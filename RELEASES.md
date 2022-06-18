@@ -2,6 +2,7 @@ Version 0.9.2 (2023-03-XX)
 ========================
 * Draw MPC path instead of model predicted path, this is a more accurate representation of what the car will do.
 * Ale Sato Stuff:
+  * Added a nice blinker indicator, tks OPKR (2023-03-08)
   * Added grey borders at SteerAlways mode (2023-03-08)
   * Improved lateral tunning, less hugging (2023-03-08)
   * Stream Driver at Reverse Gear (2023-03-06)

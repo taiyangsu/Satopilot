@@ -205,6 +205,21 @@ static void update_state(UIState *s) {
     scene.light_sensor = std::max(100.0f - scale * sm["wideRoadCameraState"].getWideRoadCameraState().getExposureValPercent(), 0.0f);
   }
   scene.started = sm["deviceState"].getDeviceState().getStarted() && scene.ignition;
+
+  if (sm.updated("carState")) {
+    auto cs_data = sm["carState"].getCarState();
+
+    if (scene.leftBlinker!=cs_data.getLeftBlinker() || scene.rightBlinker!=cs_data.getRightBlinker()) {
+      s->scene.blinker_blinkingrate = 120;
+    }
+    if (scene.leftBlinker || scene.rightBlinker) {
+      s->scene.blinker_blinkingrate -= 5;
+      if(scene.blinker_blinkingrate < 40) s->scene.blinker_blinkingrate = 120;
+    }    
+
+    s->scene.leftBlinker = cs_data.getLeftBlinker();
+    s->scene.rightBlinker = cs_data.getRightBlinker();
+  }
 }
 
 void ui_update_params(UIState *s) {

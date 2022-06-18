@@ -275,8 +275,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   p.drawEllipse(center, btn_size / 2, btn_size / 2);
   p.setOpacity(isDown() ? 0.8 : 1.0);
   p.drawPixmap((btn_size - img_size) / 2, (btn_size - img_size) / 2, img);
-}
-
+ }
 
 AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent) {
   pm = std::make_unique<PubMaster, const std::initializer_list<const char *>>({"uiDebug"});
@@ -342,6 +341,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("buttonColorSpeed", engine_rpm > 0);
   float distance_traveled = sm["controlsState"].getControlsState().getDistanceTraveled() / 1000;
   setProperty("distanceTraveled", distance_traveled);
+  setProperty("left_blinker", s.scene.leftBlinker);
+  setProperty("right_blinker", s.scene.rightBlinker);
+  setProperty("blinker_rate", s.scene.blinker_blinkingrate);
 
   // update engageability/experimental mode button
   experimental_btn->updateState(s);
@@ -602,6 +604,61 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
+
+
+  // opkr blinker
+  if (true) {
+    UIState *s = uiState();
+    float bw = 0;
+    float bx = 0;
+    float bh = 0;
+    if (left_blinker) {
+      bw = 450;
+      bx = s->fb_w/2 - bw/2;
+      bh = 400;
+      QPointF leftbsign1[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+      bx -= 125;
+      QPointF leftbsign2[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+      bx -= 125;
+      QPointF leftbsign3[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+
+      if (blinker_rate <= 120 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(115));
+        p.drawPolygon(leftbsign1, std::size(leftbsign1));
+      }
+      if (blinker_rate <= 100 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(185));
+        p.drawPolygon(leftbsign2, std::size(leftbsign2));
+      }
+      if (blinker_rate <= 80 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(255));
+        p.drawPolygon(leftbsign3, std::size(leftbsign3));
+      }
+    }
+    if (right_blinker) {
+      bw = 450;
+      bx = s->fb_w/2 - bw/2 + bw;
+      bh = 400;
+      QPointF rightbsign1[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+      bx += 125;
+      QPointF rightbsign2[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+      bx += 125;
+      QPointF rightbsign3[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+
+      if (blinker_rate <= 120 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(115));
+        p.drawPolygon(rightbsign1, std::size(rightbsign1));
+      }
+      if (blinker_rate <= 100 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(185));
+        p.drawPolygon(rightbsign2, std::size(rightbsign2));
+      }
+      if (blinker_rate <= 80 && blinker_rate >= 60) {
+        p.setBrush(yellowColor(255));
+        p.drawPolygon(rightbsign3, std::size(rightbsign3));
+      }
+    }
+  }
 
   p.restore();
 }

@@ -123,6 +123,10 @@ typedef struct UIScene {
   float light_sensor;
   bool started, ignition, is_metric, map_on_left, longitudinal_control;
   uint64_t started_frame;
+
+  bool leftBlinker;
+  bool rightBlinker;  
+  int blinker_blinkingrate;
 } UIScene;
 
 class UIState : public QObject {
@@ -137,7 +141,7 @@ public:
   inline bool engaged() const {
     return scene.started && (*sm)["controlsState"].getControlsState().getEnabled();
   };
-
+  
   int fb_w = 0, fb_h = 0;
 
   std::unique_ptr<SubMaster> sm;
