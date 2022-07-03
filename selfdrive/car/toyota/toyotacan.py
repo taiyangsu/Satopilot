@@ -41,7 +41,6 @@ def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead, acc_ty
     "ALLOW_LONG_PRESS": 1,
     "ACC_CUT_IN": fcw_alert,
     "ACCEL_CMD_ALT": accel,
-    "LVSTP": 0,
   }
   return packer.make_can_msg("ACC_CONTROL", 0, values)
 
