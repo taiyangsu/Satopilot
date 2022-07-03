@@ -26,6 +26,8 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "volkswagen"
     ret.radarOffCan = True
 
+    ret.dashcamOnly = True
+
     if True:  # pylint: disable=using-constant-test
       # Set global MQB parameters
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.volkswagen)]

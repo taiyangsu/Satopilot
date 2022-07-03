@@ -46,7 +46,7 @@ static int get_path_length_idx(const cereal::ModelDataV2::XYZTData::Reader &line
 
 static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_state, const cereal::ModelDataV2::XYZTData::Reader &line) {
   for (int i = 0; i < 2; ++i) {
-    auto lead_data = (i == 0) ? radar_state.getLeadOne() : radar_state.getLeadTwo();
+    auto lead_data = radar_state.getLeadOne();
     if (lead_data.getStatus()) {
       float z = line.getZ()[get_path_length_idx(line, lead_data.getDRel())];
       calib_frame_to_full_frame(s, lead_data.getDRel(), -lead_data.getYRel(), z + 1.22, &s->scene.lead_vertices[i]);
@@ -55,17 +55,33 @@ static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_sta
 }
 
 static void update_line_data(const UIState *s, const cereal::ModelDataV2::XYZTData::Reader &line,
-                             float y_off, float z_off, line_vertices_data *pvd, int max_idx) {
+                             float y_off, float z_off, line_vertices_data *pvd, int max_idx, bool allow_invert=true) {
   const auto line_x = line.getX(), line_y = line.getY(), line_z = line.getZ();
-  QPointF *v = &pvd->v[0];
+
+  std::vector<QPointF> left_points, right_points;
   for (int i = 0; i <= max_idx; i++) {
-    v += calib_frame_to_full_frame(s, line_x[i], line_y[i] - y_off, line_z[i] + z_off, v);
+    QPointF left, right;
+    bool l = calib_frame_to_full_frame(s, line_x[i], line_y[i] - y_off, line_z[i] + z_off, &left);
+    bool r = calib_frame_to_full_frame(s, line_x[i], line_y[i] + y_off, line_z[i] + z_off, &right);
+    if (l && r) {
+      // For wider lines the drawn polygon will "invert" when going over a hill and cause artifacts
+      if (!allow_invert && left_points.size() && left.y() > left_points.back().y()) {
+        continue;
+      }
+      left_points.push_back(left);
+      right_points.push_back(right);
+    }
   }
-  for (int i = max_idx; i >= 0; i--) {
-    v += calib_frame_to_full_frame(s, line_x[i], line_y[i] + y_off, line_z[i] + z_off, v);
-  }
-  pvd->cnt = v - pvd->v;
+
+  pvd->cnt = 2 * left_points.size();
+  assert(left_points.size() == right_points.size());
   assert(pvd->cnt <= std::size(pvd->v));
+
+  for (int left_idx = 0; left_idx < left_points.size(); left_idx++){
+    int right_idx = 2 * left_points.size() - left_idx - 1;
+    pvd->v[left_idx] = left_points[left_idx];
+    pvd->v[right_idx] = right_points[left_idx];
+  }
 }
 
 static void update_model(UIState *s, const cereal::ModelDataV2::Reader &model) {
@@ -98,7 +114,7 @@ static void update_model(UIState *s, const cereal::ModelDataV2::Reader &model) {
     max_distance = std::clamp((float)(lead_d - fmin(lead_d * 0.35, 10.)), 0.0f, max_distance);
   }
   max_idx = get_path_length_idx(model_position, max_distance);
-  update_line_data(s, model_position, 0.5, 1.22, &scene.track_vertices, max_idx);
+  update_line_data(s, model_position, 1.0, 1.22, &scene.track_vertices, max_idx, false);
 }
 
 static void update_sockets(UIState *s) {
@@ -108,6 +124,10 @@ static void update_sockets(UIState *s) {
 static void update_state(UIState *s) {
   SubMaster &sm = *(s->sm);
   UIScene &scene = s->scene;
+  s->scene.parkingLightON = sm["carState"].getCarState().getParkingLightON();
+  s->scene.headlightON = sm["carState"].getCarState().getHeadlightON();
+  s->scene.meterDimmed = sm["carState"].getCarState().getMeterDimmed();
+  s->scene.meterLowBrightness = sm["carState"].getCarState().getMeterLowBrightness();
 
   if (sm.updated("liveCalibration")) {
     auto rpy_list = sm["liveCalibration"].getLiveCalibration().getRpyCalib();
@@ -192,6 +212,8 @@ static void update_state(UIState *s) {
 
 void ui_update_params(UIState *s) {
   s->scene.is_metric = Params().getBool("IsMetric");
+  s->scene.headlight_brightness_control = Params().getBool("CarBrightnessControl");
+  s->scene.enable_radar_state = Params().getBool("DisplayRadarInfo");
 }
 
 void UIState::updateStatus() {
@@ -215,7 +237,6 @@ void UIState::updateStatus() {
     if (scene.started) {
       status = STATUS_DISENGAGED;
       scene.started_frame = sm->frame;
-      scene.end_to_end = Params().getBool("EndToEndToggle");
       wide_camera = Hardware::TICI() ? Params().getBool("EnableWideCamera") : false;
     }
     started_prev = scene.started;
@@ -226,7 +247,7 @@ void UIState::updateStatus() {
 UIState::UIState(QObject *parent) : QObject(parent) {
   sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
-    "pandaStates", "carParams", "driverMonitoringState", "sensorEvents", "carState", "liveLocationKalman",
+    "pandaStates", "carParams", "sensorEvents", "carState", "liveLocationKalman",
     "wideRoadCameraState",
   });
 
@@ -280,31 +301,62 @@ void Device::resetInteractiveTimout() {
 }
 
 void Device::updateBrightness(const UIState &s) {
-  float clipped_brightness = BACKLIGHT_OFFROAD;
-  if (s.scene.started) {
-    // Scale to 0% to 100%
-    clipped_brightness = 100.0 * s.scene.light_sensor;
+  if (s.scene.headlight_brightness_control) {
+    int brightness = BACKLIGHT_OFFROAD;
 
-    // CIE 1931 - https://www.photonstophotos.net/GeneralTopics/Exposure/Psychometric_Lightness_and_Gamma.htm
-    if (clipped_brightness <= 8) {
-      clipped_brightness = (clipped_brightness / 903.3);
-    } else {
-      clipped_brightness = std::pow((clipped_brightness + 16.0) / 116.0, 3.0);
+    if (!s.scene.started) {
+      brightness = BACKLIGHT_OFFROAD;
     }
 
-    // Scale back to 10% to 100%
-    clipped_brightness = std::clamp(100.0f * clipped_brightness, 10.0f, 100.0f);
-  }
+    if (!awake) {
+      brightness = 0;
+    }
 
-  int brightness = brightness_filter.update(clipped_brightness);
-  if (!awake) {
-    brightness = 0;
-  }
+    if (s.scene.meterLowBrightness) {
+      brightness = 1.0;
+    } else {
+      if ((s.scene.headlightON) && (s.scene.meterDimmed)) {
+        brightness = 10.0;
+      } else if ((s.scene.parkingLightON) && (!s.scene.headlightON) && (s.scene.meterDimmed)) {
+        brightness = 50.0;
+      } else {
+        brightness = 100.0;
+      }
+    }
 
-  if (brightness != last_brightness) {
-    if (!brightness_future.isRunning()) {
-      brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
-      last_brightness = brightness;
+    if (brightness != last_brightness) {
+      if (!brightness_future.isRunning()) {
+        brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
+        last_brightness = brightness;
+      }
+    }
+  } else {
+    float clipped_brightness = BACKLIGHT_OFFROAD;
+    if (s.scene.started) {
+      // Scale to 0% to 100%
+      clipped_brightness = 100.0 * s.scene.light_sensor;
+
+      // CIE 1931 - https://www.photonstophotos.net/GeneralTopics/Exposure/Psychometric_Lightness_and_Gamma.htm
+      if (clipped_brightness <= 8) {
+        clipped_brightness = (clipped_brightness / 903.3);
+      } else {
+        clipped_brightness = std::pow((clipped_brightness + 16.0) / 116.0, 3.0);
+      }
+
+      // Scale back to 10% to 100%
+      clipped_brightness = std::clamp(100.0f * clipped_brightness, 10.0f, 100.0f);
+    }
+
+    int brightness = brightness_filter.update(clipped_brightness);
+    if (!awake) {
+      brightness = 0;
+    }
+
+    if (brightness != last_brightness) {
+      if (!brightness_future.isRunning()) {
+        brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
+        last_brightness = brightness;
+      }
     }
   }
 }

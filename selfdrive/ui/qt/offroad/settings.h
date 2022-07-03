@@ -57,6 +57,12 @@ public:
   explicit TogglesPanel(SettingsWindow *parent);
 };
 
+class DodgypilotPanel : public ListWidget {
+  Q_OBJECT
+public:
+  explicit DodgypilotPanel(SettingsWindow *parent);
+};
+
 class SoftwarePanel : public ListWidget {
   Q_OBJECT
 public:

@@ -170,7 +170,6 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
 // OnroadHud
 OnroadHud::OnroadHud(QWidget *parent) : QWidget(parent) {
   engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
-  dm_img = loadPixmap("../assets/img_driver_face.png", {img_size, img_size});
 
   connect(this, &OnroadHud::valueChanged, [=] { update(); });
 }
@@ -185,7 +184,7 @@ void OnroadHud::updateState(const UIState &s) {
   if (cruise_set && !s.scene.is_metric) {
     maxspeed *= KM_TO_MILE;
   }
-  QString maxspeed_str = cruise_set ? QString::number(std::nearbyint(maxspeed)) : "N/A";
+  QString maxspeed_str = cruise_set ? QString::number(std::nearbyint(maxspeed)) : "--";
   float cur_speed = sm["carState"].getCarState().getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
 
   setProperty("is_cruise_set", cruise_set);
@@ -194,11 +193,12 @@ void OnroadHud::updateState(const UIState &s) {
   setProperty("speedUnit", s.scene.is_metric ? "km/h" : "mph");
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
+  setProperty("brakeLights", sm["carState"].getCarState().getBrakeLights());
+  setProperty("pcmStandstill", sm["carState"].getCarState().getPcmStandstill());
 
-  // update engageability and DM icons at 2Hz
+  // update engageability at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
     setProperty("engageable", cs.getEngageable() || cs.getEnabled());
-    setProperty("dmActive", sm["driverMonitoringState"].getDriverMonitoringState().getIsActiveMode());
   }
 }
 
@@ -214,13 +214,13 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
 
   // max speed
   QRect rc(bdr_s * 2, bdr_s * 1.5, 184, 202);
-  p.setPen(QPen(QColor(0xff, 0xff, 0xff, 100), 10));
-  p.setBrush(QColor(0, 0, 0, 100));
+  p.setPen(QPen(pcmStandstill ? QColor(0xff, 0xff, 0xff, 255) : QColor(0xff, 0xff, 0xff, 100), 10));
+  p.setBrush(pcmStandstill ? QColor(0xfa, 0x00, 0x21, 255) : QColor(0, 0, 0, 100));
   p.drawRoundedRect(rc, 20, 20);
   p.setPen(Qt::NoPen);
 
   configFont(p, "Open Sans", 48, "Regular");
-  drawText(p, rc.center().x(), 118, "MAX", is_cruise_set ? 200 : 100);
+  drawText(p, rc.center().x(), 118, pcmStandstill ? "RES" : "SET", is_cruise_set ? 200 : 100);
   if (is_cruise_set) {
     configFont(p, "Open Sans", 88, "Bold");
     drawText(p, rc.center().x(), 212, maxSpeed, 255);
@@ -234,18 +234,17 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
   drawText(p, rect().center().x(), 210, speed);
   configFont(p, "Open Sans", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
+  if (brakeLights) {
+    configFont(p, "Open Sans", 66, "Regular");
+    drawText(p, rect().center().x() + 128, 290, "🟥", 200);
+  }
 
   // engage-ability icon
   if (engageable) {
     drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
              engage_img, bg_colors[status], 1.0);
   }
-
-  // dm icon
-  if (!hideDM) {
-    drawIcon(p, radius / 2 + (bdr_s * 2), rect().bottom() - footer_h / 2,
-             dm_img, QColor(0, 0, 0, 70), dmActive ? 1.0 : 0.2);
-  }
+  p.restore();
 }
 
 void OnroadHud::drawText(QPainter &p, int x, int y, const QString &text, int alpha) {
@@ -320,33 +319,22 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIState *s) {
 
   // paint path
   QLinearGradient bg(0, height(), 0, height() / 4);
-  if (scene.end_to_end) {
-    const auto &orientation = (*s->sm)["modelV2"].getModelV2().getOrientation();
-    float orientation_future = 0;
-    if (orientation.getZ().size() > 16) {
-      orientation_future = std::abs(orientation.getZ()[16]);  // 2.5 seconds
-    }
-    // straight: 112, in turns: 70
-    float curve_hue = fmax(70, 112 - (orientation_future * 420));
-    // FIXME: painter.drawPolygon can be slow if hue is not rounded
-    curve_hue = int(curve_hue * 100 + 0.5) / 100;
-
-    bg.setColorAt(0.0, QColor::fromHslF(148 / 360., 0.94, 0.51, 0.4));
-    bg.setColorAt(0.75 / 1.5, QColor::fromHslF(curve_hue / 360., 1.0, 0.68, 0.35));
-    bg.setColorAt(1.0, QColor::fromHslF(curve_hue / 360., 1.0, 0.68, 0.0));
-  } else {
-    bg.setColorAt(0, whiteColor());
-    bg.setColorAt(1, whiteColor(0));
-  }
+  bg.setColorAt(0, whiteColor(128));
+  bg.setColorAt(1, whiteColor(0));
   painter.setBrush(bg);
   painter.drawPolygon(scene.track_vertices.v, scene.track_vertices.cnt);
 }
 
-void NvgWindow::drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV3::Reader &lead_data, const QPointF &vd) {
+void NvgWindow::drawLead(QPainter &painter, const UIScene &scene, 
+                         const cereal::ModelDataV2::LeadDataV3::Reader &lead_data, 
+                         const cereal::RadarState::LeadData::Reader &radar_lead_data, 
+                         const QPointF &vd, float vego) {
   const float speedBuff = 10.;
   const float leadBuff = 40.;
   const float d_rel = lead_data.getX()[0];
   const float v_rel = lead_data.getV()[0];
+  const float radar_d_rel = radar_lead_data.getDRel();
+  const float radar_v_abs = vego + radar_lead_data.getVRel();
 
   float fillAlpha = 0;
   if (d_rel < leadBuff) {
@@ -364,6 +352,12 @@ void NvgWindow::drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV
   float g_xo = sz / 5;
   float g_yo = sz / 10;
 
+  int x_int = (int)x;
+  int y_int = (int)y;
+
+  QString radar_v_abs_str = QString::number(std::nearbyint(radar_v_abs * (scene.is_metric ? 3.6 : 2.2369362912))) + (scene.is_metric ? " km/h" : " mph");
+  QString radar_d_rel_str = QString::number(std::nearbyint(radar_d_rel * (scene.is_metric ? 1.0 : 1.093613))) + (scene.is_metric ? " m" : " yd");
+
   QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_yo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
   painter.setBrush(QColor(218, 202, 37, 255));
   painter.drawPolygon(glow, std::size(glow));
@@ -372,6 +366,15 @@ void NvgWindow::drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV
   QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
   painter.setBrush(redColor(fillAlpha));
   painter.drawPolygon(chevron, std::size(chevron));
+
+  if (scene.enable_radar_state) {
+    painter.setPen(QColor(10, 255, 226, 255));
+    configFont(painter, "Open Sans", 60, "Regular");
+    painter.drawText(x_int - 104, y_int + 118, radar_v_abs_str);
+    painter.setPen(QColor(10, 255, 226, 255));
+    configFont(painter, "Open Sans", 60, "Regular");
+    painter.drawText(x_int - 72, y_int + 182, radar_d_rel_str);
+  }
 }
 
 void NvgWindow::paintGL() {
@@ -387,11 +390,13 @@ void NvgWindow::paintGL() {
 
     if (s->scene.longitudinal_control) {
       auto leads = (*s->sm)["modelV2"].getModelV2().getLeadsV3();
+      auto radar_lead_one = (*s->sm)["radarState"].getRadarState().getLeadOne();
+      float vego = (*s->sm)["carState"].getCarState().getVEgo();
+      // giving drawLead the entire uiState will make the UI
+      // extremely laggy, so only give it vego which is all that
+      // we need to calculate the absolute speed of the front car
       if (leads[0].getProb() > .5) {
-        drawLead(painter, leads[0], s->scene.lead_vertices[0]);
-      }
-      if (leads[1].getProb() > .5 && (std::abs(leads[1].getX()[0] - leads[0].getX()[0]) > 3.0)) {
-        drawLead(painter, leads[1], s->scene.lead_vertices[1]);
+        drawLead(painter, s->scene, leads[0], radar_lead_one, s->scene.lead_vertices[0], vego);
       }
     }
   }

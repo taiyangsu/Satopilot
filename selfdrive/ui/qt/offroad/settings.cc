@@ -36,12 +36,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "../assets/offroad/icon_openpilot.png",
     },
     {
-      "IsLdwEnabled",
-      "Enable Lane Departure Warnings",
-      "Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 31 mph (50 km/h).",
-      "../assets/offroad/icon_warning.png",
-    },
-    {
       "IsRHD",
       "Enable Right-Hand Drive",
       "Allow openpilot to obey left-hand traffic conventions and perform driver monitoring on right driver seat.",
@@ -58,18 +52,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "Record and Upload Driver Camera",
       "Upload data from the driver facing camera and help improve the driver monitoring algorithm.",
       "../assets/offroad/icon_monitoring.png",
-    },
-    {
-      "EndToEndToggle",
-      "\U0001f96c Disable use of lanelines (Alpha) \U0001f96c",
-      "In this mode openpilot will ignore lanelines and just drive how it thinks a human would.",
-      "../assets/offroad/icon_road.png",
-    },
-    {
-      "DisengageOnAccelerator",
-      "Disengage On Accelerator Pedal",
-      "When enabled, pressing the accelerator pedal will disengage openpilot.",
-      "../assets/offroad/icon_disengage_on_accelerator.svg",
     },
 #ifdef ENABLE_MAPS
     {
@@ -97,9 +79,86 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
     bool locked = params.getBool((param + "Lock").toStdString());
     toggle->setEnabled(!locked);
-    if (!locked) {
-      connect(uiState(), &UIState::offroadTransition, toggle, &ParamControl::setEnabled);
+    addItem(toggle);
+  }
+}
+
+// dodgypilot's custom control panel
+DodgypilotPanel::DodgypilotPanel(SettingsWindow *parent) : ListWidget(parent) {
+  Params params;
+
+  // reset car recognition
+  auto resetFpBtn = new ButtonControl("Reset Car Parameters", "RESET", "Dodgypilot will not re-recognise car by default when the device is powered off, use this to reset car recognition.");
+  connect(resetFpBtn, &ButtonControl::clicked, [&]() {
+    if (ConfirmationDialog::confirm("Are you sure you want to reset car parameters?", this)) {
+      params.remove("CarParams");
+      params.remove("CarParamsCache");
+      params.remove("CarVin");
     }
+  });
+  addItem(resetFpBtn);
+
+  // param, title, desc, icon
+  std::vector<std::tuple<QString, QString, QString, QString>> toggles{
+    // allow openpilot activation in 
+    // non-adaptive cruise control mode
+    {
+      "AllowNonAdaptiveCruise",
+      "Allow Normal Cruise Control",
+      "Allow steering wheel control in Non-Adaptive Cruise Control mode. To use this feature, hold the cruise control ON/OFF button for approximately 3 seconds.",
+      "../assets/offroad/icon_speed_limit.png",
+    },
+
+    // link car's dash brightness with your comma device
+    // should be universal on Toyota/Lexus vehicles
+    {
+      "CarBrightnessControl",
+      "Use Linked Brightness",
+      "Use the car's headlight state for brightness control.",
+      "../assets/offroad/icon_brightness.png",
+    },
+
+    // ZSS support toggle
+    {
+      "EnableZss",
+      "ZSS Support",
+      "Enable support for the high precision angle sensor developed by zorrobyte.",
+      "../assets/offroad/icon_angle_sensor.png",
+    },
+
+    // display radar lead readings
+    {
+      "DisplayRadarInfo",
+      "OP Long: Display RADAR Data",
+      "Display RADAR interface information on the onroad HUD.",
+      "../assets/offroad/icon_radar.png",
+    },
+
+    // cruise speed rewrite, stolen from dragonpilot
+    {
+      "CruiseSpeedRewrite",
+      "OP Long: Cruise Speed Override",
+      "Allow openpilot's set speed to be set below the vehicle's minimum cruise speed. To use this feature, when the vehicle is travelling below its minimum set speed, pull the cruise control lever down (or click the cruise control SET button) once, openpilot will set its maximum speed to the vehicle's current speed.",
+      "../assets/offroad/icon_cruise_speed_rewrite.png",
+    },
+  };
+
+  // use the toggled param itself as a condition to allow the toggle to be turned 
+  // off if the comma device does not exist in a SmartDSU vehicle anymore
+  if (params.getBool("ToyotaLongToggle_Allow") or params.getBool("SmartDSULongToggle")) {
+    toggles.push_back({
+      "SmartDSULongToggle",
+      "SmartDSU: Use Stock ACC",
+      "Use the vehicle's factory adaptive cruise control for acceleration and deceleration. Only available on TSS-P vehicles with SmartDSU.",
+      "../assets/offroad/icon_long_control.png",
+    });
+  }
+
+
+  for (auto &[param, title, desc, icon] : toggles) {
+    auto toggle = new ParamControl(param, title, desc, icon, this);
+    bool locked = params.getBool((param + "Lock").toStdString());
+    toggle->setEnabled(!locked);
     addItem(toggle);
   }
 }
@@ -390,6 +449,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {"Device", device},
     {"Network", network_panel(this)},
     {"Toggles", new TogglesPanel(this)},
+    {"dodgypilot", new DodgypilotPanel(this)},
     {"Software", new SoftwarePanel(this)},
   };
 
@@ -399,7 +459,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
   QObject::connect(map_panel, &MapPanel::closeSettings, this, &SettingsWindow::closeSettings);
 #endif
 
-  const int padding = panels.size() > 3 ? 25 : 35;
+  const int padding = panels.size() > 3 ? 15 : 35;
 
   nav_btns = new QButtonGroup(this);
   for (auto &[name, panel] : panels) {

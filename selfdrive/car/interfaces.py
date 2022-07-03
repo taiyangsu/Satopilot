@@ -1,10 +1,13 @@
+import yaml
 import os
 import time
 from abc import abstractmethod, ABC
 from typing import Dict, Tuple, List
 
 from cereal import car
+from common.basedir import BASEDIR
 from common.kalman.simple_kalman import KF1D
+from common.params import Params
 from common.realtime import DT_CTRL
 from selfdrive.car import gen_empty_fingerprint
 from common.conversions import Conversions as CV
@@ -17,7 +20,10 @@ EventName = car.CarEvent.EventName
 
 MAX_CTRL_SPEED = (V_CRUISE_MAX + 4) * CV.KPH_TO_MS
 ACCEL_MAX = 2.0
-ACCEL_MIN = -3.5
+ACCEL_MIN = -4.0
+TORQUE_PARAMS_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/params.yaml')
+TORQUE_OVERRIDE_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/override.yaml')
+TORQUE_SUBSTITUTE_PATH = os.path.join(BASEDIR, 'selfdrive/car/torque_data/substitute.yaml')
 
 
 # generic car and radar interfaces
@@ -27,6 +33,7 @@ class CarInterfaceBase(ABC):
   def __init__(self, CP, CarController, CarState):
     self.CP = CP
     self.VM = VehicleModel(CP)
+    self.allow_non_adaptive_cruise = Params().get_bool("AllowNonAdaptiveCruise")
 
     self.frame = 0
     self.steering_unpressed = 0
@@ -104,6 +111,28 @@ class CarInterfaceBase(ABC):
     ret.steerLimitTimer = 1.0
     return ret
 
+  @staticmethod
+  def get_torque_params(candidate, default=float('NaN')):
+    with open(TORQUE_SUBSTITUTE_PATH) as f:
+      sub = yaml.load(f, Loader=yaml.FullLoader)
+    if candidate in sub:
+      candidate = sub[candidate]
+
+    with open(TORQUE_PARAMS_PATH) as f:
+      params = yaml.load(f, Loader=yaml.FullLoader)
+    with open(TORQUE_OVERRIDE_PATH) as f:
+      params_override = yaml.load(f, Loader=yaml.FullLoader)
+
+    assert len(set(sub.keys()) & set(params.keys()) & set(params_override.keys())) == 0
+
+    if candidate in params_override:
+      out = params_override[candidate]
+    elif candidate in params:
+      out = params[candidate]
+    else:
+      raise NotImplementedError(f"Did not find torque params for {candidate}")
+    return {key:out[i] for i, key in enumerate(params['legend'])}
+
   @abstractmethod
   def _update(self, c: car.CarControl) -> car.CarState:
     pass
@@ -153,7 +182,7 @@ class CarInterfaceBase(ABC):
       events.add(EventName.stockAeb)
     if cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
-    if cs_out.cruiseState.nonAdaptive:
+    if cs_out.cruiseState.nonAdaptive and not self.allow_non_adaptive_cruise:
       events.add(EventName.wrongCruiseMode)
     if cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
       events.add(EventName.brakeHold)
