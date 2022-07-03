@@ -110,6 +110,9 @@ selfdrive/car/fw_versions.py
 selfdrive/car/isotp_parallel_query.py
 selfdrive/car/tests/__init__.py
 selfdrive/car/tests/test_car_interfaces.py
+selfdrive/car/torque_data/params.yaml
+selfdrive/car/torque_data/substitute.yaml
+selfdrive/car/torque_data/override.yaml
 selfdrive/car/chrysler/__init__.py
 selfdrive/car/chrysler/carstate.py
 selfdrive/car/chrysler/interface.py
@@ -239,7 +242,7 @@ selfdrive/controls/lib/events.py
 selfdrive/controls/lib/lane_planner.py
 selfdrive/controls/lib/latcontrol_angle.py
 selfdrive/controls/lib/latcontrol_indi.py
-selfdrive/controls/lib/latcontrol_lqr.py
+selfdrive/controls/lib/latcontrol_torque.py
 selfdrive/controls/lib/latcontrol_pid.py
 selfdrive/controls/lib/latcontrol.py
 selfdrive/controls/lib/lateral_planner.py
