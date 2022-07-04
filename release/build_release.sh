@@ -54,7 +54,7 @@ git branch --set-upstream-to=origin/$RELEASE_BRANCH
 
 # Build panda firmware
 pushd panda/
-CERT=/data/pandaextra/certs/release RELEASE=1 scons -u .
+CERT=/data/openpilot/panda/certs/debug RELEASE=0 scons -u .
 mv board/obj/panda.bin.signed /tmp/panda.bin.signed
 popd
 
