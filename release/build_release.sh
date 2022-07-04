@@ -29,7 +29,7 @@ rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 git init
-git remote add origin git@github.com:commaai/openpilot.git
+git remote add origin git@github.com:cydia2020/dodgypilot.git
 git fetch origin $RELEASE_BRANCH
 git checkout --orphan $RELEASE_BRANCH
 
@@ -49,7 +49,7 @@ echo "#define COMMA_VERSION \"$VERSION-release\"" > selfdrive/common/version.h
 
 echo "[-] committing version $VERSION T=$SECONDS"
 git add -f .
-git commit -a -m "openpilot v$VERSION release"
+git commit -a -m "dodgypilot v$VERSION release"
 git branch --set-upstream-to=origin/$RELEASE_BRANCH
 
 # Build panda firmware
