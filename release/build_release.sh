@@ -95,24 +95,8 @@ touch prebuilt
 git add -f .
 git commit --amend -m "openpilot v$VERSION"
 
-# Run tests
-TEST_FILES="tools/"
-cd $SOURCE_DIR
-cp -pR -n --parents $TEST_FILES $BUILD_DIR/
-cd $BUILD_DIR
-RELEASE=1 selfdrive/test/test_onroad.py
-#selfdrive/manager/test/test_manager.py
-selfdrive/car/tests/test_car_interfaces.py
-rm -rf $TEST_FILES
+echo "[-] pushing T=$SECONDS"
+git push -f origin $RELEASE_BRANCH
 
-if [ ! -z "$PUSH" ]; then
-  echo "[-] pushing T=$SECONDS"
-  git push -f origin $RELEASE_BRANCH
-
-  # Create dashcam
-  git rm selfdrive/car/*/carcontroller.py
-  git commit -m "create dashcam release from release"
-  git push -f origin $RELEASE_BRANCH:$DASHCAM_BRANCH
-fi
 
 echo "[-] done T=$SECONDS"
