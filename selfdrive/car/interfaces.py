@@ -114,14 +114,14 @@ class CarInterfaceBase(ABC):
   @staticmethod
   def get_torque_params(candidate, default=float('NaN')):
     with open(TORQUE_SUBSTITUTE_PATH) as f:
-      sub = yaml.load(f, Loader=yaml.CSafeLoader)
+      sub = yaml.load(f, Loader=yaml.FullLoader)
     if candidate in sub:
       candidate = sub[candidate]
 
     with open(TORQUE_PARAMS_PATH) as f:
-      params = yaml.load(f, Loader=yaml.CSafeLoader)
+      params = yaml.load(f, Loader=yaml.FullLoader)
     with open(TORQUE_OVERRIDE_PATH) as f:
-      params_override = yaml.load(f, Loader=yaml.CSafeLoader)
+      params_override = yaml.load(f, Loader=yaml.FullLoader)
 
     assert len(set(sub.keys()) & set(params.keys()) & set(params_override.keys())) == 0
 
