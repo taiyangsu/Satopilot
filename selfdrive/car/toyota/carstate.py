@@ -147,6 +147,7 @@ class CarState(CarStateBase):
       ret.leftBlindspot = (cp.vl["BSM"]["L_ADJACENT"] == 1) or (cp.vl["BSM"]["L_APPROACHING"] == 1)
       ret.rightBlindspot = (cp.vl["BSM"]["R_ADJACENT"] == 1) or (cp.vl["BSM"]["R_APPROACHING"] == 1)
 
+    # LKAS_HUD is on a different address on the Prius V, don't send to avoid problems
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.sws_toggle = (cp_cam.vl["LKAS_HUD"]["LANE_SWAY_TOGGLE"])
       self.sws_sensitivity = (cp_cam.vl["LKAS_HUD"]["LANE_SWAY_SENSITIVITY"])
@@ -176,6 +177,10 @@ class CarState(CarStateBase):
       self.lda_sensitivity = 2
       self.ldw_exist = 1
 
+    # if openpilot does not control long and we are running on a TSS-P car, we can assume that
+    # 0x343 will be present on the ADAS Bus. We assume resume will be ready when
+    # 1) the car is no longer sending standstill
+    # 2) the car is still in standstill
     if not self.CP.openpilotLongitudinalControl and self.CP.carFingerprint not in (TSS2_CAR, CAR.LEXUS_IS, CAR.LEXUS_RC):
       self.stock_resume_ready = (cp.vl["ACC_CONTROL"]["RELEASE_STANDSTILL"] == 1 and self.pcm_acc_status == 7)
     else:

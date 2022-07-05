@@ -127,7 +127,7 @@ class CarController:
       self.last_gas_press_frame = self.frame
 
     # Handle permit braking logic
-    if 0.8 / DT_CTRL > (self.frame - self.last_off_frame) or actuators.accel > 0.35:
+    if actuators.accel > 0.35:
       self.permit_braking = False
     else:
       self.permit_braking = True
@@ -152,7 +152,8 @@ class CarController:
       can_sends.append(create_gas_interceptor_command(self.packer, interceptor_gas_cmd, self.frame // 2))
       self.gas = interceptor_gas_cmd
 
-    if self.frame % 25 == 0:
+    # LKAS_HUD is on a different address on the Prius V, don't send to avoid problems
+    if self.frame % 25 == 0 and self.CP.carFingerprint != CAR.PRIUS_V:
       can_sends.append(create_ui_command(self.packer, alert_prompt, alert_prompt_repeat, alert_immediate, hud_control.leftLaneVisible,
                                          hud_control.rightLaneVisible, CS.sws_toggle, CS.sws_sensitivity, CS.sws_buzzer, CS.sws_fld, 
                                          CS.sws_warning, CS.lda_left_lane, CS.lda_right_lane, CS.lda_sa_toggle, CS.lkas_status,
