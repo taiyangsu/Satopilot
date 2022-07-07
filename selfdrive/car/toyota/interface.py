@@ -51,7 +51,6 @@ class CarInterface(CarInterfaceBase):
         if fw.ecu == "eps" and not fw.fwVersion == b'8965B47060\x00\x00\x00\x00\x00\x00' or not ret.hasZss:
           steering_angle_deadzone_deg = 1.0
           set_torque_tune(ret.lateralTuning, torque_params['LAT_ACCEL_FACTOR'], torque_params['FRICTION'], steering_angle_deadzone_deg)
-      ret.steerActuatorDelay = 0.3
 
     elif candidate == CAR.PRIUS_V:
       stop_and_go = True
