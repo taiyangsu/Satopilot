@@ -56,10 +56,12 @@ class CarController:
       pedal_offset = interp(CS.out.vEgo, [0.0, 2.3, MIN_ACC_SPEED + PEDAL_TRANSITION], [-.4, 0.0, 0.2])
       pedal_command = PEDAL_SCALE * (actuators.accel + pedal_offset)
       interceptor_gas_cmd = clip(pedal_command, 0., MAX_INTERCEPTOR_GAS)
-    # FSRDRCC SnG logic
-    elif (self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in FULL_SPEED_DRCC_CAR and actuators.accel > 0. and CS.out.standstill and CS.pcm_acc_status == 7) \
-         or (self.CP.enableGasInterceptor and not self.CP.openpilotLongitudinalControl and self.CP.carFingerprint not in (TSS2_CAR, CAR.LEXUS_IS, CAR.LEXUS_RC) and CS.stock_resume_ready):
+    # FSRDRCC openpilot SnG logic
+    elif self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in FULL_SPEED_DRCC_CAR and actuators.accel > 0. and CS.out.standstill and CS.pcm_acc_status == 7:
       interceptor_gas_cmd = 0.14
+    # Stock auto-resume hack, larger pedal value since car doesn't seem to respond well to small pedal commands
+    elif self.CP.enableGasInterceptor and not self.CP.openpilotLongitudinalControl and self.CP.carFingerprint not in (TSS2_CAR, CAR.LEXUS_IS, CAR.LEXUS_RC) and CS.stock_resume_ready:
+      interceptor_gas_cmd = 0.2
     else:
       interceptor_gas_cmd = 0.
 
