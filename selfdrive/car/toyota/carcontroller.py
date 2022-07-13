@@ -61,7 +61,7 @@ class CarController:
       interceptor_gas_cmd = 0.14
     # Stock auto-resume hack, larger pedal value since car doesn't seem to respond well to small pedal commands
     elif self.CP.enableGasInterceptor and not self.CP.openpilotLongitudinalControl and self.CP.carFingerprint not in (TSS2_CAR, CAR.LEXUS_IS, CAR.LEXUS_RC) and CS.stock_resume_ready:
-      interceptor_gas_cmd = 0.2
+      interceptor_gas_cmd = 0.14
     else:
       interceptor_gas_cmd = 0.
 
@@ -148,7 +148,7 @@ class CarController:
       else:
         can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance_btn, False, False, False))
 
-    if self.frame % 2 == 0 and self.CP.enableGasInterceptor:
+    if self.frame % 2 == 0 and self.CP.enableGasInterceptor and not CS.out.brakePressed:
       # send exactly zero if gas cmd is zero. Interceptor will send the max between read value and gas cmd.
       # This prevents unexpected pedal range rescaling
       can_sends.append(create_gas_interceptor_command(self.packer, interceptor_gas_cmd, self.frame // 2))
