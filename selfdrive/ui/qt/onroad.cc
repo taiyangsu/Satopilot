@@ -359,7 +359,13 @@ void NvgWindow::drawLead(QPainter &painter, const UIScene &scene,
   QString radar_d_rel_str = QString::number(std::nearbyint(radar_d_rel * (scene.is_metric ? 1.0 : 1.093613))) + (scene.is_metric ? " m" : " yd");
 
   QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_yo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
-  painter.setBrush(QColor(218, 202, 37, 255));
+  if (scene.followDistanceFar) {
+    painter.setBrush(QColor(0, 182, 49, 255));
+  } else if (scene.followDistanceMid) {
+    painter.setBrush(QColor(255, 180, 49, 255));
+  } else {
+    painter.setBrush(QColor(255, 49, 49, 255));
+  }
   painter.drawPolygon(glow, std::size(glow));
 
   // chevron

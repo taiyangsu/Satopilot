@@ -94,12 +94,21 @@ typedef struct {
 
 typedef struct UIScene {
   mat3 view_from_calib;
+
+  // car state and settings
   bool headlightON;
   bool parkingLightON;
   bool meterDimmed;
   bool meterLowBrightness;
   bool headlight_brightness_control;
   bool enable_radar_state;
+
+  // follow distance
+  bool followDistanceFar;
+  bool followDistanceMid;
+  bool followDistanceCls;
+
+  // panda state
   cereal::PandaState::PandaType pandaType;
 
   // modelV2

@@ -128,6 +128,9 @@ static void update_state(UIState *s) {
   s->scene.headlightON = sm["carState"].getCarState().getHeadlightON();
   s->scene.meterDimmed = sm["carState"].getCarState().getMeterDimmed();
   s->scene.meterLowBrightness = sm["carState"].getCarState().getMeterLowBrightness();
+  s->scene.followDistanceFar = sm["carState"].getCarState().getPcmFollowDistance() == 1;
+  s->scene.followDistanceMid = sm["carState"].getCarState().getPcmFollowDistance() == 2;
+  s->scene.followDistanceCls = sm["carState"].getCarState().getPcmFollowDistance() == 3;
 
   if (sm.updated("liveCalibration")) {
     auto rpy_list = sm["liveCalibration"].getLiveCalibration().getRpyCalib();
