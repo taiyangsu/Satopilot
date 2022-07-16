@@ -370,7 +370,7 @@ void NvgWindow::drawLead(QPainter &painter, const UIScene &scene,
 
   // chevron
   QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
-  painter.setBrush(scene.longitudinal_control ? redColor(fillAlpha) : redColor(0));
+  painter.setBrush(scene.longitudinal_control ? redColor(fillAlpha) : QColor(0, 0, 0, 255));
   painter.drawPolygon(chevron, std::size(chevron));
 
   if (scene.enable_radar_state) {
