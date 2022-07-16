@@ -364,7 +364,7 @@ void NvgWindow::drawLead(QPainter &painter, const UIScene &scene,
 
   // chevron
   QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
-  painter.setBrush(redColor(fillAlpha));
+  painter.setBrush(scene.longitudinal_control ? redColor(fillAlpha) : QColor(0, 0, 0, 0));
   painter.drawPolygon(chevron, std::size(chevron));
 
   if (scene.enable_radar_state) {
@@ -388,16 +388,14 @@ void NvgWindow::paintGL() {
 
     drawLaneLines(painter, s);
 
-    if (s->scene.longitudinal_control) {
-      auto leads = (*s->sm)["modelV2"].getModelV2().getLeadsV3();
-      auto radar_lead_one = (*s->sm)["radarState"].getRadarState().getLeadOne();
-      float vego = (*s->sm)["carState"].getCarState().getVEgo();
-      // giving drawLead the entire uiState will make the UI
-      // extremely laggy, so only give it vego which is all that
-      // we need to calculate the absolute speed of the front car
-      if (leads[0].getProb() > .5) {
-        drawLead(painter, s->scene, leads[0], radar_lead_one, s->scene.lead_vertices[0], vego);
-      }
+    auto leads = (*s->sm)["modelV2"].getModelV2().getLeadsV3();
+    auto radar_lead_one = (*s->sm)["radarState"].getRadarState().getLeadOne();
+    float vego = (*s->sm)["carState"].getCarState().getVEgo();
+    // giving drawLead the entire uiState will make the UI
+    // extremely laggy, so only give it vego which is all that
+    // we need to calculate the absolute speed of the front car
+    if (leads[0].getProb() > .5) {
+      drawLead(painter, s->scene, leads[0], radar_lead_one, s->scene.lead_vertices[0], vego);
     }
   }
 
