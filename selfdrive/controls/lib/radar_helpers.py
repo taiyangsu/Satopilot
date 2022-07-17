@@ -4,7 +4,7 @@ from common.kalman.simple_kalman import KF1D
 
 # the longer lead decels, the more likely it will keep decelerating
 # TODO is this a good default?
-_LEAD_ACCEL_TAU = 1.5
+_LEAD_ACCEL_TAU = 0.0
 
 # radar tracks
 SPEED, ACCEL = 0, 1   # Kalman filter states enum
