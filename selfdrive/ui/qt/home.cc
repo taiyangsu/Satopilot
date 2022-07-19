@@ -181,7 +181,7 @@ void OffroadHome::hideEvent(QHideEvent *event) {
 }
 
 void OffroadHome::refresh() {
-  date->setText(QDateTime::currentDateTime().toString("dddd, MMMM d"));
+  date->setText(QDateTime::currentDateTime().toString("📅 yyyy-MMMM-dd ddd 🕰️ HH:mm"));
 
   bool updateAvailable = update_widget->refresh();
   int alerts = alerts_widget->refresh();
