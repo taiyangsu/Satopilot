@@ -362,13 +362,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
       Priority.HIGHEST, VisualAlert.fcw, AudibleAlert.none, .1),
   },
 
-  EventName.ldw: {
-    ET.PERMANENT: Alert(
-      "Lane Departure Detected",
-      "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.ldw, AudibleAlert.prompt, 0.),
-  },
+  EventName.ldw: {},
 
   # ********** events only containing alerts that display while engaged **********
 
