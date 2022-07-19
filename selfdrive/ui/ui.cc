@@ -304,62 +304,56 @@ void Device::resetInteractiveTimout() {
 }
 
 void Device::updateBrightness(const UIState &s) {
-  if (s.scene.headlight_brightness_control) {
-    int brightness = BACKLIGHT_OFFROAD;
+  float desired_brightness = BACKLIGHT_OFFROAD;
+  float clipped_brightness_sensor = BACKLIGHT_OFFROAD;
+  float clipped_brightness_headlight = BACKLIGHT_OFFROAD;
 
-    if (!s.scene.started) {
-      brightness = BACKLIGHT_OFFROAD;
+  if (s.scene.started) {
+    // Scale to 0% to 100%
+    clipped_brightness_sensor = 100.0 * s.scene.light_sensor;
+
+    // CIE 1931 - https://www.photonstophotos.net/GeneralTopics/Exposure/Psychometric_Lightness_and_Gamma.htm
+    if (clipped_brightness_sensor <= 8) {
+      clipped_brightness_sensor = (clipped_brightness_sensor / 903.3);
+    } else {
+      clipped_brightness_sensor = std::pow((clipped_brightness_sensor + 16.0) / 116.0, 3.0);
     }
 
-    if (!awake) {
-      brightness = 0;
-    }
+    // Scale back to 10% to 100%
+    clipped_brightness_sensor = std::clamp(100.0f * clipped_brightness_sensor, 10.0f, 100.0f);
 
+    // Headlight brightness control logic, no scaling required
     if (s.scene.meterLowBrightness) {
-      brightness = 1.0;
+      clipped_brightness_headlight = 1.0f;
     } else {
       if ((s.scene.headlightON) && (s.scene.meterDimmed)) {
-        brightness = 10.0;
+        clipped_brightness_headlight = 10.0f;
       } else if ((s.scene.parkingLightON) && (!s.scene.headlightON) && (s.scene.meterDimmed)) {
-        brightness = 50.0;
+        clipped_brightness_headlight = 50.0f;
       } else {
-        brightness = 100.0;
+        clipped_brightness_headlight = 100.0f;
       }
     }
+  }
 
-    if (brightness != last_brightness) {
-      if (!brightness_future.isRunning()) {
-        brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
-        last_brightness = brightness;
-      }
-    }
+  // handle brightness from two sources
+  if (s.scene.headlight_brightness_control) {
+    desired_brightness = clipped_brightness_headlight;
   } else {
-    float clipped_brightness = BACKLIGHT_OFFROAD;
-    if (s.scene.started) {
-      // Scale to 0% to 100%
-      clipped_brightness = 100.0 * s.scene.light_sensor;
+    desired_brightness = clipped_brightness_sensor;
+  }
 
-      // CIE 1931 - https://www.photonstophotos.net/GeneralTopics/Exposure/Psychometric_Lightness_and_Gamma.htm
-      if (clipped_brightness <= 8) {
-        clipped_brightness = (clipped_brightness / 903.3);
-      } else {
-        clipped_brightness = std::pow((clipped_brightness + 16.0) / 116.0, 3.0);
-      }
+  // update brightness
+  int brightness = brightness_filter.update(desired_brightness);
+  
+  if (!awake) {
+    brightness = 0;
+  }
 
-      // Scale back to 10% to 100%
-      clipped_brightness = std::clamp(100.0f * clipped_brightness, 10.0f, 100.0f);
-    }
-
-    int brightness = brightness_filter.update(clipped_brightness);
-    if (!awake) {
-      brightness = 0;
-    }
-
-    if (brightness != last_brightness) {
-      if (!brightness_future.isRunning()) {
-        brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
-        last_brightness = brightness;
-      }
+  if (brightness != last_brightness) {
+    if (!brightness_future.isRunning()) {
+      brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
+      last_brightness = brightness;
     }
   }
 }
