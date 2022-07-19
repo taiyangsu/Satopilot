@@ -323,29 +323,37 @@ void Device::updateBrightness(const UIState &s) {
     clipped_brightness_sensor = std::clamp(100.0f * clipped_brightness_sensor, 10.0f, 100.0f);
 
     // Headlight brightness control logic, no scaling required
+    // Logic for when the MFD is at its lowest possible brightness setting
     if (s.scene.meterLowBrightness) {
       clipped_brightness_headlight = 1.0f;
     } else {
+      // dim display to 10% if the headlights are on and the combination meter is dimmed
+      // TODO: Link the combination meter brightness slider to this
       if ((s.scene.headlightON) && (s.scene.meterDimmed)) {
         clipped_brightness_headlight = 10.0f;
+      // parking light + dimmed MFD logic, useful during sunset
       } else if ((s.scene.parkingLightON) && (!s.scene.headlightON) && (s.scene.meterDimmed)) {
         clipped_brightness_headlight = 50.0f;
+      // default brightness
       } else {
         clipped_brightness_headlight = 100.0f;
       }
     }
   }
 
-  // handle brightness from two sources
+  // handle brightness from two sources, if the headlight brightness toggle is ON
+  // use the headlight + MFD logic's output
   if (s.scene.headlight_brightness_control) {
     desired_brightness = clipped_brightness_headlight;
+  // otherwise use the comma device's sensor output
   } else {
     desired_brightness = clipped_brightness_sensor;
   }
 
   // update brightness
   int brightness = brightness_filter.update(desired_brightness);
-  
+
+  // brightness should be 0 if not awake
   if (!awake) {
     brightness = 0;
   }
