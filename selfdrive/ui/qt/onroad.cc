@@ -338,11 +338,11 @@ void NvgWindow::drawLead(QPainter &painter, const UIScene &scene,
 
   float fillAlpha = 0;
   if (d_rel < leadBuff) {
-    fillAlpha = 255 * (1.0 - (d_rel / leadBuff));
+    fillAlpha = 255 * (1.0 - (d_rel / leadBuff)) * 0.45;
     if (v_rel < 0) {
-      fillAlpha += 255 * (-1 * (v_rel / speedBuff));
+      fillAlpha += 255 * (-1 * (v_rel / speedBuff)) * 0.45;
     }
-    fillAlpha = (int)(fmin(fillAlpha, 255));
+    fillAlpha = (int)(fmin(fillAlpha, 150));
   }
 
   float sz = std::clamp((25 * 30) / (d_rel / 3 + 30), 15.0f, 30.0f) * 2.35;
@@ -370,7 +370,7 @@ void NvgWindow::drawLead(QPainter &painter, const UIScene &scene,
 
   // chevron
   QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
-  painter.setBrush(scene.longitudinal_control ? redColor(fillAlpha) : QColor(0, 0, 0, 255));
+  painter.setBrush(scene.longitudinal_control ? QColor(0, 0, 0, fillAlpha) : QColor(0, 0, 0, 255));
   painter.drawPolygon(chevron, std::size(chevron));
 
   if (scene.enable_radar_state) {
