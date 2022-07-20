@@ -184,6 +184,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DisplayRadarInfo", PERSISTENT},
     {"CruiseSpeedRewrite", PERSISTENT},
     {"EnableZss", PERSISTENT},
+    {"ScreenOffTimer", PERSISTENT},
 };
 
 } // namespace

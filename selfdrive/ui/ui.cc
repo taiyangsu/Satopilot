@@ -217,6 +217,7 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = Params().getBool("IsMetric");
   s->scene.headlight_brightness_control = Params().getBool("CarBrightnessControl");
   s->scene.enable_radar_state = Params().getBool("DisplayRadarInfo");
+  s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
 }
 
 void UIState::updateStatus() {
@@ -308,6 +309,9 @@ void Device::updateBrightness(const UIState &s) {
   float clipped_brightness_sensor = BACKLIGHT_OFFROAD;
   float clipped_brightness_headlight = BACKLIGHT_OFFROAD;
 
+  // 60 seconds before display turns off
+  int DISPLAY_OFF_TIMEOUT = 60 * UI_FREQ;
+
   if (s.scene.started) {
     // Scale to 0% to 100%
     clipped_brightness_sensor = 100.0 * s.scene.light_sensor;
@@ -341,11 +345,21 @@ void Device::updateBrightness(const UIState &s) {
     }
   }
 
-  // handle brightness from two sources, if the headlight brightness toggle is ON
-  // use the headlight + MFD logic's output
+  if (s.scene.screen_off_timer && s.scene.touched2) {
+    sleep_time = DISPLAY_OFF_TIMEOUT;
+  } else if (s.scene.controls_state.getAlertSize() != cereal::ControlsState::AlertSize::NONE && s.scene.screen_off_timer) {
+    sleep_time = DISPLAY_OFF_TIMEOUT;
+  } else if (sleep_time > 0 && s.scene.screen_off_timer) {
+    sleep_time--;
+  } else if (s.scene.started && sleep_time == -1 && s.scene.screen_off_timer) {
+    sleep_time = DISPLAY_OFF_TIMEOUT;
+  }
+
+  // handle brightness from two sources
+  // if the headlight brightness toggle is ON, use the headlight + MFD logic's output
   if (s.scene.headlight_brightness_control) {
     desired_brightness = clipped_brightness_headlight;
-  // otherwise use the comma device's sensor output
+    // otherwise use the comma device's sensor output
   } else {
     desired_brightness = clipped_brightness_sensor;
   }
@@ -353,8 +367,8 @@ void Device::updateBrightness(const UIState &s) {
   // update brightness
   int brightness = brightness_filter.update(desired_brightness);
 
-  // brightness should be 0 if not awake
-  if (!awake) {
+  // brightness should be 0 if not awake or the screen off timer is up
+  if ((!awake) || (s.scene.started && sleep_time == 0 && s.scene.screen_off_timer)) {
     brightness = 0;
   }
 

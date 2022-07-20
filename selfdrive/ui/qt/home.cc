@@ -82,6 +82,11 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
   if ((onroad->isVisible() || body->isVisible()) && (!sidebar->isVisible() || e->x() > sidebar->width())) {
     sidebar->setVisible(!sidebar->isVisible() && !onroad->isMapVisible());
   }
+
+  if (uiState()->scene.started && uiState()->scene.screen_off_timer) {
+    uiState()->scene.touched2 = true;
+    QTimer::singleShot(500, []() { uiState()->scene.touched2 = false; });
+  }
 }
 
 void HomeWindow::mouseDoubleClickEvent(QMouseEvent* e) {

@@ -102,14 +102,18 @@ typedef struct UIScene {
   bool meterLowBrightness;
   bool headlight_brightness_control;
   bool enable_radar_state;
+  bool screen_off_timer;
 
   // follow distance
   bool followDistanceFar;
   bool followDistanceMid;
   bool followDistanceCls;
 
-  // panda state
+  bool touched2 = false;
+
+  // cereal
   cereal::PandaState::PandaType pandaType;
+  cereal::ControlsState::Reader controls_state;
 
   // modelV2
   float lane_line_probs[4];
@@ -184,6 +188,8 @@ private:
   int last_brightness = 0;
   FirstOrderFilter brightness_filter;
   QFuture<void> brightness_future;
+
+  int sleep_time = -1;
 
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);
