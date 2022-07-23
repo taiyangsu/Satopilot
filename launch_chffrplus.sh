@@ -177,6 +177,10 @@ function launch {
   # write tmux scrollback to a file
   tmux capture-pane -pq -S-1000 > /tmp/launch_log
 
+  # This fork only supports Toyota vehicles
+  python /data/openpilot/selfdrive/car/toyota/values.py > /data/params/d/ToyotaCars
+  python /data/openpilot/selfdrive/car/force_car_recognition.py
+
   # start manager
   cd selfdrive/manager
   ./build.py && ./manager.py

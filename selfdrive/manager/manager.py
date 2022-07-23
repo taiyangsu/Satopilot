@@ -43,6 +43,7 @@ def manager_init() -> None:
     ("OpenpilotEnabledToggle", "1"),
     ("IsLdwEnabled", "0"),
     ("EnableZss", "1"),
+    ("CarModel", ""),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

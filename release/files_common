@@ -103,6 +103,7 @@ selfdrive/car/__init__.py
 selfdrive/car/docs_definitions.py
 selfdrive/car/car_helpers.py
 selfdrive/car/fingerprints.py
+selfdrive/car/force_car_recognition.py
 selfdrive/car/interfaces.py
 selfdrive/car/vin.py
 selfdrive/car/disable_ecu.py

@@ -177,6 +177,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Offroad_UnofficialHardware", CLEAR_ON_MANAGER_START},
     {"Offroad_UpdateFailed", CLEAR_ON_MANAGER_START},
     // cydia2020 params
+    // for vehicle selector
+    {"CarModel", PERSISTENT},
+    {"LastCarModel", PERSISTENT},
+    // configurations
     {"AllowNonAdaptiveCruise", PERSISTENT},
     {"CarBrightnessControl", PERSISTENT},
     {"SmartDSULongToggle", PERSISTENT},

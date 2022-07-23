@@ -1898,3 +1898,11 @@ NO_STOP_TIMER_CAR = TSS2_CAR | {CAR.PRIUS_V, CAR.RAV4H, CAR.HIGHLANDERH, CAR.HIG
 
 # Full Speed DRCC Cars that require resume button to do full SNG
 FULL_SPEED_DRCC_CAR = {CAR.PRIUS, CAR.LEXUS_CTH, CAR.LEXUS_NX, CAR.LEXUS_NXH, CAR.LEXUS_RX, CAR.LEXUS_RXH}
+
+def main():
+  for member, value in vars(CAR).items():
+    if not member.startswith("_"):
+      print(value)
+
+if __name__ == "__main__":
+  main()

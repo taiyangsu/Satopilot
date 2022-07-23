@@ -177,9 +177,15 @@ def fingerprint(logcan, sendcan):
 def get_car(logcan, sendcan):
   candidate, fingerprints, vin, car_fw, source, exact_match = fingerprint(logcan, sendcan)
 
+  if Params().get("CarModel") is not None:
+    car_model = Params().get("CarModel")
+    candidate = car_model.decode("utf-8")
+
   if candidate is None:
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)
     candidate = "mock"
+
+  Params().put("LastCarModel", candidate)
 
   disable_radar = Params().get_bool("DisableRadar")
 

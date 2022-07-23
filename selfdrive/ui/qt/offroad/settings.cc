@@ -3,6 +3,10 @@
 #include <cassert>
 #include <cmath>
 #include <string>
+#include <QListWidget>
+#include <QListView>
+#include <QScroller>
+#include <QAbstractItemView>
 
 #include <QDebug>
 
@@ -25,6 +29,72 @@
 #include "selfdrive/ui/ui.h"
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
+
+// shamelessly stolen from sunnyhaibin
+static QStringList get_list(const char* path) {
+  QStringList stringList;
+  QFile textFile(path);
+  if (textFile.open(QIODevice::ReadOnly)) {
+    QTextStream textStream(&textFile);
+    while (true) {
+      QString line = textStream.readLine();
+      if (line.isNull())
+        break;
+      else
+        stringList.append(line);
+    }
+  }
+
+  return stringList;
+}
+
+ForceCarRecognition::ForceCarRecognition(QWidget* parent): QWidget(parent) {
+
+  QVBoxLayout* main_layout = new QVBoxLayout(this);
+  main_layout->setMargin(20);
+  main_layout->setSpacing(20);
+
+  QPushButton* back = new QPushButton("Back");
+  back->setObjectName("backBtn");
+  back->setFixedSize(500, 100);
+  connect(back, &QPushButton::clicked, [=]() { emit backPress(); });
+  main_layout->addWidget(back, 0, Qt::AlignLeft);
+
+  QListWidget* list = new QListWidget(this);
+  list->setStyleSheet("QListView {padding: 40px; background-color: #393939; border-radius: 15px; height: 140px;} QListView::item{height: 100px}");
+  QScroller::grabGesture(list->viewport(), QScroller::LeftMouseButtonGesture);
+  list->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+  list->addItem("[-Not selected-]");
+
+  QStringList items = get_list("/data/params/d/Cars");
+  list->addItems(items);
+  list->setCurrentRow(0);
+
+  QString set = QString::fromStdString(Params().get("CarModel"));
+
+  int index = 0;
+  for (QString item : items) {
+    if (set == item) {
+      list->setCurrentRow(index + 1);
+      break;
+    }
+    index++;
+  }
+
+  QObject::connect(list, QOverload<QListWidgetItem*>::of(&QListWidget::itemClicked),
+    [=](QListWidgetItem* item){
+
+    if (list->currentRow() == 0)
+      Params().remove("CarModel");
+    else
+      Params().put("CarModel", list->currentItem()->text().toStdString());
+
+    emit selectedCar();
+    });
+
+  main_layout->addWidget(list);
+}
 
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
@@ -169,6 +239,61 @@ DodgypilotPanel::DodgypilotPanel(SettingsWindow *parent) : ListWidget(parent) {
     toggle->setEnabled(!locked);
     addItem(toggle);
   }
+}
+
+// Vehicle Selector Panel, stolen from sunnyhaibin
+VehicleSelectorPanel::VehicleSelectorPanel(QWidget* parent) : QWidget(parent) {
+
+  //QVBoxLayout* main_layout_init = new QVBoxLayout(this);
+  main_layout = new QStackedLayout(this);
+  home = new QWidget(this);
+  QVBoxLayout* fcr_layout = new QVBoxLayout(home);
+  fcr_layout->setContentsMargins(0, 20, 0, 20);
+
+  QString set = QString::fromStdString(Params().get("CarModel"));
+
+  QPushButton* setCarBtn = new QPushButton(set.length() ? set : "Set your car");
+  setCarBtn->setObjectName("setCarBtn");
+  setCarBtn->setStyleSheet("margin-right: 30px;");
+  connect(setCarBtn, &QPushButton::clicked, [=]() { main_layout->setCurrentWidget(setCar); });
+  fcr_layout->addSpacing(10);
+  fcr_layout->addWidget(setCarBtn, 0, Qt::AlignRight);
+  fcr_layout->addSpacing(10);
+
+  home_widget = new QWidget(this);
+  home_widget->setObjectName("homeWidget");
+
+  ScrollView *scroller = new ScrollView(home_widget, this);
+  scroller->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  fcr_layout->addWidget(scroller, 1);
+
+  main_layout->addWidget(home);
+
+  setCar = new ForceCarRecognition(this);
+  connect(setCar, &ForceCarRecognition::backPress, [=]() { main_layout->setCurrentWidget(home); });
+  connect(setCar, &ForceCarRecognition::selectedCar, [=]() {
+    QString set = QString::fromStdString(Params().get("CarModel"));
+    setCarBtn->setText(set.length() ? set : "Set your car");
+    main_layout->setCurrentWidget(home);
+  });
+  main_layout->addWidget(setCar);
+
+  QPalette pal = palette();
+  pal.setColor(QPalette::Background, QColor(0x29, 0x29, 0x29));
+  setAutoFillBackground(true);
+  setPalette(pal);
+
+  setStyleSheet(R"(
+    #backBtn, #setCarBtn {
+      font-size: 50px;
+      margin: 0px;
+      padding: 20px;
+      border-width: 0;
+      border-radius: 30px;
+      color: #dddddd;
+      background-color: #444444;
+    }
+  )");
 }
 
 DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
@@ -458,6 +583,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {"Network", network_panel(this)},
     {"Toggles", new TogglesPanel(this)},
     {"dodgypilot", new DodgypilotPanel(this)},
+    {"Fingerprint", new VehicleSelectorPanel(this)},
     {"Software", new SoftwarePanel(this)},
   };
 
@@ -467,7 +593,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
   QObject::connect(map_panel, &MapPanel::closeSettings, this, &SettingsWindow::closeSettings);
 #endif
 
-  const int padding = panels.size() > 3 ? 15 : 35;
+  const int padding = panels.size() > 3 ? 7 : 17;
 
   nav_btns = new QButtonGroup(this);
   for (auto &[name, panel] : panels) {
