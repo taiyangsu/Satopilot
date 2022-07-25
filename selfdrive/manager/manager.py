@@ -44,6 +44,7 @@ def manager_init() -> None:
     ("IsLdwEnabled", "0"),
     ("EnableZss", "1"),
     ("CarModel", ""),
+    ("EnableTorqueController", "1"),
     ("EnableOpenpilotSounds", "0"),
   ]
   if not PC:
