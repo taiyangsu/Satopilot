@@ -154,6 +154,7 @@ class CarState(CarStateBase):
       self.sws_buzzer = (cp_cam.vl["LKAS_HUD"]["LANE_SWAY_BUZZER"])
       self.sws_fld = (cp_cam.vl["LKAS_HUD"]["LANE_SWAY_FLD"])
       self.sws_warning = (cp_cam.vl["LKAS_HUD"]["LANE_SWAY_WARNING"])
+      self.sws_beeps = (cp_cam.vl["LKAS_HUD"]["TWO_BEEPS"])
       self.lda_left_lane = (cp_cam.vl["LKAS_HUD"]["LEFT_LINE"] == 3)
       self.lda_right_lane = (cp_cam.vl["LKAS_HUD"]["RIGHT_LINE"] == 3)
       self.lda_sa_toggle = (cp_cam.vl["LKAS_HUD"]["LDA_SA_TOGGLE"])
@@ -162,20 +163,12 @@ class CarState(CarStateBase):
       self.lda_on_message = (cp_cam.vl["LKAS_HUD"]["LDA_ON_MESSAGE"])
       self.lda_sensitivity = (cp_cam.vl["LKAS_HUD"]["LDA_SENSITIVITY"])
       self.ldw_exist = (cp_cam.vl["LKAS_HUD"]["LDW_EXIST"])
-    else:
-      self.sws_toggle = 1
-      self.sws_sensitivity = 2
-      self.sws_buzzer = 0
-      self.sws_fld = 7
-      self.sws_warning = 0
-      self.lda_left_lane = 0
-      self.lda_right_lane = 0
-      self.lda_sa_toggle = 1
-      self.lkas_status = 1
-      self.lda_speed_too_low = 0
-      self.lda_on_message = 0
-      self.lda_sensitivity = 2
-      self.ldw_exist = 1
+      self.lda_take_control = (cp_cam.vl["LKAS_HUD"]["TAKE_CONTROL"])
+      self.lda_adjusting_camera = (cp_cam.vl["LKAS_HUD"]["ADJUSTING_CAMERA"])
+      self.lda_unavailable_quiet = (cp_cam.vl["LKAS_HUD"]["LDA_UNAVAILABLE_QUIET"])
+      self.lda_unavailable = (cp_cam.vl["LKAS_HUD"]["LDA_UNAVAILABLE"])
+      self.lda_malfunction = (cp_cam.vl["LKAS_HUD"]["LDA_MALFUNCTION"])
+      self.lda_fcb = (cp_cam.vl["LKAS_HUD"]["LDA_FRONT_CAMERA_BLOCKED"])
 
     # if openpilot does not control long and we are running on a TSS-P car, we can assume that
     # 0x343 will be present on the ADAS Bus. We assume resume will be ready when
@@ -319,6 +312,13 @@ class CarState(CarStateBase):
         ("LDA_SA_TOGGLE", "LKAS_HUD"),
         ("LDA_SENSITIVITY", "LKAS_HUD"),
         ("LDW_EXIST", "LKAS_HUD"),
+        ("TWO_BEEPS", "LKAS_HUD"),
+        ("TAKE_CONTROL", "LKAS_HUD"),
+        ("ADJUSTING_CAMERA", "LKAS_HUD"),
+        ("LDA_UNAVAILABLE_QUIET", "LKAS_HUD"),
+        ("LDA_UNAVAILABLE", "LKAS_HUD"),
+        ("LDA_MALFUNCTION", "LKAS_HUD"),
+        ("LDA_FRONT_CAMERA_BLOCKED", "LKAS_HUD"),
       ]
       checks += [
         ("LKAS_HUD", 1),

@@ -353,6 +353,9 @@ class CarInterface(CarInterfaceBase):
         # while in standstill, send a user alert
         events.add(EventName.manualRestart)
 
+    if self.CS.lda_sa_toggle == 1:
+      events.add(car.CarEvent.EventName.invalidLkasSetting)
+
     ret.events = events.to_msg()
 
     return ret

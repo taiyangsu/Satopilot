@@ -72,9 +72,11 @@ def create_fcw_command(packer, fcw):
 
 def create_ui_command(packer, alert_prompt, alert_prompt_repeat, alert_immediate, left_line, right_line, sws_toggle, 
                       sws_sensitivity, sws_buzzer, sws_fld, sws_warning, lda_left_lane, lda_right_lane, lda_sa_toggle,
-                      lkas_status, lda_speed_too_low, lda_on_message, lda_sensitivity, ldw_exist, enabled):
+                      lkas_status, lda_speed_too_low, lda_on_message, lda_sensitivity, ldw_exist, enabled, sws_beeps,
+                      lda_take_control, lda_adjusting_camera, lda_unavailable_quiet, lda_unavailable, lda_malfunction,
+                      lda_fcb):
   values = {
-    "TWO_BEEPS": 1 if alert_prompt else 0,
+    "TWO_BEEPS": 1 if alert_prompt or sws_beeps else 0,
     "LDA_ALERT": 3 if alert_immediate else 2 if alert_prompt_repeat else 1 if alert_prompt else 0,
     "RIGHT_LINE": 3 if lda_right_lane else 1 if right_line else 2,
     "LEFT_LINE": 3 if lda_left_lane else 1 if left_line else 2,
@@ -93,15 +95,15 @@ def create_ui_command(packer, alert_prompt, alert_prompt_repeat, alert_immediate
     "LDA_SA_TOGGLE": lda_sa_toggle,
     "LDA_SENSITIVITY": lda_sensitivity,
     "LDW_EXIST": ldw_exist,
+    "LDA_FRONT_CAMERA_BLOCKED": lda_fcb,
+    "TAKE_CONTROL": lda_take_control,
+    "LDA_UNAVAILABLE": lda_unavailable,
+    "LDA_MALFUNCTION": lda_malfunction,
+    "LDA_UNAVAILABLE_QUIET": lda_unavailable_quiet,
+    "ADJUSTING_CAMERA": lda_adjusting_camera,
 
     # static signals
     "SET_ME_X02": 2,
     "SET_ME_X01": 1,
-    "LDA_FRONT_CAMERA_BLOCKED": 0,
-    "TAKE_CONTROL": 0,
-    "LDA_UNAVAILABLE": 0,
-    "LDA_MALFUNCTION": 0,
-    "LDA_UNAVAILABLE_QUIET": 0,
-    "ADJUSTING_CAMERA": 0,
   }
   return packer.make_can_msg("LKAS_HUD", 0, values)
