@@ -353,7 +353,7 @@ class CarInterface(CarInterfaceBase):
         # while in standstill, send a user alert
         events.add(EventName.manualRestart)
 
-    if self.CS.lda_sa_toggle == 1:
+    if self.CS.lda_sa_toggle == 1 and not params.get_bool("AlwaysONSteeringAssist"):
       events.add(car.CarEvent.EventName.invalidLkasSetting)
 
     ret.events = events.to_msg()
