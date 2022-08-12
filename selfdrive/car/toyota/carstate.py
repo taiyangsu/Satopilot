@@ -3,6 +3,7 @@ from common.conversions import Conversions as CV
 from common.numpy_fast import mean
 from common.filter_simple import FirstOrderFilter
 from common.realtime import DT_CTRL
+from common.params import Params
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
@@ -29,6 +30,7 @@ class CarState(CarStateBase):
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
+    params = Params()
 
     ret.doorOpen = any([cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_FL"], cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_FR"],
                         cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_RL"], cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_RR"]])
@@ -146,6 +148,11 @@ class CarState(CarStateBase):
     if self.CP.enableBsm:
       ret.leftBlindspot = (cp.vl["BSM"]["L_ADJACENT"] == 1) or (cp.vl["BSM"]["L_APPROACHING"] == 1)
       ret.rightBlindspot = (cp.vl["BSM"]["R_ADJACENT"] == 1) or (cp.vl["BSM"]["R_APPROACHING"] == 1)
+
+    if params.get_bool("AlwaysONSteeringAssist") and self.CP.carFingerprint != CAR.PRIUS_V:
+      ret.alwaysONSteeringAssistOn = (cp_cam.vl["LKAS_HUD"]["LDA_SA_TOGGLE"])
+    else:
+      ret.alwaysONSteeringAssistOn = False
 
     # LKAS_HUD is on a different address on the Prius V, don't send to avoid problems
     if self.CP.carFingerprint != CAR.PRIUS_V:
