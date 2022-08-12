@@ -150,7 +150,7 @@ class CarState(CarStateBase):
       ret.rightBlindspot = (cp.vl["BSM"]["R_ADJACENT"] == 1) or (cp.vl["BSM"]["R_APPROACHING"] == 1)
 
     if params.get_bool("AlwaysONSteeringAssist") and self.CP.carFingerprint != CAR.PRIUS_V:
-      ret.alwaysONSteeringAssistOn = (cp_cam.vl["LKAS_HUD"]["LDA_SA_TOGGLE"])
+      ret.alwaysONSteeringAssistOn = (cp_cam.vl["LKAS_HUD"]["LDA_SA_TOGGLE"]) and (cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"])
     else:
       ret.alwaysONSteeringAssistOn = False
 
