@@ -2,6 +2,7 @@ from cereal import car
 from common.conversions import Conversions as CV
 from common.numpy_fast import mean
 from common.filter_simple import FirstOrderFilter
+from common.params import Params
 from common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
@@ -26,6 +27,7 @@ class CarState(CarStateBase):
 
     self.low_speed_lockout = False
     self.acc_type = 1
+    self.params = Params()
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -127,6 +129,16 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = self.pcm_acc_status == 7
     ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"])
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]["CRUISE_STATE"] in (1, 2, 3, 4, 5, 6)
+
+    # Sunny's change e2e_long on fly
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+      self.ispressed = cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1
+    elif self.CP.flags & ToyotaFlags.SMART_DSU:
+      self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1
+    if self.ispressed and not self.ispressed_prev:
+      self.e2eLongButton = not self.params.get_bool("EndToEndLong")
+      self.params.put_bool('EndToEndLong', self.e2eLongButton)
+    self.ispressed_prev = self.ispressed
 
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["AUTO_HIGH_BEAM"])
     ret.espDisabled = cp.vl["ESP_CONTROL"]["TC_DISABLED"] != 0
@@ -244,6 +256,10 @@ class CarState(CarStateBase):
         ("PRE_COLLISION", 33),
       ]
 
+    if CP.flags & ToyotaFlags.SMART_DSU:
+      signals.append(("FD_BUTTON", "SDSU", 0))
+      checks.append(("SDSU", 33))
+
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
   @staticmethod
@@ -257,6 +273,7 @@ class CarState(CarStateBase):
         ("FORCE", "PRE_COLLISION"),
         ("ACC_TYPE", "ACC_CONTROL"),
         ("FCW", "ACC_HUD"),
+        ("DISTANCE", 'ACC_CONTROL'),
       ]
       checks += [
         ("PRE_COLLISION", 33),
