@@ -107,6 +107,15 @@ DBCManager *dbc() {
   return &dbc_manager;
 }
 
+// DBCMsg
+
+std::vector<const Signal*> DBCMsg::getSignals() const {
+  std::vector<const Signal*> ret;
+  for (auto &[name, sig] : sigs) ret.push_back(&sig);
+  std::sort(ret.begin(), ret.end(), [](auto l, auto r) { return l->start_bit < r->start_bit; });
+  return ret;
+}
+
 // helper functions
 
 static QVector<int> BIG_ENDIAN_START_BITS = []() {
@@ -164,4 +173,12 @@ std::pair<int, int> getSignalRange(const Signal *s) {
   int from = s->is_little_endian ? s->start_bit : bigEndianBitIndex(s->start_bit);
   int to = from + s->size - 1;
   return {from, to};
+}
+
+bool operator==(const Signal &l, const Signal &r) {
+  return l.name == r.name && l.size == r.size &&
+         l.start_bit == r.start_bit &&
+         l.msb == r.msb && l.lsb == r.lsb &&
+         l.is_signed == r.is_signed && l.is_little_endian == r.is_little_endian &&
+         l.factor == r.factor && l.offset == r.offset;
 }
