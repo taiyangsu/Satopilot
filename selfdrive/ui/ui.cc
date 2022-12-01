@@ -12,6 +12,8 @@
 #include "common/watchdog.h"
 #include "system/hardware/hw.h"
 
+#include <ctime> // i used as a reference: <https://www.tutorialspoint.com/cplusplus/cpp_date_time.htm>
+
 #define BACKLIGHT_DT 0.05
 #define BACKLIGHT_TS 10.00
 #define BACKLIGHT_OFFROAD 50
@@ -288,6 +290,41 @@ void Device::updateBrightness(const UIState &s) {
   if (!awake) {
     brightness = 0;
   }
+
+
+  /*
+   *
+   *  AleSato dim bright after 18h
+   *
+   */
+
+  int hour_to_begin_dim = 18; // hour to begin dim
+  float percent_to_dimm = 0.5; // percent to dimm (50% in this case) the screen after that hour
+ 
+  // current date/time based on current system
+  time_t rawtime = time(NULL); 
+
+  // put in a struct format
+  struct tm timeinfo;
+  localtime_r(&rawtime, &timeinfo);
+
+  // struct tm {
+  //   int tm_sec;   // seconds of minutes from 0 to 61
+  //   int tm_min;   // minutes of hour from 0 to 59
+  //   int tm_hour;  // hours of day from 0 to 24
+  //   int tm_mday;  // day of month from 1 to 31
+  //   int tm_mon;   // month of year from 0 to 11
+  //   int tm_year;  // year since 1900
+  //   int tm_wday;  // days since sunday
+  //   int tm_yday;  // days since January 1st
+  //   int tm_isdst; // hours of daylight savings time
+  // }
+
+  // here is where the m4gic happens, tunne at your taste and enjoy your day!!
+  if (timeinfo.tm_hour > hour_to_begin_dim) {
+    brightness *= percent_to_dimm;
+  }
+
 
   if (brightness != last_brightness) {
     if (!brightness_future.isRunning()) {
