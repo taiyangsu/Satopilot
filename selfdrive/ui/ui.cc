@@ -301,8 +301,8 @@ void Device::updateBrightness(const UIState &s) {
    *
    */
 
-  int hour_to_begin_dim = 18; // hour to begin dim
-  float percent_to_dimm = 0.5; // percent to dimm (50% in this case) the screen after that hour
+  int hour_to_begin_dim = 19; // hour to begin dim
+  float percent_to_dimm = 0.05; // percent to dimm (50% in this case) the screen after that hour
  
   // current date/time based on current system
   time_t rawtime = time(NULL); 
