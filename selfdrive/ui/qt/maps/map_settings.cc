@@ -116,7 +116,7 @@ MapPanel::MapPanel(QWidget* parent) : QWidget(parent) {
   stack->addWidget(main_widget);
   stack->addWidget(no_prime_widget);
   connect(uiState(), &UIState::primeTypeChanged, [=](int prime_type) {
-    stack->setCurrentIndex(prime_type ? 0 : 1);
+    stack->setCurrentIndex(prime_type ? 0 : 0);
   });
 
   QVBoxLayout *wrapper = new QVBoxLayout(this);
