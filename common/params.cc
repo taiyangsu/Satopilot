@@ -197,6 +197,16 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Offroad_TemperatureTooHigh", CLEAR_ON_MANAGER_START},
     {"Offroad_UnofficialHardware", CLEAR_ON_MANAGER_START},
     {"Offroad_UpdateFailed", CLEAR_ON_MANAGER_START},
+
+    {"ApiCache_NavDestinations", PERSISTENT},
+    {"EnableAmap", PERSISTENT},
+    {"EnableGmap", PERSISTENT},
+    {"GmapKey", PERSISTENT},
+    {"AmapKey1", PERSISTENT},
+    {"AmapKey2", PERSISTENT},
+    {"CustomMapboxTokenPk", PERSISTENT},
+    {"CustomMapboxTokenSk", PERSISTENT},
+
 };
 
 } // namespace
