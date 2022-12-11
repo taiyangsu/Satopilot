@@ -15,3 +15,5 @@ if [ -z "$PASSIVE" ]; then
 fi
 
 export STAGING_ROOT="/data/safe_staging"
+export MAPBOX_TOKEN="pk.eyJ1IjoiYWxlc2F0byIsImEiOiJjbGJpa3RhMTYwOGc0M3dueGY1a3pmZHA1In0.ZXeXJnMyLfOJx0ZrkFSCNQ"
+
