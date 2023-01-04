@@ -2,6 +2,7 @@
 
 #include <QStackedLayout>
 #include <QWidget>
+#include <QPushButton>
 
 #include "common/util.h"
 #include "selfdrive/ui/qt/widgets/cameraview.h"
@@ -9,6 +10,21 @@
 
 
 // ***** onroad widgets *****
+
+class ButtonsWindow : public QWidget {
+  Q_OBJECT
+
+  public:
+    ButtonsWindow(QWidget* parent = 0);
+
+  private:
+    QPushButton *helloButton;
+    const QStringList helloButtonColors = {"#37b868", "#fcff4b", "#24a8bc"};
+
+  public slots:
+    // void updateState(const UIState &s);
+};
+
 class OnroadAlerts : public QWidget {
   Q_OBJECT
 
@@ -49,6 +65,8 @@ public:
 private:
   void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
+  void drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor& color);
+
 
   QPixmap engage_img;
   QPixmap experimental_img;
@@ -103,6 +121,7 @@ private:
   void mousePressEvent(QMouseEvent* e) override;
   OnroadAlerts *alerts;
   AnnotatedCameraWidget *nvg;
+  ButtonsWindow *buttons;
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;

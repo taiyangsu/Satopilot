@@ -20,6 +20,14 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   nvg = new AnnotatedCameraWidget(VISION_STREAM_ROAD, this);
 
+  // HelloButton
+  buttons = new ButtonsWindow(this);
+  // QObject::connect(this, &OnroadWindow::updateStateSignal, buttons, &ButtonsWindow::updateState);
+  // QObject::connect(nvg, &NvgWindow::resizeSignal, [=] (int w) {
+  //   buttons->setFixedWidth(w);
+  // });
+  stacked_layout->addWidget(buttons);
+
   QWidget * split_wrapper = new QWidget;
   split = new QHBoxLayout(split_wrapper);
   split->setContentsMargins(0, 0, 0, 0);
@@ -113,6 +121,38 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
 }
 
 // ***** onroad widgets *****
+
+// HelloButton
+ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
+  QVBoxLayout *main_layout  = new QVBoxLayout(this);
+  QWidget *btns_wrapper = new QWidget;
+  QHBoxLayout *btns_layout  = new QHBoxLayout(btns_wrapper);
+  btns_layout->setSpacing(0);
+  btns_layout->setContentsMargins(282, 0, 30, 30);
+  main_layout->addWidget(btns_wrapper, 0, Qt::AlignBottom);
+  QString initHelloButton = "";
+  helloButton = new QPushButton(initHelloButton);
+  
+  QObject::connect(helloButton, &QPushButton::clicked, [=]() {
+    helloButton->setText("Hai!");
+  });
+
+  helloButton->setFixedWidth(200);
+  helloButton->setFixedHeight(200);
+  btns_layout->addWidget(helloButton, 0, Qt::AlignLeft);
+  btns_layout->addSpacing(35);  
+
+  setStyleSheet(R"(
+    QPushButton {
+      color: white;
+      text-align: center;
+      padding: 0px;
+      border-width: 12px;
+      border-style: solid;
+      background-color: rgba(75, 75, 75, 0.3);
+    }
+  )");
+}
 
 // OnroadAlerts
 void OnroadAlerts::updateAlert(const Alert &a, const QColor &color) {
@@ -378,7 +418,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   // current speed
   configFont(p, "Inter", 176, "Bold");
-  drawText(p, rect().center().x(), 210, speedStr);
+  QColor tempColor = QColor(20, 255, 20, 255);
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, tempColor); // Turning the speed blue
+  // drawText(p, rect().center().x(), 210, speedStr);
+
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
@@ -407,6 +450,14 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
   p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.drawText(real_rect.x(), real_rect.bottom(), text);
+}
+
+void AnnotatedCameraWidget::drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor& color) {
+  QRect real_rect = getTextRect(p, 0, text);
+  real_rect.moveCenter({x, y - real_rect.height() / 2});
+
+  p.setPen(color);
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
