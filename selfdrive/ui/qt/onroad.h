@@ -22,7 +22,7 @@ class ButtonsWindow : public QWidget {
     const QStringList helloButtonColors = {"#37b868", "#fcff4b", "#24a8bc"};
 
   public slots:
-    // void updateState(const UIState &s);
+    void updateState(const UIState &s);
 };
 
 class OnroadAlerts : public QWidget {
@@ -57,6 +57,7 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(bool hideDM MEMBER hideDM);
   Q_PROPERTY(bool rightHandDM MEMBER rightHandDM);
   Q_PROPERTY(int status MEMBER status);
+  Q_PROPERTY(bool buttonColorSpeed MEMBER buttonColorSpeed);
 
 public:
   explicit AnnotatedCameraWidget(VisionStreamType type, QWidget* parent = 0);
@@ -65,7 +66,7 @@ public:
 private:
   void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
-  void drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor& color);
+  void drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor color);
 
 
   QPixmap engage_img;
@@ -91,6 +92,8 @@ private:
 
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
+
+  bool buttonColorSpeed = false;
 
 protected:
   void paintGL() override;
@@ -125,6 +128,10 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
+
+signals:
+  void updateStateSignal(const UIState &s);
+  void offroadTransitionSignal(bool offroad);
 
 private slots:
   void offroadTransition(bool offroad);

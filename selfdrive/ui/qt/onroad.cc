@@ -6,6 +6,7 @@
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
+#include "common/params.h"
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
 #include "selfdrive/ui/qt/maps/map_helpers.h"
@@ -22,7 +23,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   // HelloButton
   buttons = new ButtonsWindow(this);
-  // QObject::connect(this, &OnroadWindow::updateStateSignal, buttons, &ButtonsWindow::updateState);
+  QObject::connect(this, &OnroadWindow::updateStateSignal, buttons, &ButtonsWindow::updateState);
   // QObject::connect(nvg, &NvgWindow::resizeSignal, [=] (int w) {
   //   buttons->setFixedWidth(w);
   // });
@@ -54,8 +55,8 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   alerts->raise();
 
   setAttribute(Qt::WA_OpaquePaintEvent);
-  QObject::connect(uiState(), &UIState::uiUpdate, this, &OnroadWindow::updateState);
-  QObject::connect(uiState(), &UIState::offroadTransition, this, &OnroadWindow::offroadTransition);
+  QObject::connect(this, &OnroadWindow::updateStateSignal, this, &OnroadWindow::updateState);
+  QObject::connect(this, &OnroadWindow::offroadTransitionSignal, this, &OnroadWindow::offroadTransition);
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -134,6 +135,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton = new QPushButton(initHelloButton);
   
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
+    Params().putBool("AleSato_HelloButton", true);
     helloButton->setText("Hai!");
   });
 
@@ -152,6 +154,14 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
       background-color: rgba(75, 75, 75, 0.3);
     }
   )");
+}
+
+void ButtonsWindow::updateState(const UIState &s) {
+  const auto helloButtonState = Params().getBool("AleSato_HelloButton");
+  if(helloButtonState) {
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
+    helloButton->setText("World");    
+  }
 }
 
 // OnroadAlerts
@@ -266,6 +276,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("speedUnit", s.scene.is_metric ? tr("km/h") : tr("mph"));
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
+  setProperty("buttonColorSpeed", Params().getBool("AleSato_HelloButton"));
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
@@ -418,9 +429,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   // current speed
   configFont(p, "Inter", 176, "Bold");
-  QColor tempColor = QColor(20, 255, 20, 255);
-  drawTextWithColor(p, rect().center().x(), 210, speedStr, tempColor); // Turning the speed blue
-  // drawText(p, rect().center().x(), 210, speedStr);
+  //drawText(p, rect().center().x(), 210, speedStr);
+
+  // Turning the speed blue
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? QColor(20, 20, 255, 255) : QColor(20, 255, 20, 255)); 
+  
 
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
@@ -453,7 +466,7 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
-void AnnotatedCameraWidget::drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor& color) {
+void AnnotatedCameraWidget::drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor color) {
   QRect real_rect = getTextRect(p, 0, text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
