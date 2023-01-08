@@ -24,10 +24,9 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   // HelloButton
   buttons = new ButtonsWindow(this);
-  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
-  // QObject::connect(nvg, &NvgWindow::resizeSignal, [=] (int w) {
-  //   buttons->setFixedWidth(w);
-  // });
+  // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
+  // QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
+
   stacked_layout->addWidget(buttons);
 
   QWidget * split_wrapper = new QWidget;
@@ -136,9 +135,11 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton = new QPushButton(initHelloButton);
   
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
-    Params().putBool("AleSato_HelloButton", !Params().getBool("AleSato_HelloButton"));
-    helloButton->setText("Hai!");
+    bool button_state = Params().getBool("AleSato_HelloButton");
+    Params().putBool("AleSato_HelloButton", !button_state);
+    helloButton->setText(button_state? "Hai!" : "World");
     std::cout << "FOO" << std::endl;
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
   });
 
   helloButton->setFixedWidth(200);
@@ -156,15 +157,21 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
       background-color: rgba(75, 75, 75, 0.3);
     }
   )");
+
+  helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(1)));
 }
 
+// We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
   std::cout << "UPDATED?" << std::endl;
   const auto helloButtonState = Params().getBool("AleSato_HelloButton");
   if(helloButtonState) {
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("World");    
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
+    helloButton->setText("Hai !!");    
     std::cout << "BAR" << std::endl;
+  } else {
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
+    helloButton->setText("WORLD !!"); 
   }
 }
 
