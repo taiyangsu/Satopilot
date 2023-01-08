@@ -36,6 +36,7 @@ class CarController:
     self.packer = CANPacker(dbc_name)
     self.gas = 0
     self.accel = 0
+    self.hellobutton = False
 
   def update(self, CC, CS):
     actuators = CC.actuators
