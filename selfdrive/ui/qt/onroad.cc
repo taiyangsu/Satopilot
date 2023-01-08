@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <QDebug>
+#include <iostream>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
@@ -23,7 +24,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   // HelloButton
   buttons = new ButtonsWindow(this);
-  QObject::connect(this, &OnroadWindow::updateStateSignal, buttons, &ButtonsWindow::updateState);
+  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
   // QObject::connect(nvg, &NvgWindow::resizeSignal, [=] (int w) {
   //   buttons->setFixedWidth(w);
   // });
@@ -55,8 +56,8 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   alerts->raise();
 
   setAttribute(Qt::WA_OpaquePaintEvent);
-  QObject::connect(this, &OnroadWindow::updateStateSignal, this, &OnroadWindow::updateState);
-  QObject::connect(this, &OnroadWindow::offroadTransitionSignal, this, &OnroadWindow::offroadTransition);
+  QObject::connect(uiState(), &UIState::uiUpdate, this, &OnroadWindow::updateState);
+  QObject::connect(uiState(), &UIState::offroadTransition, this, &OnroadWindow::offroadTransition);
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -135,8 +136,9 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton = new QPushButton(initHelloButton);
   
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
-    Params().putBool("AleSato_HelloButton", true);
+    Params().putBool("AleSato_HelloButton", !Params().getBool("AleSato_HelloButton"));
     helloButton->setText("Hai!");
+    std::cout << "FOO" << std::endl;
   });
 
   helloButton->setFixedWidth(200);
@@ -157,10 +159,12 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void ButtonsWindow::updateState(const UIState &s) {
+  std::cout << "UPDATED?" << std::endl;
   const auto helloButtonState = Params().getBool("AleSato_HelloButton");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
     helloButton->setText("World");    
+    std::cout << "BAR" << std::endl;
   }
 }
 
