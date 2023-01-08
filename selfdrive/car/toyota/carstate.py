@@ -3,6 +3,7 @@ import copy
 from cereal import car
 from common.conversions import Conversions as CV
 from common.numpy_fast import mean
+from common.params import Params
 from common.filter_simple import FirstOrderFilter
 from common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
@@ -29,6 +30,7 @@ class CarState(CarStateBase):
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
+    params = Params()
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -145,6 +147,8 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
+
+    ret.hellobutton = params.get_bool("AleSato_HelloButton")
 
     return ret
 
