@@ -37,6 +37,7 @@ class CarController:
     self.gas = 0
     self.accel = 0
     self.hellobutton = False
+    self.lastHellobutton = False
 
   def update(self, CC, CS):
     actuators = CC.actuators
