@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include <QDebug>
-#include <iostream>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
@@ -138,7 +137,6 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
     bool button_state = Params().getBool("AleSato_HelloButton");
     Params().putBool("AleSato_HelloButton", !button_state);
     helloButton->setText(button_state? "Hai!" : "World");
-    std::cout << "FOO" << std::endl;
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
   });
 
@@ -163,15 +161,13 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
 
 // We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
-  std::cout << "UPDATED?" << std::endl;
   const auto helloButtonState = Params().getBool("AleSato_HelloButton");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
-    helloButton->setText("Hai !!");    
-    std::cout << "BAR" << std::endl;
+    helloButton->setText("HAI!!");    
   } else {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("WORLD !!"); 
+    helloButton->setText("WORLD!!"); 
   }
 }
 
