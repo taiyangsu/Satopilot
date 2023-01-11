@@ -24,7 +24,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   // HelloButton
   buttons = new ButtonsWindow(this);
   // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
-  // QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
+  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
 
   stacked_layout->addWidget(buttons);
 
@@ -136,8 +136,8 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
     bool button_state = Params().getBool("AleSato_HelloButton");
     Params().putBool("AleSato_HelloButton", !button_state);
-    helloButton->setText(button_state? "Hai!" : "World");
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
+    // helloButton->setText(button_state? "Hai!" : "World");
+    // helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
   });
 
   helloButton->setFixedWidth(200);
@@ -164,10 +164,10 @@ void ButtonsWindow::updateState(const UIState &s) {
   const auto helloButtonState = Params().getBool("AleSato_HelloButton");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
-    helloButton->setText("HAI!!");    
+    helloButton->setText("Lock");    
   } else {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("WORLD!!"); 
+    helloButton->setText("Unlock"); 
   }
 }
 

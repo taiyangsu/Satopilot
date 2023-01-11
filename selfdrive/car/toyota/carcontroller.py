@@ -100,9 +100,9 @@ class CarController:
 
     self.hellobutton = CS.hellobutton
     if self.hellobutton and not self.lastHellobutton:
-      can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
-    elif not self.hellobutton and self.lastHellobutton:
       can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
+    elif not self.hellobutton and self.lastHellobutton:
+      can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
     self.lastHellobutton = self.hellobutton
 
     # *** control msgs ***
