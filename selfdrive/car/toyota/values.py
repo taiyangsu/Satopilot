@@ -828,6 +828,7 @@ FW_VERSIONS = {
   },
   CAR.COROLLAH_TSS2: {
     (Ecu.engine, 0x700, None): [
+      b'\x018965B12490\x00\x00\x00\x00\x00\x00',
       b'\x01896630ZJ1000\x00\x00\x00\x00',
       b'\x01896630ZU8000\x00\x00\x00\x00',
       b'\x01896637621000\x00\x00\x00\x00',
