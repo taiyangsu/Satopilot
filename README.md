@@ -1,4 +1,4 @@
-Huge thanks to spektor56 for split lkas/acc pencil labeler/reviewer Optoolkit and much more!!
+Huge thanks to spektor56 (Brett Sanderson) for this ghostpilot with split lkas/acc pencil labeler/reviewer Optoolkit and much more!!
 
 ![](https://i.imgur.com/b0ZyIx5.jpg)
 
