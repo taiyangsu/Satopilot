@@ -56,12 +56,12 @@ MIN_ACCEL = -3.5
 MAX_ACCEL = 2.0
 T_FOLLOW = 1.45
 COMFORT_BRAKE = 2.5
-STOP_DISTANCE = 6.0
+STOP_DISTANCE = 5.25
 
 def get_stopped_equivalence_factor(v_lead, v_ego):
   v_diff_offset = 0
   v_diff_offset_max = 12
-  speed_to_reach_max_v_diff_offset = 20 # in kp/h
+  speed_to_reach_max_v_diff_offset = 26 # in kp/h
   speed_to_reach_max_v_diff_offset = speed_to_reach_max_v_diff_offset * CV.KPH_TO_MS
   delta_speed = v_lead - v_ego
   if np.all(delta_speed > 0):
