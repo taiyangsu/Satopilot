@@ -1,9 +1,15 @@
+[submodule "panda"]
+  path = panda
+  url = ../../AlexandreSato/panda.git
 [submodule "opendbc"]
   path = opendbc
   url = ../../commaai/opendbc.git
 [submodule "laika_repo"]
   path = laika_repo
   url = ../../commaai/laika.git
+[submodule "cereal"]
+  path = cereal
+  url = ../../AlexandreSato/cereal.git
 [submodule "rednose_repo"]
   path = rednose_repo
   url = ../../commaai/rednose.git
