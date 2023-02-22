@@ -6,6 +6,7 @@ from common.conversions import Conversions as CV
 from common.realtime import sec_since_boot
 from common.numpy_fast import clip
 from system.swaglog import cloudlog
+# WARNING: imports outside of constants will not trigger a rebuild
 from selfdrive.modeld.constants import index_function
 from selfdrive.controls.lib.radar_helpers import _LEAD_ACCEL_TAU
 
