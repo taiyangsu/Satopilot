@@ -20,7 +20,9 @@ MAX_STEER_RATE_FRAMES = 18  # tx control frames needed before torque can be cut
 MAX_USER_TORQUE = 500
 
 UNLOCK_CMD = b'\x40\x05\x30\x11\x00\x40\x00\x00'
-LOCK_CMD = b'\x40\x05\x30\x11\x00\x80\x00\x00'
+LOCK_CMD =   b'\x40\x05\x30\x11\x00\x80\x00\x00'
+HORN_ON_CMD =  b'\x40\x04\x30\x06\x00\x20\x00\x00'
+HORN_OFF_CMD = b'\x40\x04\x30\x06\x00\x00\x00\x00'
 
 class CarController:
   def __init__(self, dbc_name, CP, VM):
@@ -38,6 +40,9 @@ class CarController:
     self.accel = 0
     self.remoteLockDoors = False
     self.lastRemoteLockDoors = False
+    self.oneHonk = False
+    self.twoHonks = False
+    self.honk_rate_counter = 0
 
   def update(self, CC, CS, now_nanos):
     actuators = CC.actuators
@@ -100,10 +105,32 @@ class CarController:
 
     self.remoteLockDoors = Params().get_bool("AleSato_RemoteLockDoors")
     if self.remoteLockDoors and not self.lastRemoteLockDoors:
-      can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
+      self.oneHonk = True
+      self.honk_rate_counter = self.frame
     elif not self.remoteLockDoors and self.lastRemoteLockDoors:
-      can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
+      self.twoHonks = True
+      self.honk_rate_counter = self.frame
     self.lastRemoteLockDoors = self.remoteLockDoors
+    if self.oneHonk:
+      if self.frame == (self.honk_rate_counter + 5):
+        can_sends.append(make_can_msg(0x750, HORN_ON_CMD, 0))
+      elif self.frame == (self.honk_rate_counter + 6):
+        can_sends.append(make_can_msg(0x750, HORN_OFF_CMD, 0))
+      elif self.frame > (self.honk_rate_counter + 6):
+        can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
+        self.oneHonk = False
+    if self.twoHonks:
+      if self.frame == (self.honk_rate_counter + 5):
+        can_sends.append(make_can_msg(0x750, HORN_ON_CMD, 0))
+      elif self.frame == (self.honk_rate_counter + 6):
+        can_sends.append(make_can_msg(0x750, HORN_OFF_CMD, 0))
+      elif self.frame == (self.honk_rate_counter + 31):
+        can_sends.append(make_can_msg(0x750, HORN_ON_CMD, 0))
+      elif self.frame == (self.honk_rate_counter + 32):
+        can_sends.append(make_can_msg(0x750, HORN_OFF_CMD, 0))
+      elif self.frame > (self.honk_rate_counter + 32):
+        can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
+        self.twoHonks = False
 
     # *** control msgs ***
     # print("steer {0} {1} {2} {3}".format(apply_steer, min_lim, max_lim, CS.steer_torque_motor)
