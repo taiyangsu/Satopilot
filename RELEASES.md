@@ -2,6 +2,8 @@ Version 0.9.2 (2023-03-XX)
 ========================
 * Draw MPC path instead of model predicted path, this is a more accurate representation of what the car will do.
 * Ale Sato Stuff:
+  * Stream Driver at Reverse Gear (2023-03-06)
+  * Fix position of the "TRIP DISTANCE" box (2023-03-06)
   * Added Horn feedback on remote lockdoors (2023-02-27)
 
 Version 0.9.1 (2023-02-23)
