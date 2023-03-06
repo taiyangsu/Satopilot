@@ -830,6 +830,12 @@ void AnnotatedCameraWidget::paintGL() {
     wide_cam_requested = wide_cam_requested && s->scene.calibration_wide_valid;
     CameraWidget::setStreamType(wide_cam_requested ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD);
 
+    // Ale Sato stream_driver when reverse gear
+    bool reversing = int(sm["carState"].getCarState().getGearShifter()) == 4;
+    if(reversing) {
+      CameraWidget::setStreamType(VISION_STREAM_DRIVER);
+    }
+
     s->scene.wide_cam = CameraWidget::getStreamType() == VISION_STREAM_WIDE_ROAD;
     if (s->scene.calibration_valid) {
       auto calib = s->scene.wide_cam ? s->scene.view_from_wide_calib : s->scene.view_from_calib;
