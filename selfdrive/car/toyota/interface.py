@@ -24,7 +24,7 @@ class CarInterface(CarInterfaceBase):
     if candidate in (CAR.RAV4, CAR.PRIUS_V, CAR.COROLLA, CAR.LEXUS_ESH, CAR.LEXUS_CTH):
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_ALT_BRAKE
 
-    ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
+    ret.steerActuatorDelay = 0.12 * 4 # Default delay, Prius has larger delay
     ret.steerLimitTimer = 0.4
     ret.stoppingControl = False  # Toyota starts braking more when it thinks you want to stop
 
