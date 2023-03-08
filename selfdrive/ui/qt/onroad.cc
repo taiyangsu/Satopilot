@@ -59,7 +59,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void OnroadWindow::updateState(const UIState &s) {
-  QColor bgColor = bg_colors[s.status];
+  QColor bgColor = (Params().getBool("AleSato_SteerAlwaysOn") && s.status != STATUS_ENGAGED)? bg_colors[STATUS_OVERRIDE] : bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
   if (s.sm->updated("controlsState") || !alert.equal({})) {
     if (alert.type == "controlsUnresponsive") {
