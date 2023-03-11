@@ -1,6 +1,7 @@
 Version 0.9.2 (2023-03-XX)
 ========================
 * Draw MPC path instead of model predicted path, this is a more accurate representation of what the car will do.
+* Škoda Fabia 2022-23 support thanks to jyoung8607!
 * Ale Sato Stuff:
   * Added a nice blinker indicator, tks OPKR (2023-03-08)
   * Added grey borders at SteerAlways mode (2023-03-08)
@@ -9,7 +10,7 @@ Version 0.9.2 (2023-03-XX)
   * Fix position of the "TRIP DISTANCE" box (2023-03-06)
   * Added Horn feedback on remote lockdoors (2023-02-27)
 
-Version 0.9.1 (2023-02-23)
+Version 0.9.1 (2023-02-28)
 ========================
 * New driving model
   * 30% improved height estimation resulting in better driving performance for tall cars

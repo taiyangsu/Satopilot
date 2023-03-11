@@ -11,9 +11,7 @@
 #include <QToolButton>
 #include <QVector>
 
-#include "tools/cabana/dbcmanager.h"
-using namespace dbcmanager;
-
+#include "tools/cabana/dbc.h"
 
 class ChangeTracker {
 public:
@@ -31,17 +29,36 @@ private:
   QByteArray prev_dat;
 };
 
+enum {
+  ColorsRole = Qt::UserRole + 1,
+  BytesRole = Qt::UserRole + 2
+};
+
+class SegmentTree {
+public:
+  SegmentTree() = default;
+  void build(const QVector<QPointF> &arr);
+  inline std::pair<double, double> minmax(int left, int right) const { return get_minmax(1, 0, size - 1, left, right); }
+
+private:
+  std::pair<double, double> get_minmax(int n, int left, int right, int range_left, int range_right) const;
+  void build_tree(const QVector<QPointF> &arr, int n, int left, int right);
+  std::vector<std::pair<double ,double>> tree;
+  int size = 0;
+};
+
 class MessageBytesDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
   MessageBytesDelegate(QObject *parent);
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
   QFont fixed_font;
+  int byte_width;
 };
 
 inline QString toHex(const QByteArray &dat) { return dat.toHex(' ').toUpper(); }
-inline char toHex(uint value) { return "0123456789ABCDEF"[value & 0xF]; }
-QColor getColor(const dbcmanager::Signal *sig);
+QString toHex(uint8_t byte);
+QColor getColor(const cabana::Signal *sig);
 
 class NameValidator : public QRegExpValidator {
   Q_OBJECT
