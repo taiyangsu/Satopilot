@@ -342,6 +342,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("enginerpm", engine_rpm);
   setProperty("buttonColorSpeed", engine_rpm > 0);
   float distance_traveled = sm["controlsState"].getControlsState().getDistanceTraveled() / 1000;
+  if(!s.scene.is_metric) {distance_traveled *= KM_TO_MILE;}
   setProperty("distanceTraveled", distance_traveled);
   setProperty("left_blinker", s.scene.leftBlinker);
   setProperty("right_blinker", s.scene.rightBlinker);
