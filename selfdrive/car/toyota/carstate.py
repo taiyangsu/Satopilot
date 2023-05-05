@@ -152,7 +152,7 @@ class CarState(CarStateBase):
       self.params.put_bool('ExperimentalMode', self.e2eLongButton)
     self.ispressed_prev = self.ispressed
 
-    ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["AUTO_HIGH_BEAM"])
+    ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["FRONT_FOG"])
     ret.espDisabled = cp.vl["ESP_CONTROL"]["TC_DISABLED"] != 0
 
     if not self.CP.enableDsu:
@@ -214,7 +214,7 @@ class CarState(CarStateBase):
       ("STEER_ANGLE_INITIALIZING", "STEER_TORQUE_SENSOR"),
       ("TURN_SIGNALS", "BLINKERS_STATE"),
       ("LKA_STATE", "EPS_STATUS"),
-      ("AUTO_HIGH_BEAM", "LIGHT_STALK"),
+      ("FRONT_FOG", "LIGHT_STALK"),
       # AleSato
       ("RPM", "ENGINE_RPM"),
     ]

@@ -30,6 +30,12 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon, confirm
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
     {
+      "AleSato_ShutdownScreen",
+      tr("turn off the screen with fog light"),
+      tr("When the fog light is lit the comma3 screen will turn off."),
+      "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
+    },
+    {
       "OpenpilotEnabledToggle",
       tr("Enable openpilot"),
       tr("Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off."),

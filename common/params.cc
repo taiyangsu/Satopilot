@@ -202,8 +202,9 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Offroad_TemperatureTooHigh", CLEAR_ON_MANAGER_START},
     {"Offroad_UnofficialHardware", CLEAR_ON_MANAGER_START},
     {"Offroad_UpdateFailed", CLEAR_ON_MANAGER_START},
-    {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
     {"AleSato_RemoteLockDoors", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
+    {"AleSato_ShutdownScreen", PERSISTENT},
+    {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
 
 };
 

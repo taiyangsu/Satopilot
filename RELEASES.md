@@ -15,6 +15,7 @@ Version 0.9.2 (2023-05-XX)
 * Lincoln Aviator Plug-in Hybrid 2021 support
 * Škoda Fabia 2022-23 support thanks to jyoung8607!
 * Ale Sato Stuff:
+  * Added screen shutdown with fog lights (2023-05-05)
   * Added DrawLockOn by programanIchiro (2023-03-14)
   * Added a nice blinker indicator, tks OPKR (2023-03-08)
   * Added grey borders at SteerAlways mode (2023-03-08)
