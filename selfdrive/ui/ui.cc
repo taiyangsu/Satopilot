@@ -341,7 +341,7 @@ void Device::updateBrightness(const UIState &s) {
 
   // AleSato turn off screen with fog light
   SubMaster &sm = *(s.sm);
-  if (sm.updated("carState") && Params().getBool("AleSato_ShutdownScreen") && sm["carState"].getCarState().getGenericToggle()) {brightness = 0.00;}
+  if (Params().getBool("AleSato_ShutdownScreen") && sm["carState"].getCarState().getGenericToggle()) {brightness = 0.00;}
 
   if (!awake) {
     brightness = 0;
