@@ -102,14 +102,14 @@ def route(route):
     video.addEventListener('ended', function(e) {
       tracks.next();
       video.src = tracks.play();
-      document.getElementById("currentsegment").textContent=video.src.split("/")[4];
-      document.getElementById("currentview").textContent=video.src.split("/")[3];
+      document.getElementById("currentsegment").textContent=video.src.split("/")[5];
+      document.getElementById("currentview").textContent=video.src.split("/")[4];
       video.load();
       video.play();
     });
     video.src = tracks.play();
-    document.getElementById("currentsegment").textContent=video.src.split("/")[4];
-    document.getElementById("currentview").textContent=video.src.split("/")[3];
+    document.getElementById("currentsegment").textContent=video.src.split("/")[5];
+    document.getElementById("currentview").textContent=video.src.split("/")[4];
     </script>
 </html>
 """
