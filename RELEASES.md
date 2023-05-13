@@ -23,6 +23,9 @@ Version 0.9.2 (2023-05-22)
 * Lincoln Aviator 2021 support
 * Škoda Fabia 2022-23 support thanks to jyoung8607!
 * Ale Sato Stuff:
+  * Show follow distance at carDash (2023-05-12)
+  * Added view footage tks First and ntegan (2023-05-13)
+    Usage: connect to C3 wifi and put 192.168.43.1:5000 at chrome
   * Added screen shutdown with fog lights (2023-05-05)
   * Added DrawLockOn by programanIchiro (2023-03-14)
   * Added a nice blinker indicator, tks OPKR (2023-03-08)

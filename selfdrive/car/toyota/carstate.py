@@ -38,6 +38,9 @@ class CarState(CarStateBase):
     self.lkas_enabled = False
     self.prev_lkas_enabled = False
 
+    self.distance_lines_control = False
+    self.myframe = 0
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -179,6 +182,16 @@ class CarState(CarStateBase):
 
     # AleSato Stuff
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR): # Comunicate better about follow distance
+      self.is_exp = self.params.get_bool("ExperimentalMode")
+      self.distance_lines = int(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"])
+                                       # 1bar for Chill and                                                 3bars for Exp
+      if ((not self.is_exp and self.distance_lines != 1 and self.myframe % 2 == 0) or (self.is_exp and self.distance_lines != 3 and self.myframe % 2 == 0)) and ret.cruiseState.enabled:
+        self.distance_lines_control = True
+      else:
+        self.distance_lines_control = False
+
+    self.myframe += 1 if self.myframe < 255 else -255
 
     return ret
 
@@ -299,6 +312,11 @@ class CarState(CarStateBase):
     if CP.flags & ToyotaFlags.SMART_DSU:
       signals.append(("FD_BUTTON", "SDSU", 0))
       checks.append(("SDSU", 33))
+
+    if CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR):
+      signals += [
+        ("DISTANCE_LINES", 'PCM_CRUISE_SM'),
+      ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
