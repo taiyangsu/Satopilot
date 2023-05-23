@@ -6,7 +6,7 @@ from system.webserver.helpers import *
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
+def index():
   return render_template("index.html")
 
 @app.route("/lock")
@@ -115,19 +115,8 @@ def route(route):
 """
 
 @app.route("/footage")
-def index():
-  result = """
-  <html>
-    <head>
-      <meta name="viewport" content="initial-scale=1, width=device-width"/>
-      <link href="/static/favicon.ico" rel="icon">
-      <title>Dashcam Footage</title>
-    </head>
-    <body><center><br><a href='\\'>Back to remote door locker</a><br>"""
-  for route in all_routes():
-    result += "<a href='footage/"+route+"'>"+route+"</a><br>"
-  result += """</center></body></html>"""
-  return result
+def footage():
+  return render_template("footage.html", rows=all_routes())
 
 
 def main():
