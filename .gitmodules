@@ -1,6 +1,7 @@
 [submodule "panda"]
   path = panda
   url = ../../AlexandreSato/panda.git
+  branch = personal3
 [submodule "opendbc"]
   path = opendbc
   url = ../../commaai/opendbc.git
@@ -10,6 +11,7 @@
 [submodule "cereal"]
   path = cereal
   url = ../../AlexandreSato/cereal.git
+  branch = personal3
 [submodule "rednose_repo"]
   path = rednose_repo
   url = ../../commaai/rednose.git
