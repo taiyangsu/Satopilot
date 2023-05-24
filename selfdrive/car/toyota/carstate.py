@@ -181,7 +181,7 @@ class CarState(CarStateBase):
       self.prev_lkas_enabled = self.lkas_enabled 
 
     # AleSato Stuff
-    ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
+    ret.engineRpm = cp.vl["ENGINE_RPM"]['RPM']
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR): # Comunicate better about follow distance
       self.is_exp = self.params.get_bool("ExperimentalMode")
       self.distance_lines = int(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"])

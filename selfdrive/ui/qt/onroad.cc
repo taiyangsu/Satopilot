@@ -338,7 +338,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("status", s.status);
 
   // AleSato stuff
-  float engine_rpm = sm["carState"].getCarState().getEngineRPM();
+  float engine_rpm = sm["carState"].getCarState().getEngineRpm();
   setProperty("enginerpm", engine_rpm);
   setProperty("buttonColorSpeed", engine_rpm > 0);
   float distance_traveled = sm["controlsState"].getControlsState().getDistanceTraveled() / 1000;
