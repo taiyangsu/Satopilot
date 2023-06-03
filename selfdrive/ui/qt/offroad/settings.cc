@@ -26,6 +26,83 @@
 #include "selfdrive/ui/qt/qt_window.h"
 #include "selfdrive/ui/qt/widgets/input.h"
 
+
+LongitudinalPersonality::LongitudinalPersonality() : AbstractControl("Driving Personality",
+                                                             "Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake.",
+                                                             "../assets/offroad/icon_speed_limit.png") {
+
+  std::vector<QPushButton*> buttons;
+  hlayout->addWidget(&btnaggressive);
+  hlayout->addWidget(&btnstandard);
+  hlayout->addWidget(&btnrelaxed);
+
+  btnaggressive.setText("aggressive");
+  btnstandard.setText("standard");
+  btnrelaxed.setText("relaxed");
+
+  select_style = (R"(
+      padding: 0;
+      border-radius: 50px;
+      font-size: 45px;
+      font-weight: 500;
+      color: #E4E4E4;
+      background-color: #33Ab4C;
+    )");
+  unselect_style = (R"(
+      padding: 0;
+      border-radius: 50px;
+      font-size: 45px;
+      font-weight: 350;
+      color: #E4E4E4;
+      background-color: #393939;
+    )");
+
+  btnaggressive.setFixedSize(300, 100);
+  btnstandard.setFixedSize(250, 100);
+  btnrelaxed.setFixedSize(225, 100);
+
+  QObject::connect(&btnaggressive, &QPushButton::clicked, [=]() {
+    params.put("LongitudinalPersonality", (QString::number((int) cereal::LongitudinalPersonality::AGGRESSIVE)).toStdString());
+    refresh();
+  });
+
+  QObject::connect(&btnstandard, &QPushButton::clicked, [=]() {
+    params.put("LongitudinalPersonality", (QString::number((int) cereal::LongitudinalPersonality::STANDARD)).toStdString());
+    refresh();
+  });
+
+  QObject::connect(&btnrelaxed, &QPushButton::clicked, [=]() {
+    params.put("LongitudinalPersonality", (QString::number((int) cereal::LongitudinalPersonality::RELAXED)).toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+ int LongitudinalPersonality::get_param() {
+    return stoi(params.get("LongitudinalPersonality"));
+  };
+
+ void LongitudinalPersonality::set_param(int new_value) {
+    new_value = std::clamp(new_value, (int) cereal::LongitudinalPersonality::AGGRESSIVE, (int) cereal::LongitudinalPersonality::RELAXED);
+    QString values = QString::number(new_value);
+    params.put("LongitudinalPersonality", values.toStdString());
+    refresh();
+ };
+
+void LongitudinalPersonality::refresh() {
+  int value = get_param();
+  btnaggressive.setStyleSheet(unselect_style);
+  btnstandard.setStyleSheet(unselect_style);
+  btnrelaxed.setStyleSheet(unselect_style);
+  if (value == (int) cereal::LongitudinalPersonality::AGGRESSIVE) {
+    btnaggressive.setStyleSheet(select_style);
+  } else if (value == (int) cereal::LongitudinalPersonality::STANDARD) {
+    btnstandard.setStyleSheet(select_style);
+  } else if (value == (int) cereal::LongitudinalPersonality::RELAXED) {
+    btnrelaxed.setStyleSheet(select_style);
+  }
+}
+
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon, confirm
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
@@ -103,6 +180,11 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
 
     addItem(toggle);
     toggles[param.toStdString()] = toggle;
+
+    // insert longitudinal personality after NDOG toggle
+    if (param == "DisengageOnAccelerator") {
+      addItem(new LongitudinalPersonality());
+    }
   }
 
   // Toggles with confirmation dialogs
@@ -327,6 +409,7 @@ void SettingsWindow::showEvent(QShowEvent *event) {
 void SettingsWindow::setCurrentPanel(int index, const QString &param) {
   panel_widget->setCurrentIndex(index);
   nav_btns->buttons()[index]->setChecked(true);
+  //printf("setCurrentPanel %s\n", param);
   if (!param.isEmpty()) {
     emit expandToggleDescription(param);
   }

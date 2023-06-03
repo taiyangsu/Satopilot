@@ -2,6 +2,8 @@
 import math
 import numpy as np
 from common.numpy_fast import clip, interp
+from common.params import Params
+from cereal import log
 
 import cereal.messaging as messaging
 from common.conversions import Conversions as CV
@@ -64,6 +66,15 @@ class LongitudinalPlanner:
     self.a_desired_trajectory = np.zeros(CONTROL_N)
     self.j_desired_trajectory = np.zeros(CONTROL_N)
     self.solverExecutionTime = 0.0
+    self.params = Params()
+    self.param_read_counter = 0
+    self.read_param()
+    self.personality = log.LongitudinalPersonality.standard
+
+  def read_param(self):
+    param_value = self.params.get('LongitudinalPersonality')
+    if param_value is not None:
+      self.personality = int(param_value)
 
   @staticmethod
   def parse_model(model_msg, model_error):
@@ -82,6 +93,9 @@ class LongitudinalPlanner:
     return x, v, a, j
 
   def update(self, sm):
+    if self.param_read_counter % 50 == 0:
+      self.read_param()
+    self.param_read_counter += 1
     self.mpc.mode = 'blended' if sm['controlsState'].experimentalMode else 'acc'
 
     v_ego = sm['carState'].vEgo
@@ -125,11 +139,11 @@ class LongitudinalPlanner:
     lead_xv_1 = self.mpc.process_lead(sm['radarState'].leadTwo)
     v_lead0 = lead_xv_0[0,1]
     v_lead1 = lead_xv_1[0,1]
-    self.mpc.set_weights(prev_accel_constraint, v_lead0, v_lead1)
+    self.mpc.set_weights(prev_accel_constraint, personality=self.personality, v_lead0, v_lead1)
     self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
     x, v, a, j = self.parse_model(sm['modelV2'], self.v_model_error)
-    self.mpc.update(sm['radarState'], v_cruise, x, v, a, j)
+    self.mpc.update(sm['radarState'], v_cruise, x, v, a, j, personality=self.personality)
 
     self.v_desired_trajectory_full = np.interp(T_IDXS, T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory_full = np.interp(T_IDXS, T_IDXS_MPC, self.mpc.a_solution)
@@ -165,5 +179,6 @@ class LongitudinalPlanner:
     longitudinalPlan.fcw = self.fcw
 
     longitudinalPlan.solverExecutionTime = self.mpc.solve_time
+    longitudinalPlan.personality = self.personality
 
     pm.send('longitudinalPlan', plan_send)
