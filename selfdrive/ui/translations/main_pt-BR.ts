@@ -91,7 +91,7 @@
     </message>
     <message>
         <source>ENGINE RPM</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MOTOR RPM</translation>
     </message>
     <message>
         <source>TRIP DIST</source>
@@ -1045,11 +1045,15 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>turn off the screen with fog light</source>
-        <translation>apagar a tela com farol de neblina</translation>
+        <translation type="obsolete">Apagar a Tela com Farol de Neblina</translation>
     </message>
     <message>
         <source>When the fog light is lit the comma3 screen will turn off.</source>
         <translation>Quando o farol de neblina estiver aceso a tela do comma3 irá se apagar</translation>
+    </message>
+    <message>
+        <source>Turn Off the Screen with Fog Light</source>
+        <translation type="unfinished">Apagar a Tela com o Farol de Neblina</translation>
     </message>
 </context>
 <context>
