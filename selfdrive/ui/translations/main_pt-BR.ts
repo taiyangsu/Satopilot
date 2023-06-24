@@ -91,11 +91,11 @@
     </message>
     <message>
         <source>ENGINE RPM</source>
-        <translation type="unfinished">MOTOR RPM</translation>
+        <translation>MOTOR RPM</translation>
     </message>
     <message>
         <source>TRIP DIST</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -346,6 +346,29 @@
     <message>
         <source>Installing...</source>
         <translation>Instalando...</translation>
+    </message>
+</context>
+<context>
+    <name>LongitudinalPersonality</name>
+    <message>
+        <source>Driving Personality</source>
+        <translation type="unfinished">Temperamento de Direção</translation>
+    </message>
+    <message>
+        <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>aggressive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>relaxed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1132,6 +1155,14 @@ Isso pode levar até um minuto.</translation>
     <message>
         <source>An alpha version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.</source>
         <translation>Uma versão embrionária do controle longitudinal openpilot pode ser testada em conjunto com o modo Experimental, em branches que não sejam de produção.</translation>
+    </message>
+    <message>
+        <source>Turn Off the Screen with Fog Light</source>
+        <translation>Apagar Tela com Farol de Neblina</translation>
+    </message>
+    <message>
+        <source>When the fog light is lit the comma3 screen will turn off.</source>
+        <translation type="unfinished">Quando o farol de neblina estiver aceso a tela do comma3 se apagará.</translation>
     </message>
 </context>
 <context>
