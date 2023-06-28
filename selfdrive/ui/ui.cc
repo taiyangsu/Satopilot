@@ -232,6 +232,7 @@ void UIState::updateStatus() {
     }
     started_prev = scene.started;
     emit offroadTransition(!scene.started);
+    emit offroadTransition(false); // hardcode to put ui in alway on road mode
   }
 }
 
