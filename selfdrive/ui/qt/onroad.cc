@@ -21,6 +21,10 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   nvg = new AnnotatedCameraWidget(VISION_STREAM_ROAD, this);
 
+  // Ale Sato Buttons
+  buttons = new ButtonsWindows(this);
+  stacked_layout->addWidget(buttons);
+
   QWidget * split_wrapper = new QWidget;
   split = new QHBoxLayout(split_wrapper);
   split->setContentsMargins(0, 0, 0, 0);
@@ -52,6 +56,9 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void OnroadWindow::updateState(const UIState &s) {
+  // Ale Sato button
+  buttons->updateState(s);
+
   QColor bgColor = bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
   alerts->updateAlert(alert);
@@ -110,6 +117,40 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
 }
 
 // ***** onroad widgets *****
+// AleSato buttons
+ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
+  QVBoxLayout *main_layout = new QVBoxLayout(this);
+  QWidget *buttons_wrapper = new QWidget;
+  QHBoxLayout *buttons_layout = new QHBoxLayout(buttons_wrapper);
+  buttons_layout->setSpacing(0);
+  buttons_layout->setContentsMargins(0, 0, 15, 15);
+  main_layout->addWidget(buttons_wrapper, 0, Qt::AlignBottom);
+
+  buttonChangeStatus = new QPushButton("Change Borders");
+  QObject::connect(buttonChangeStatus, &QPushButton::clicked, [=]() {
+    buttonChangeStatus->setStyleSheet("font-size: 50px; border-color: #ff0000; border-radius: 25px;");
+    qDebug() << "hello world"; // needs to set LOGPRINT=debug environment variable
+  });
+  buttonChangeStatus->setFixedWidth(525);
+  buttonChangeStatus->setFixedHeight(150);
+  // buttons_layout->addStretch(); // void expand vertically, 1 expand horizontally
+  buttons_layout->addWidget(buttonChangeStatus, 0, Qt::AlignCenter);
+
+    setStyleSheet(R"(
+    QPushButton {
+      color: red;
+      text-align: center;
+      padding: 0px;
+      border-width: 12px;
+      border-style: solid;
+      background-color: rgba(75, 75, 75, 0.3);
+    }
+  )");
+}
+
+void ButtonsWindows::updateState(const UIState &s) {
+  buttonChangeStatus->setStyleSheet(QString("color: white; font-size: 50px; border-radius: 25px; border-color: red"));
+}
 
 // OnroadAlerts
 void OnroadAlerts::updateAlert(const Alert &a) {

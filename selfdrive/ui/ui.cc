@@ -234,7 +234,7 @@ void UIState::updateStatus() {
     emit offroadTransition(!scene.started);
     emit offroadTransition(false); // hardcode to put ui in alway on road mode
   }
-  qDebug() << "hello world";
+  // qDebug() << "hello world"; // needs to set LOGPRINT=debug environment variable
 }
 
 UIState::UIState(QObject *parent) : QObject(parent) {

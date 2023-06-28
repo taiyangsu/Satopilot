@@ -14,6 +14,17 @@ const int img_size = (btn_size / 4) * 3;
 
 
 // ***** onroad widgets *****
+class ButtonsWindows : public QWidget {
+  Q_OBJECT
+
+public:
+  ButtonsWindows(QWidget* parent = 0);
+  void updateState(const UIState &s);
+
+private:
+  QPushButton *buttonChangeStatus;
+};
+
 class OnroadAlerts : public QWidget {
   Q_OBJECT
 
@@ -123,6 +134,9 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
+  
+  // Ale Sato buttons
+  ButtonsWindows *buttons;
 
 private slots:
   void offroadTransition(bool offroad);
