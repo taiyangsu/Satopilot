@@ -48,6 +48,8 @@ class CarController:
     self.packer = CANPacker(dbc_name)
     self.gas = 0
     self.accel = 0
+
+    # AleSato stuff
     self.remoteLockDoors = False
     self.lastRemoteLockDoors = False
     self.oneHonk = False
@@ -140,8 +142,7 @@ class CarController:
 
     self.last_standstill = CS.out.standstill
 
-    can_sends = []
-
+    # AleSato Stuff 
     self.remoteLockDoors = Params().get_bool("AleSato_RemoteLockDoors")
     if self.remoteLockDoors and not self.lastRemoteLockDoors:
       self.oneHonk = True
