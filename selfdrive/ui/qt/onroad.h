@@ -119,6 +119,7 @@ private:
   bool wide_cam_requested = false;
 
   // AleSato stuff
+  ButtonsWindow *buttons;
   float enginerpm; 
   bool buttonColorSpeed = false;
   float distanceTraveled;
@@ -162,7 +163,6 @@ private:
   void mousePressEvent(QMouseEvent* e) override;
   OnroadAlerts *alerts;
   AnnotatedCameraWidget *nvg;
-  ButtonsWindow *buttons;
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;

@@ -24,13 +24,6 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   nvg = new AnnotatedCameraWidget(VISION_STREAM_ROAD, this);
 
-  // HelloButton
-  buttons = new ButtonsWindow(this);
-  // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
-  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
-
-  stacked_layout->addWidget(buttons);
-
   QWidget * split_wrapper = new QWidget;
   split = new QHBoxLayout(split_wrapper);
   split->setContentsMargins(0, 0, 0, 0);
@@ -129,7 +122,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   QWidget *btns_wrapper = new QWidget;
   QHBoxLayout *btns_layout  = new QHBoxLayout(btns_wrapper);
   btns_layout->setSpacing(0);
-  btns_layout->setContentsMargins(282, 0, 30, 30);
+  btns_layout->setContentsMargins(200, 0, 0, 0);
   main_layout->addWidget(btns_wrapper, 0, Qt::AlignBottom);
   QString initHelloButton = "";
   helloButton = new QPushButton(initHelloButton);
@@ -137,38 +130,36 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
     bool button_state = Params().getBool("AleSato_SteerAlwaysOn");
     Params().putBool("AleSato_SteerAlwaysOn", !button_state);
-    // helloButton->setText(button_state? "Hai!" : "World");
-    // helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
   });
 
-  helloButton->setFixedWidth(200);
+  helloButton->setFixedWidth(525);
   helloButton->setFixedHeight(200);
   btns_layout->addWidget(helloButton, 0, Qt::AlignLeft);
-  btns_layout->addSpacing(35);  
+  btns_layout->addSpacing(35);
 
   setStyleSheet(R"(
     QPushButton {
       color: white;
       text-align: center;
       padding: 0px;
-      border-width: 12px;
+      border-width: 18px;
       border-style: solid;
       background-color: rgba(75, 75, 75, 0.3);
     }
   )");
 
-  helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(1)));
+  helloButton->setStyleSheet(QString("font-size: 50px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(1)));
 }
 
 // We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
   const auto helloButtonState = Params().getBool("AleSato_SteerAlwaysOn");
   if(helloButtonState) {
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("STEER\nalways");    
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(0)));
+    helloButton->setText("STEER ALWAYS");    
   } else {
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
-    helloButton->setText("stock"); 
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(2)));
+    helloButton->setText("STOCK"); 
   }
 }
 
@@ -291,6 +282,12 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
 
   experimental_btn = new ExperimentalButton(this);
   main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
+
+    // HelloButton
+  buttons = new ButtonsWindow(this);
+  // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
+  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
+  main_layout->addWidget(buttons);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
 }
