@@ -340,7 +340,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   // AleSato stuff
   float engine_rpm = sm["carState"].getCarState().getEngineRpm();
   setProperty("enginerpm", engine_rpm);
-  setProperty("buttonColorSpeed", engine_rpm > 0);
+  setProperty("engineColorSpeed", engine_rpm > 0);
   float distance_traveled = sm["controlsState"].getControlsState().getDistanceTraveled() / 1000;
   if(!s.scene.is_metric) {distance_traveled *= KM_TO_MILE;}
   setProperty("distanceTraveled", distance_traveled);
@@ -449,17 +449,16 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // Begin Ale Sato
-  QString engineRPMStr = buttonColorSpeed? QString::number(std::nearbyint(enginerpm)) : "OFF";
+  QString engineRPMStr = engineColorSpeed? QString::number(std::nearbyint(enginerpm)) : "OFF";
   int my_rect_width = 344;
   int my_rect_height = 204;
-
   int my_top_radius = 32;
   int my_bottom_radius = 32;
 
-  QRect my_set_speed_rect(60, (has_us_speed_limit || has_eu_speed_limit)? 500 : 450, my_rect_width, my_rect_height);
+  QRect my_engine_rpm_rect(60, (has_us_speed_limit || has_eu_speed_limit)? 500 : 450, my_rect_width, my_rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
-  drawRoundedRect(p, my_set_speed_rect, my_top_radius, my_top_radius, my_bottom_radius, my_bottom_radius);
+  drawRoundedRect(p, my_engine_rpm_rect, my_top_radius, my_top_radius, my_bottom_radius, my_bottom_radius);
 
   // Draw colored ENGINE RPM
   p.setPen(interpColor(
@@ -468,48 +467,36 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
   ));
   configFont(p, "Inter", 40, "SemiBold");
-  QRect my_max_rect = getTextRect(p, Qt::AlignCenter, tr("ENGINE RPM"));
-  my_max_rect.moveCenter({my_set_speed_rect.center().x(), 0});
-  my_max_rect.moveTop(my_set_speed_rect.top() + 127);
-  p.drawText(my_max_rect, Qt::AlignCenter, tr("ENGINE RPM"));
+  p.drawText(my_engine_rpm_rect.adjusted(0, 97, 0, 0), Qt::AlignTop | Qt::AlignCenter, tr("ENGINE RPM"));
 
-  // Draw rpm
-  if (buttonColorSpeed) {
-    if ((speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) || true) {
-      p.setPen(interpColor(
-        enginerpm,
-        {1500, 2100, 3000},
-        {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
-      ));
-    } else {
-      p.setPen(whiteColor());
-    }
+  // Draw colored RPM numbers
+  if (engineColorSpeed) {
+    p.setPen(interpColor(
+      enginerpm,
+      {1500, 2100, 3000},
+      {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
+    ));
   } else {
     p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
   }
   configFont(p, "Inter", 90, "Bold");
-  QRect my_speed_rect = getTextRect(p, Qt::AlignCenter, engineRPMStr);
-  my_speed_rect.moveCenter({my_set_speed_rect.center().x(), 0});
-  my_speed_rect.moveTop(my_set_speed_rect.top() + 7);
-  p.drawText(my_speed_rect, Qt::AlignCenter, engineRPMStr);
+  p.drawText(my_engine_rpm_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  engineRPMStr);
   // End AleSato
 
-// Begin2 Ale Sato
+// Begin2 Ale Sato 
   char distanceTraveledStr[16];
   snprintf(distanceTraveledStr, sizeof(distanceTraveledStr), "%.1f", distanceTraveled);
 
   // Draw outer box + border to contain set speed and speed limit
   int my2_rect_width = 344;
   int my2_rect_height = 204;
-
-
   int my2_top_radius = 32;
   int my2_bottom_radius = 32;
 
-  QRect my2_set_speed_rect(rect().right() - 400, 450, my2_rect_width, my2_rect_height);
+  QRect my_trip_distance_rect(rect().right() - 400, 450, my2_rect_width, my2_rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
-  drawRoundedRect(p, my2_set_speed_rect, my2_top_radius, my2_top_radius, my2_bottom_radius, my2_bottom_radius);
+  drawRoundedRect(p, my_trip_distance_rect, my2_top_radius, my2_top_radius, my2_bottom_radius, my2_bottom_radius);
 
   // Draw colored TRIP DIST
   p.setPen(interpColor(
@@ -518,10 +505,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     {QColor(0xff, 0xbf, 0xbf, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0x80, 0xd8, 0xa6, 0xff)}
   ));
   configFont(p, "Inter", 40, "SemiBold");
-  QRect my2_max_rect = getTextRect(p, Qt::AlignCenter, tr("TRIP DIST"));
-  my2_max_rect.moveCenter({my2_set_speed_rect.center().x(), 0});
-  my2_max_rect.moveTop(my2_set_speed_rect.top() + 127);
-  p.drawText(my2_max_rect, Qt::AlignCenter, tr("TRIP DIST"));
+  p.drawText(my_trip_distance_rect.adjusted(0, 97, 0, 0), Qt::AlignTop | Qt::AlignCenter, tr("TRIP DIST"));
 
   // Draw trip distance
   if (is_cruise_set || true) {
@@ -538,22 +522,17 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
   }
   configFont(p, "Inter", 90, "Bold");
-  QRect my2_speed_rect = getTextRect(p, Qt::AlignCenter, distanceTraveledStr);
-  my2_speed_rect.moveCenter({my2_set_speed_rect.center().x(), 0});
-  my2_speed_rect.moveTop(my2_set_speed_rect.top() + 7);
-  p.drawText(my2_speed_rect, Qt::AlignCenter, distanceTraveledStr);
-  // End2 AleSato
+  p.drawText(my_trip_distance_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  distanceTraveledStr);
+  // End2 AleSato 
 
   // current speed
   configFont(p, "Inter", 230, "Bold");
 
   // Turning the speed blue
-  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, engineColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 
   
-
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
-
 
   // opkr blinker
   if (true) {
@@ -613,7 +592,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 }
 
 void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &text, int alpha) {
-  QRect real_rect = getTextRect(p, 0, text);
+  QRect real_rect = p.fontMetrics().boundingRect(text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
   p.setPen(QColor(0xff, 0xff, 0xff, alpha));
@@ -621,7 +600,7 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
 }
 
 void AnnotatedCameraWidget::drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor color) {
-  QRect real_rect = getTextRect(p, 0, text);
+  QRect real_rect = p.fontMetrics().boundingRect(text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
   p.setPen(color);

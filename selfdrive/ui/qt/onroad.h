@@ -60,6 +60,7 @@ private:
   QPixmap engage_img;
   QPixmap experimental_img;
   bool experimental_mode;
+  bool engageable;
 };
 
 // container window for the NVG UI
@@ -81,7 +82,7 @@ class AnnotatedCameraWidget : public CameraWidget {
 
   // Ale Sato Stuff
   Q_PROPERTY(float enginerpm MEMBER enginerpm);
-  Q_PROPERTY(bool buttonColorSpeed MEMBER buttonColorSpeed);
+  Q_PROPERTY(bool engineColorSpeed MEMBER engineColorSpeed);
   Q_PROPERTY(float distanceTraveled MEMBER distanceTraveled);
   Q_PROPERTY(bool left_blinker MEMBER left_blinker);
   Q_PROPERTY(bool right_blinker MEMBER right_blinker);
@@ -121,7 +122,7 @@ private:
   // AleSato stuff
   ButtonsWindow *buttons;
   float enginerpm; 
-  bool buttonColorSpeed = false;
+  bool engineColorSpeed = false;
   float distanceTraveled;
   bool left_blinker = false;
   bool right_blinker = false;
@@ -166,6 +167,7 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
+  bool navDisabled = false;
 
 private slots:
   void offroadTransition(bool offroad);
