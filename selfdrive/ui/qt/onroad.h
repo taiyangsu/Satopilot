@@ -101,6 +101,9 @@ private:
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
 
+  // Ale Sato buttons
+  ButtonsWindows *buttons;
+
 protected:
   void paintGL() override;
   void initializeGL() override;
@@ -134,9 +137,6 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
-  
-  // Ale Sato buttons
-  ButtonsWindows *buttons;
 
 private slots:
   void offroadTransition(bool offroad);

@@ -21,10 +21,6 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   nvg = new AnnotatedCameraWidget(VISION_STREAM_ROAD, this);
 
-  // Ale Sato Buttons
-  buttons = new ButtonsWindows(this);
-  stacked_layout->addWidget(buttons);
-
   QWidget * split_wrapper = new QWidget;
   split = new QHBoxLayout(split_wrapper);
   split->setContentsMargins(0, 0, 0, 0);
@@ -56,9 +52,6 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void OnroadWindow::updateState(const UIState &s) {
-  // Ale Sato button
-  buttons->updateState(s);
-
   QColor bgColor = bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
   alerts->updateAlert(alert);
@@ -267,6 +260,14 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
+
+  // Ale Sato Buttons
+  buttons = new ButtonsWindows(this);
+  main_layout->addWidget(buttons);
+
+  // Ale Sato button
+  UIState *s = uiState();
+  buttons->updateState(s);
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {
