@@ -153,6 +153,7 @@ public:
   std::unique_ptr<SubMaster> sm;
 
   UIStatus status;
+  int button0 = 0;
   UIScene scene = {};
 
   bool awake;

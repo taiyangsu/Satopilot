@@ -123,6 +123,9 @@ ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
   QObject::connect(buttonChangeStatus, &QPushButton::clicked, [=]() {
     buttonChangeStatus->setStyleSheet("font-size: 50px; border-color: #ff0000; border-radius: 25px;");
     qDebug() << "hello world"; // needs to set LOGPRINT=debug environment variable
+    UIState *s = uiState();
+    s->button0 += s->button0 == 2? -2 : 1;
+    qDebug() << "button0 state: "<< s->button0;
   });
   buttonChangeStatus->setFixedWidth(525);
   buttonChangeStatus->setFixedHeight(150);
@@ -131,7 +134,7 @@ ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
 
     setStyleSheet(R"(
     QPushButton {
-      color: red;
+      color: white;
       text-align: center;
       padding: 0px;
       border-width: 12px;
@@ -266,8 +269,7 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->addWidget(buttons);
 
   // Ale Sato button
-  UIState *s = uiState();
-  buttons->updateState(s);
+  buttons->updateState(uiState());
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {

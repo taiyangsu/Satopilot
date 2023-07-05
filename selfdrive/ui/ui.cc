@@ -222,7 +222,7 @@ void UIState::updateStatus() {
     } else {
       status = controls_state.getEnabled() ? STATUS_ENGAGED : STATUS_DISENGAGED;
     }
-  }
+   }
 
   // Handle onroad/offroad transition
   if (scene.started != started_prev || sm->frame == 1) {
@@ -234,7 +234,13 @@ void UIState::updateStatus() {
     emit offroadTransition(!scene.started);
     emit offroadTransition(false); // hardcode to put ui in alway on road mode
   }
-  // qDebug() << "hello world"; // needs to set LOGPRINT=debug environment variable
+  if (button0) {
+    qDebug() << "button0 changed, button0:" << button0; // needs to set LOGPRINT=debug environment variable
+    status = button0 == 1? STATUS_ENGAGED : STATUS_OVERRIDE;
+  } else {
+    qDebug() << "default status, button0" << button0;
+    status = STATUS_DISENGAGED;
+  }
 }
 
 UIState::UIState(QObject *parent) : QObject(parent) {
