@@ -153,8 +153,10 @@ public:
   std::unique_ptr<SubMaster> sm;
 
   UIStatus status;
-  int button0 = 0;
   UIScene scene = {};
+  // Ale Sato
+  int button0 = 0;
+  int blinkerstatus = 0;
 
   bool awake;
   QString language;

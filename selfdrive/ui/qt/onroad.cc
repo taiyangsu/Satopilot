@@ -107,6 +107,16 @@ void OnroadWindow::offroadTransition(bool offroad) {
 void OnroadWindow::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.fillRect(rect(), QColor(bg.red(), bg.green(), bg.blue(), 255));
+
+  UIState *s = uiState();
+  if (s->blinkerstatus % 2 == 0) {
+  // if (s->blinkerstatus) {
+    QRect r = QRect(0, 0, 400, height());
+    p.setPen(Qt::NoPen);
+    // p.setBrush(QBrush(alert_colors[alert.status]));
+    p.setBrush(QBrush(QColor(255, 0, 0, 255)));
+    p.drawRect(r);
+  }
 }
 
 // ***** onroad widgets *****
@@ -119,18 +129,30 @@ ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
   buttons_layout->setContentsMargins(0, 0, 15, 15);
   main_layout->addWidget(buttons_wrapper, 0, Qt::AlignBottom);
 
+  UIState *s = uiState();
   buttonChangeStatus = new QPushButton("Change Borders");
   QObject::connect(buttonChangeStatus, &QPushButton::clicked, [=]() {
-    buttonChangeStatus->setStyleSheet("font-size: 50px; border-color: #ff0000; border-radius: 25px;");
+    buttonChangeStatus->setStyleSheet("font-size: 50px; border-color: #00ff00; border-radius: 25px;");
     qDebug() << "hello world"; // needs to set LOGPRINT=debug environment variable
-    UIState *s = uiState();
     s->button0 += s->button0 == 2? -2 : 1;
     qDebug() << "button0 state: "<< s->button0;
   });
-  buttonChangeStatus->setFixedWidth(525);
+  buttonChangeStatus->setFixedWidth(425);
   buttonChangeStatus->setFixedHeight(150);
-  // buttons_layout->addStretch(); // void expand vertically, 1 expand horizontally
   buttons_layout->addWidget(buttonChangeStatus, 0, Qt::AlignCenter);
+
+  buttonBlinker = new QPushButton("Test blinkers");
+  QObject::connect(buttonBlinker, &QPushButton::clicked, [=]() {
+    buttonBlinker->setStyleSheet("font-size: 50px; border-color: #ff0000; border-radius: 25px;");
+    qDebug() << "bye world!";
+    s->blinkerstatus += s->blinkerstatus == 2? -2 : 1;
+    qDebug() << "blinkerstatus: " << s->blinkerstatus;
+    // onroadwindow->updateState(s);
+  });
+  buttonBlinker->setFixedWidth(425);
+  buttonBlinker->setFixedHeight(150);
+  buttons_layout->addWidget(buttonBlinker, 0, Qt::AlignCenter);
+  // buttons_layout->addStretch(); // void expand vertically, 1 expand horizontally
 
     setStyleSheet(R"(
     QPushButton {
@@ -146,6 +168,7 @@ ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
 
 void ButtonsWindows::updateState(const UIState &s) {
   buttonChangeStatus->setStyleSheet(QString("color: white; font-size: 50px; border-radius: 25px; border-color: red"));
+  buttonBlinker->setStyleSheet(QString("color: white; font-size: 50px; border-radius: 25px; border-color: blue"));
 }
 
 // OnroadAlerts

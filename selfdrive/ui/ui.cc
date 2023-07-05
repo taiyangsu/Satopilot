@@ -235,10 +235,10 @@ void UIState::updateStatus() {
     emit offroadTransition(false); // hardcode to put ui in alway on road mode
   }
   if (button0) {
-    qDebug() << "button0 changed, button0:" << button0; // needs to set LOGPRINT=debug environment variable
+    // qDebug() << "button0 changed, button0:" << button0; // needs to set LOGPRINT=debug environment variable
     status = button0 == 1? STATUS_ENGAGED : STATUS_OVERRIDE;
   } else {
-    qDebug() << "default status, button0" << button0;
+    // qDebug() << "default status, button0" << button0;
     status = STATUS_DISENGAGED;
   }
 }

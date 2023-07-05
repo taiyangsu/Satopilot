@@ -23,6 +23,8 @@ public:
 
 private:
   QPushButton *buttonChangeStatus;
+  QPushButton *buttonBlinker;
+  // OnroadWindow *onroadwindow;
 };
 
 class OnroadAlerts : public QWidget {
