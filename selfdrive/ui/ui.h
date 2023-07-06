@@ -157,6 +157,8 @@ public:
   // Ale Sato
   int button0 = 0;
   int blinkerstatus = 0;
+  int prev_blinkerstatus = 0;
+  int blinkerframe = 0;
 
   bool awake;
   QString language;

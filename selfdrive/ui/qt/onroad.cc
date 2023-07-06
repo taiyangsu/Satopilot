@@ -69,6 +69,14 @@ void OnroadWindow::updateState(const UIState &s) {
     bg = bgColor;
     update();
   }
+  // TODO improve this logic
+  UIState *my_s = uiState();
+  if (s.blinkerstatus != my_s->prev_blinkerstatus || true) {
+    update();
+    my_s->prev_blinkerstatus = s.blinkerstatus;
+    my_s->blinkerframe += my_s->blinkerframe < 255? +10 : -255;
+    // qDebug() << "blinker frame: " << my_s->blinkerframe;
+  }
 }
 
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
@@ -108,13 +116,16 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.fillRect(rect(), QColor(bg.red(), bg.green(), bg.blue(), 255));
 
+  p.setPen(Qt::NoPen);
   UIState *s = uiState();
-  if (s->blinkerstatus % 2 == 0) {
-  // if (s->blinkerstatus) {
+  p.setBrush(QBrush(s->blinkerframe < 124? QColor(255, 255, 0, 255) : QColor(0, 0, 0, 255)));
+  if (s->blinkerstatus == 1) {
+    // left rectangle for blinker indicator
     QRect r = QRect(0, 0, 400, height());
-    p.setPen(Qt::NoPen);
-    // p.setBrush(QBrush(alert_colors[alert.status]));
-    p.setBrush(QBrush(QColor(255, 0, 0, 255)));
+    p.drawRect(r);
+  } else if (s->blinkerstatus == 2) {
+    // right rectangle for blinker indicator
+    QRect r = QRect((width() -400), 0, width(), height());
     p.drawRect(r);
   }
 }
@@ -147,7 +158,6 @@ ButtonsWindows::ButtonsWindows(QWidget *parent) : QWidget(parent) {
     qDebug() << "bye world!";
     s->blinkerstatus += s->blinkerstatus == 2? -2 : 1;
     qDebug() << "blinkerstatus: " << s->blinkerstatus;
-    // onroadwindow->updateState(s);
   });
   buttonBlinker->setFixedWidth(425);
   buttonBlinker->setFixedHeight(150);
