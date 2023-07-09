@@ -74,8 +74,7 @@ void OnroadWindow::updateState(const UIState &s) {
   if (s.blinkerstatus != my_s->prev_blinkerstatus || true) {
     update();
     my_s->prev_blinkerstatus = s.blinkerstatus;
-    my_s->blinkerframe += my_s->blinkerframe < 255? +10 : -255;
-    // qDebug() << "blinker frame: " << my_s->blinkerframe;
+    my_s->blinkerframe += my_s->blinkerframe < 255? +18 : -255;
   }
 }
 
@@ -116,18 +115,46 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.fillRect(rect(), QColor(bg.red(), bg.green(), bg.blue(), 255));
 
+  // Begin AleSato Blinker Indicator
   p.setPen(Qt::NoPen);
   UIState *s = uiState();
-  p.setBrush(QBrush(s->blinkerframe < 124? QColor(255, 255, 0, 255) : QColor(0, 0, 0, 255)));
+  p.setBrush(QBrush(QColor(0, 0, 0, 0xff)));
   if (s->blinkerstatus == 1) {
     // left rectangle for blinker indicator
-    QRect r = QRect(0, 0, 400, height());
+    float rightcorner = width() * 0.75;
+    QRect blackground = QRect(0, height()*0.75, rightcorner, height());
+    p.drawRect(blackground);
+    float bottomsect = rightcorner / (rightcorner + (height()/4)); // time proportion
+    float delta = 1 - (float(s->blinkerframe)/(255*bottomsect));
+    delta = delta < 0? 0 : delta;
+    delta = delta > 1? 1 : delta;
+    QRect r = QRect(rightcorner*delta, height()-30, rightcorner-(rightcorner*delta), 30);
+    p.setBrush(QBrush(QColor(255, 150, 0, 255)));
+    p.drawRect(r);
+    float delta2 = (float(s->blinkerframe) - float(255 * bottomsect)) / (255 * (1 - bottomsect));
+    delta2 = delta2 < 0? 0 : delta2;
+    delta2 = delta2 > 1? 1 : delta2;
+    r = QRect(0, height() - height()*0.25*delta2, 30, height());
     p.drawRect(r);
   } else if (s->blinkerstatus == 2) {
     // right rectangle for blinker indicator
-    QRect r = QRect((width() -400), 0, width(), height());
+    float leftcorner = width() * 0.25;
+    QRect blackground = QRect(leftcorner, height()*0.75, width(), height());
+    p.drawRect(blackground);
+    float bottomsect = (width() - leftcorner) / (width() - leftcorner + (height()/4)); // time proportion
+    float delta = float(s->blinkerframe)/(255*bottomsect);
+    delta = delta < 0? 0 : delta;
+    delta = delta > 1? 1 : delta;
+    QRect r = QRect(leftcorner, height()-30, (width()-leftcorner)*delta, 30);
+    p.setBrush(QBrush(QColor(255, 150, 0, 255)));
+    p.drawRect(r);
+    float delta2 = (float(s->blinkerframe) - float(255 * bottomsect)) / (255 * (1 - bottomsect));
+    delta2 = delta2 < 0? 0 : delta2;
+    delta2 = delta2 > 1? 1 : delta2;
+    r = QRect(width()-30, height() - height()*0.25*delta2, width(), height());
     p.drawRect(r);
   }
+  // End AleSato Blinker Indicator
 }
 
 // ***** onroad widgets *****

@@ -154,7 +154,7 @@ public:
 
   UIStatus status;
   UIScene scene = {};
-  // Ale Sato
+  // Ale Sato blinker indicator
   int button0 = 0;
   int blinkerstatus = 0;
   int prev_blinkerstatus = 0;
