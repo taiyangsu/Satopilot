@@ -13,11 +13,10 @@
 #include "selfdrive/ui/qt/maps/map_panel.h"
 #endif
 
-#define FONT_OPEN_SANS "Inter" //"Open Sans"
 
 OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   QVBoxLayout *main_layout  = new QVBoxLayout(this);
-  main_layout->setMargin(bdr_s);
+  main_layout->setMargin(UI_BORDER_SIZE);
   QStackedLayout *stacked_layout = new QStackedLayout;
   stacked_layout->setStackingMode(QStackedLayout::StackAll);
   main_layout->addLayout(stacked_layout);
@@ -67,8 +66,18 @@ void OnroadWindow::updateState(const UIState &s) {
 
   nvg->updateState(s);
 
-  if (bg != bgColor) {
-    // repaint border
+  // update spacing
+  bool navDisabledNow = (*s.sm)["controlsState"].getControlsState().getEnabled() &&
+                        !(*s.sm)["modelV2"].getModelV2().getNavEnabled();
+  if (navDisabled != navDisabledNow) {
+    split->setSpacing(navDisabledNow ? UI_BORDER_SIZE * 2 : 0);
+    if (map) {
+      map->setFixedWidth(topWidget(this)->width() / 2 - UI_BORDER_SIZE * (navDisabledNow ? 2 : 1));
+    }
+  }
+
+  // repaint border
+  if (bg != bgColor || navDisabled != navDisabledNow) {
     bg = bgColor;
     update();
   }
@@ -97,7 +106,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
       QObject::connect(m, &MapPanel::mapWindowShown, this, &OnroadWindow::mapWindowShown);
 
-      m->setFixedWidth(topWidget(this)->width() / 2 - bdr_s);
+      m->setFixedWidth(topWidget(this)->width() / 2 - UI_BORDER_SIZE);
       split->insertWidget(0, m);
 
       // hidden by default, made visible when navRoute is published
@@ -212,25 +221,24 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   p.setPen(QColor(0xff, 0xff, 0xff));
   p.setRenderHint(QPainter::TextAntialiasing);
   if (alert.size == cereal::ControlsState::AlertSize::SMALL) {
-    configFont(p, "Inter", 74, "SemiBold");
+    p.setFont(InterFont(74, QFont::DemiBold));
     p.drawText(r, Qt::AlignCenter, alert.text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
-    configFont(p, "Inter", 88, "Bold");
+    p.setFont(InterFont(88, QFont::Bold));
     p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);
-    configFont(p, "Inter", 66, "Regular");
+    p.setFont(InterFont(66));
     p.drawText(QRect(0, c.y() + 21, width(), 90), Qt::AlignHCenter, alert.text2);
   } else if (alert.size == cereal::ControlsState::AlertSize::FULL) {
     bool l = alert.text1.length() > 15;
-    configFont(p, "Inter", l ? 132 : 177, "Bold");
+    p.setFont(InterFont(l ? 132 : 177, QFont::Bold));
     p.drawText(QRect(0, r.y() + (l ? 240 : 270), width(), 600), Qt::AlignHCenter | Qt::TextWordWrap, alert.text1);
-    configFont(p, "Inter", 88, "Regular");
+    p.setFont(InterFont(88));
     p.drawText(QRect(0, r.height() - (l ? 361 : 420), width(), 300), Qt::AlignHCenter | Qt::TextWordWrap, alert.text2);
   }
 }
 
 // ExperimentalButton
-ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), QPushButton(parent) {
-  setVisible(false);
+ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), engageable(false), QPushButton(parent) {
   setFixedSize(btn_size, btn_size);
 
   params = Params();
@@ -277,7 +285,7 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   pm = std::make_unique<PubMaster, const std::initializer_list<const char *>>({"uiDebug"});
 
   QVBoxLayout *main_layout  = new QVBoxLayout(this);
-  main_layout->setMargin(bdr_s);
+  main_layout->setMargin(UI_BORDER_SIZE);
   main_layout->setSpacing(0);
 
   experimental_btn = new ExperimentalButton(this);
@@ -363,10 +371,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.save();
 
   // Header gradient
-  QLinearGradient bg(0, header_h - (header_h / 2.5), 0, header_h);
+  QLinearGradient bg(0, UI_HEADER_HEIGHT - (UI_HEADER_HEIGHT / 2.5), 0, UI_HEADER_HEIGHT);
   bg.setColorAt(0, QColor::fromRgbF(0, 0, 0, 0.45));
   bg.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
-  p.fillRect(0, 0, width(), header_h, bg);
+  p.fillRect(0, 0, width(), UI_HEADER_HEIGHT, bg);
 
   QString speedLimitStr = (speedLimit > 1) ? QString::number(std::nearbyint(speedLimit)) : "–";
   QString speedStr = QString::number(std::nearbyint(speed));
@@ -412,10 +420,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     max_color = QColor(0xa6, 0xa6, 0xa6, 0xff);
     set_speed_color = QColor(0x72, 0x72, 0x72, 0xff);
   }
-  configFont(p, "Inter", 40, "SemiBold");
+  p.setFont(InterFont(40, QFont::DemiBold));
   p.setPen(max_color);
   p.drawText(set_speed_rect.adjusted(0, 27, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("MAX"));
-  configFont(p, "Inter", 90, "Bold");
+  p.setFont(InterFont(90, QFont::Bold));
   p.setPen(set_speed_color);
   p.drawText(set_speed_rect.adjusted(0, 77, 0, 0), Qt::AlignTop | Qt::AlignHCenter, setSpeedStr);
 
@@ -428,10 +436,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(blackColor(), 6));
     p.drawRoundedRect(sign_rect.adjusted(9, 9, -9, -9), 16, 16);
 
-    configFont(p, "Inter", 28, "SemiBold");
+    p.setFont(InterFont(28, QFont::DemiBold));
     p.drawText(sign_rect.adjusted(0, 22, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("SPEED"));
     p.drawText(sign_rect.adjusted(0, 51, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("LIMIT"));
-    configFont(p, "Inter", 70, "Bold");
+    p.setFont(InterFont(70, QFont::Bold));
     p.drawText(sign_rect.adjusted(0, 85, 0, 0), Qt::AlignTop | Qt::AlignHCenter, speedLimitStr);
   }
 
@@ -443,7 +451,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(Qt::red, 20));
     p.drawEllipse(sign_rect.adjusted(16, 16, -16, -16));
 
-    configFont(p, "Inter", (speedLimitStr.size() >= 3) ? 60 : 70, "Bold");
+    p.setFont(InterFont((speedLimitStr.size() >= 3) ? 60 : 70, QFont::Bold));
     p.setPen(blackColor());
     p.drawText(sign_rect, Qt::AlignCenter, speedLimitStr);
   }
@@ -466,7 +474,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     {1500, 2100, 3000},
     {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
   ));
-  configFont(p, "Inter", 40, "SemiBold");
+  p.setFont(InterFont(40, QFont::DemiBold));
   p.drawText(my_engine_rpm_rect.adjusted(0, 97, 0, 0), Qt::AlignTop | Qt::AlignCenter, tr("ENGINE RPM"));
 
   // Draw colored RPM numbers
@@ -479,7 +487,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else {
     p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
   }
-  configFont(p, "Inter", 90, "Bold");
+  p.setFont(InterFont(90, QFont::Bold));
   p.drawText(my_engine_rpm_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  engineRPMStr);
   // End AleSato
 
@@ -504,7 +512,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     {3, 5, 10},
     {QColor(0xff, 0xbf, 0xbf, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0x80, 0xd8, 0xa6, 0xff)}
   ));
-  configFont(p, "Inter", 40, "SemiBold");
+  p.setFont(InterFont(40, QFont::DemiBold));
   p.drawText(my_trip_distance_rect.adjusted(0, 97, 0, 0), Qt::AlignTop | Qt::AlignCenter, tr("TRIP DIST"));
 
   // Draw trip distance
@@ -521,17 +529,16 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else {
     p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
   }
-  configFont(p, "Inter", 90, "Bold");
+  p.setFont(InterFont(90, QFont::Bold));
   p.drawText(my_trip_distance_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  distanceTraveledStr);
   // End2 AleSato 
 
   // current speed
-  configFont(p, "Inter", 230, "Bold");
-
+  p.setFont(InterFont(230, QFont::Bold));
+  drawText(p, rect().center().x(), 210, speedStr);
   // Turning the speed blue
   drawTextWithColor(p, rect().center().x(), 210, speedStr, engineColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 
-  
-  configFont(p, "Inter", 66, "Regular");
+  p.setFont(InterFont(66));
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
   // opkr blinker
@@ -711,7 +718,7 @@ void AnnotatedCameraWidget::drawDriverState(QPainter &painter, const UIState *s)
   painter.save();
 
   // base icon
-  int offset = bdr_s + btn_size / 2;
+  int offset = UI_BORDER_SIZE + btn_size / 2;
   int x = rightHandDM ? width() - offset : offset;
   int y = height() - offset;
   float opacity = dmActive ? 0.65 : 0.2;
@@ -883,7 +890,7 @@ void AnnotatedCameraWidget::drawLockon(QPainter &painter, const cereal::ModelDat
   float y1 = leadcar_lockon[1].x * leadcar_lockon[1].d;
 #endif
 
-  configFont(painter, FONT_OPEN_SANS, 38, "SemiBold");
+  painter.setFont(InterFont(38, QFont::DemiBold));
   if(num == 0 /* && uiState()->scene.mLockOnButton */){
     //推論1番
     painter.setPen(QPen(QColor(0.09*255, 0.945*255, 0.26*255, prob_alpha), 2));
