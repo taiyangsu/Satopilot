@@ -293,8 +293,6 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
 
     // HelloButton
   buttons = new ButtonsWindow(this);
-  // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
-  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
   main_layout->addWidget(buttons);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
@@ -355,6 +353,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("left_blinker", s.scene.leftBlinker);
   setProperty("right_blinker", s.scene.rightBlinker);
   setProperty("blinker_rate", s.scene.blinker_blinkingrate);
+  buttons->updateState(s);
 
   // update engageability/experimental mode button
   experimental_btn->updateState(s);
