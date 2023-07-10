@@ -71,7 +71,7 @@ void OnroadWindow::updateState(const UIState &s) {
   }
   // TODO improve this logic
   UIState *my_s = uiState();
-  if (s.blinkerstatus != my_s->prev_blinkerstatus || true) {
+  if (s.blinkerstatus || my_s->prev_blinkerstatus) {
     update();
     my_s->prev_blinkerstatus = s.blinkerstatus;
     my_s->blinkerframe += my_s->blinkerframe < 255? +18 : -255;
@@ -126,14 +126,12 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
     p.drawRect(blackground);
     float bottomsect = rightcorner / (rightcorner + (height()/4)); // time proportion
     float delta = 1 - (float(s->blinkerframe)/(255*bottomsect));
-    delta = delta < 0? 0 : delta;
-    delta = delta > 1? 1 : delta;
+    delta = std::clamp(delta, 0.0f, 1.0f);
     QRect r = QRect(rightcorner*delta, height()-30, rightcorner-(rightcorner*delta), 30);
     p.setBrush(QBrush(QColor(255, 150, 0, 255)));
     p.drawRect(r);
     float delta2 = (float(s->blinkerframe) - float(255 * bottomsect)) / (255 * (1 - bottomsect));
-    delta2 = delta2 < 0? 0 : delta2;
-    delta2 = delta2 > 1? 1 : delta2;
+    delta2 = std::clamp(delta2, 0.0f, 1.0f);
     r = QRect(0, height() - height()*0.25*delta2, 30, height());
     p.drawRect(r);
   } else if (s->blinkerstatus == 2) {
@@ -143,14 +141,12 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
     p.drawRect(blackground);
     float bottomsect = (width() - leftcorner) / (width() - leftcorner + (height()/4)); // time proportion
     float delta = float(s->blinkerframe)/(255*bottomsect);
-    delta = delta < 0? 0 : delta;
-    delta = delta > 1? 1 : delta;
+    delta = std::clamp(delta, 0.0f, 1.0f);
     QRect r = QRect(leftcorner, height()-30, (width()-leftcorner)*delta, 30);
     p.setBrush(QBrush(QColor(255, 150, 0, 255)));
     p.drawRect(r);
     float delta2 = (float(s->blinkerframe) - float(255 * bottomsect)) / (255 * (1 - bottomsect));
-    delta2 = delta2 < 0? 0 : delta2;
-    delta2 = delta2 > 1? 1 : delta2;
+    delta2 = std::clamp(delta2, 0.0f, 1.0f);
     r = QRect(width()-30, height() - height()*0.25*delta2, width(), height());
     p.drawRect(r);
   }
@@ -328,8 +324,7 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   buttons = new ButtonsWindows(this);
   main_layout->addWidget(buttons);
 
-  // Ale Sato button
-  buttons->updateState(uiState());
+
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {
@@ -378,6 +373,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
 
   // update engageability/experimental mode button
   experimental_btn->updateState(s);
+
+  // Ale Sato button
+  buttons->updateState(s);
 
   // update DM icon
   auto dm_state = sm["driverMonitoringState"].getDriverMonitoringState();
