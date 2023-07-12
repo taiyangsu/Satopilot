@@ -58,7 +58,7 @@ MapWindow::MapWindow(const QMapboxGLSettings &settings) : m_settings(settings), 
     }
   )");
   QObject::connect(settings_btn, &QPushButton::clicked, [=]() {
-    emit openSettings();
+    emit requestSettings(true);
   });
 
   overlay_layout->addWidget(map_instructions);
@@ -130,6 +130,15 @@ void MapWindow::updateState(const UIState &s) {
   const SubMaster &sm = *(s.sm);
   update();
 
+  // update navigate on openpilot status
+  if (sm.updated("modelV2")) {
+    bool nav_enabled = sm["modelV2"].getModelV2().getNavEnabled();
+    if (nav_enabled && !uiState()->scene.navigate_on_openpilot) {
+      emit requestVisible(true);  // Show map on rising edge of navigate on openpilot
+    }
+    uiState()->scene.navigate_on_openpilot = nav_enabled;
+  }
+
   if (sm.updated("liveLocationKalman")) {
     auto locationd_location = sm["liveLocationKalman"].getLiveLocationKalman();
     auto locationd_pos = locationd_location.getPositionGeodetic();
@@ -157,6 +166,7 @@ void MapWindow::updateState(const UIState &s) {
       emit requestVisible(true); // Show map on destination set/change
       allow_open = false;
     }
+    emit requestSettings(false);
   }
 
   if (m_map.isNull()) {
@@ -347,6 +357,7 @@ void MapWindow::pinchTriggered(QPinchGesture *gesture) {
 void MapWindow::offroadTransition(bool offroad) {
   if (offroad) {
     clearRoute();
+    uiState()->scene.navigate_on_openpilot = false;
   } else {
     auto dest = coordinate_from_param("NavDestination");
     emit requestVisible(dest.has_value());
@@ -557,10 +568,6 @@ void MapETA::paintEvent(QPaintEvent *event) {
 }
 
 void MapETA::updateETA(float s, float s_typical, float d) {
-  eta_doc.clear();
-  setVisible(d >= MANEUVER_TRANSITION_THRESHOLD);
-  if (!isVisible()) return;
-
   // ETA
   auto eta_t = QDateTime::currentDateTime().addSecs(s).time();
   auto eta = format_24h ? std::array{eta_t.toString("HH:mm"), tr("eta")}
@@ -581,5 +588,7 @@ void MapETA::updateETA(float s, float s_typical, float d) {
 
   eta_doc.setHtml(QString(R"(<body><b>%1</b>%2 <span style="color:%3"><b>%4</b>%5</span> <b>%6</b>%7</body>)")
                       .arg(eta[0], eta[1], color, remaining[0], remaining[1], distance[0], distance[1]));
+
+  setVisible(d >= MANEUVER_TRANSITION_THRESHOLD);
   update();
 }
