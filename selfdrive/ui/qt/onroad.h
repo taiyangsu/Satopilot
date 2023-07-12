@@ -84,9 +84,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(float enginerpm MEMBER enginerpm);
   Q_PROPERTY(bool engineColorSpeed MEMBER engineColorSpeed);
   Q_PROPERTY(float distanceTraveled MEMBER distanceTraveled);
-  Q_PROPERTY(bool left_blinker MEMBER left_blinker);
-  Q_PROPERTY(bool right_blinker MEMBER right_blinker);
-  Q_PROPERTY(int blinker_rate MEMBER blinker_rate);
 
 public:
   explicit AnnotatedCameraWidget(VisionStreamType type, QWidget* parent = 0);
@@ -124,9 +121,6 @@ private:
   float enginerpm; 
   bool engineColorSpeed = false;
   float distanceTraveled;
-  bool left_blinker = false;
-  bool right_blinker = false;
-  int blinker_rate = 120; 
 
 protected:
   void paintGL() override;
@@ -142,7 +136,6 @@ protected:
   inline QColor redColor(int alpha = 255) { return QColor(201, 34, 49, alpha); }
   inline QColor whiteColor(int alpha = 255) { return QColor(255, 255, 255, alpha); }
   inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
-  inline QColor yellowColor(int alpha = 255) { return QColor(218, 202, 37, alpha); }
 
   double prev_draw_t = 0;
   FirstOrderFilter fps_filter;

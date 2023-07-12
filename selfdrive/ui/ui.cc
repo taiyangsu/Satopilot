@@ -206,19 +206,12 @@ static void update_state(UIState *s) {
   }
   scene.started = sm["deviceState"].getDeviceState().getStarted() && scene.ignition;
 
+  // Ale Sato blinker indicator
   if (sm.updated("carState")) {
     auto cs_data = sm["carState"].getCarState();
-
-    if (scene.leftBlinker!=cs_data.getLeftBlinker() || scene.rightBlinker!=cs_data.getRightBlinker()) {
-      s->scene.blinker_blinkingrate = 120;
-    }
-    if (scene.leftBlinker || scene.rightBlinker) {
-      s->scene.blinker_blinkingrate -= 5;
-      if(scene.blinker_blinkingrate < 40) s->scene.blinker_blinkingrate = 120;
-    }    
-
     s->scene.leftBlinker = cs_data.getLeftBlinker();
     s->scene.rightBlinker = cs_data.getRightBlinker();
+    scene.blinkerstatus = cs_data.getLeftBlinker()? 1 : cs_data.getRightBlinker()? 2 : 0;
   }
 }
 

@@ -135,9 +135,12 @@ typedef struct UIScene {
   bool started, ignition, is_metric, map_on_left, longitudinal_control;
   uint64_t started_frame;
 
+  // Ale Sato blinker indicator
   bool leftBlinker;
   bool rightBlinker;  
-  int blinker_blinkingrate;
+  int blinkerstatus = 0;
+  int prev_blinkerstatus = 0;
+  int blinkerframe = 0;
 } UIScene;
 
 class UIState : public QObject {
