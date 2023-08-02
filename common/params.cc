@@ -84,6 +84,11 @@ private:
 };
 
 std::unordered_map<std::string, uint32_t> keys = {
+    // AleSato stuff 
+    {"AleSato_RemoteLockDoors", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
+    {"AleSato_ShutdownScreen", PERSISTENT},
+    {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
+    
     {"AccessToken", CLEAR_ON_MANAGER_START | DONT_LOG},
     {"ApiCache_Device", PERSISTENT},
     {"ApiCache_DriveStats", PERSISTENT},
@@ -107,6 +112,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DisablePowerDown", PERSISTENT},
     {"DisableUpdates", PERSISTENT},
     {"DisengageOnAccelerator", PERSISTENT},
+    {"DmModelInitialized", CLEAR_ON_ONROAD_TRANSITION},
     {"DongleId", PERSISTENT},
     {"DoReboot", CLEAR_ON_MANAGER_START},
     {"DoShutdown", CLEAR_ON_MANAGER_START},
@@ -204,10 +210,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"UpdaterTargetBranch", CLEAR_ON_MANAGER_START},
     {"Version", PERSISTENT},
     {"VisionRadarToggle", PERSISTENT},
-
-    {"AleSato_RemoteLockDoors", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
-    {"AleSato_ShutdownScreen", PERSISTENT},
-    {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
+    {"WheeledBody", PERSISTENT},
 };
 
 } // namespace
