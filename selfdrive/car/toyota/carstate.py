@@ -4,13 +4,12 @@ from cereal import car
 from common.conversions import Conversions as CV
 from common.numpy_fast import mean
 from common.filter_simple import FirstOrderFilter
-from common.params import Params
+from common.params import Params, put_bool_nonblocking
 from common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
 from selfdrive.car.toyota.values import ToyotaFlags, CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR, RADAR_ACC_CAR, EPS_SCALE, UNSUPPORTED_DSU_CAR
-from common.params import Params
 
 SteerControlType = car.CarParams.SteerControlType
 
@@ -45,6 +44,7 @@ class CarState(CarStateBase):
     self.acc_type = 1
     self.lkas_hud = {}
     self.params = Params()
+    self.mem_params = Params("/dev/shm/params")
 
     # Steer always on stuff , Stolen from spektor56 and sunnyhaibin (Giants shoulders)
     self.madsEnabled = False
@@ -167,7 +167,7 @@ class CarState(CarStateBase):
       self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1
     if self.ispressed and not self.ispressed_prev:
       self.e2eLongButton = not self.params.get_bool("ExperimentalMode")
-      self.params.put_bool('ExperimentalMode', self.e2eLongButton)
+      put_bool_nonblocking('ExperimentalMode', self.e2eLongButton)
     self.ispressed_prev = self.ispressed
 
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["FRONT_FOG"])
@@ -185,11 +185,11 @@ class CarState(CarStateBase):
       self.lkas_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
       if self.prev_lkas_enabled is None:
         self.prev_lkas_enabled = self.lkas_enabled  
-      if not self.prev_lkas_enabled and self.lkas_enabled and not self.params.get_bool("AleSato_SteerAlwaysOn") and ret.cruiseState.available:
-        self.params.put_bool('AleSato_SteerAlwaysOn', True)  
-      elif (self.prev_lkas_enabled and not self.lkas_enabled and self.params.get_bool("AleSato_SteerAlwaysOn")) or not ret.cruiseState.available:
-        self.params.put_bool('AleSato_SteerAlwaysOn', False)  
-      if self.params.get_bool("AleSato_SteerAlwaysOn"):
+      if not self.prev_lkas_enabled and self.lkas_enabled and not self.mem_params.get_bool("AleSato_SteerAlwaysOn") and ret.cruiseState.available:
+        self.mem_params.put_bool('AleSato_SteerAlwaysOn', True)  
+      elif (self.prev_lkas_enabled and not self.lkas_enabled and self.mem_params.get_bool("AleSato_SteerAlwaysOn")) or not ret.cruiseState.available:
+        self.mem_params.put_bool('AleSato_SteerAlwaysOn', False)  
+      if self.mem_params.get_bool("AleSato_SteerAlwaysOn"):
         self.madsEnabled = True
       else:
         self.madsEnabled = False

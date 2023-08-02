@@ -54,7 +54,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 }
 
 void OnroadWindow::updateState(const UIState &s) {
-  QColor bgColor = (Params().getBool("AleSato_SteerAlwaysOn") && s.status != STATUS_ENGAGED)? bg_colors[STATUS_OVERRIDE] : bg_colors[s.status];
+  QColor bgColor = (Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn") && s.status != STATUS_ENGAGED)? bg_colors[STATUS_OVERRIDE] : bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
   alerts->updateAlert(alert);
 
@@ -171,8 +171,8 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton = new QPushButton(initHelloButton);
   
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
-    bool button_state = Params().getBool("AleSato_SteerAlwaysOn");
-    Params().putBool("AleSato_SteerAlwaysOn", !button_state);
+    bool button_state = Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn");
+    Params("/dev/shm/params").putBool("AleSato_SteerAlwaysOn", !button_state);
   });
 
   helloButton->setFixedWidth(525);
@@ -196,7 +196,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
 
 // We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
-  const auto helloButtonState = Params().getBool("AleSato_SteerAlwaysOn");
+  const auto helloButtonState = Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(0)));
     helloButton->setText("STEER ALWAYS");    
