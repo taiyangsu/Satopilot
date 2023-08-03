@@ -362,6 +362,7 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->addWidget(map_settings_btn, 0, Qt::AlignBottom | Qt::AlignRight);
 
   // HelloButton
+  main_layout->addStretch();
   buttons = new ButtonsWindow(this);
   main_layout->addWidget(buttons);
 
