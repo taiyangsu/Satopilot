@@ -1,5 +1,6 @@
 Version 0.9.5 (202X-XX-XX)
 ========================
+* Lexus IS 2023 support thanks to L3R5!
 * Ale Sato
   * Lateral Tunning (fix hugg turn cutting) using Pfeiferj's distance based curvature and increased actuator delay (2023-08-10)
   * Fixed "controls lagging" bug when a engage is requested immediately after activating cruise main (2023-08-02)
