@@ -51,6 +51,9 @@ class CarState(CarStateBase):
     self.lkas_enabled = False
     self.prev_lkas_enabled = False
 
+    # Change between chill/experimental mode using steering wheel 
+    self.ispressed = False
+    self.ispressed_prev = False
     self.distance_lines_control = False
     self.myframe = 0
 
