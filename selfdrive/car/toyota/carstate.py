@@ -167,7 +167,7 @@ class CarState(CarStateBase):
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       self.ispressed = cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1
     elif self.CP.flags & ToyotaFlags.SMART_DSU:
-      self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1 or cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1
+      self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1 or cp_acc.vl["ACC_CONTROL"]["DISTANCE"] == 1
     if self.ispressed and not self.ispressed_prev:
       self.e2eLongButton = not self.params.get_bool("ExperimentalMode")
       put_bool_nonblocking('ExperimentalMode', self.e2eLongButton)
