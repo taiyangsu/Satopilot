@@ -268,6 +268,7 @@ class CarState(CarStateBase):
     if CP.flags & ToyotaFlags.SMART_DSU:
       messages += [
         ("SDSU", 0),
+        ("ACC_CONTROL", 33),
       ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 0)
