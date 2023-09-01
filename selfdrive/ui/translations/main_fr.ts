@@ -354,33 +354,6 @@
         <source>hr</source>
         <translation>h</translation>
     </message>
-    <message>
-        <source>km</source>
-        <translation>km</translation>
-    </message>
-    <message>
-        <source>mi</source>
-        <translation>mi</translation>
-    </message>
-</context>
-<context>
-    <name>MapInstructions</name>
-    <message>
-        <source> km</source>
-        <translation> km</translation>
-    </message>
-    <message>
-        <source> m</source>
-        <translation> m</translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation> mi</translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation> ft</translation>
-    </message>
 </context>
 <context>
     <name>MapSettings</name>
@@ -544,7 +517,7 @@
     <name>PrimeAdWidget</name>
     <message>
         <source>Upgrade Now</source>
-        <translation>Mettre à niveau maintenant</translation>
+        <translation>Mettre à niveau</translation>
     </message>
     <message>
         <source>Become a comma prime member at connect.comma.ai</source>
@@ -620,6 +593,22 @@
             <numerusform>il y a %n jour</numerusform>
             <numerusform>il y a %n jours</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>km</source>
+        <translation>km</translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation>m</translation>
+    </message>
+    <message>
+        <source>mi</source>
+        <translation>mi</translation>
+    </message>
+    <message>
+        <source>ft</source>
+        <translation>ft</translation>
     </message>
 </context>
 <context>
@@ -764,6 +753,10 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <source>Start over</source>
         <translation>Recommencer</translation>
     </message>
+    <message>
+        <source>Select a language</source>
+        <translation>Choisir une langue</translation>
+    </message>
 </context>
 <context>
     <name>SetupWidget</name>
@@ -867,7 +860,7 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
     <name>SoftwarePanel</name>
     <message>
         <source>Updates are only downloaded while the car is off.</source>
-        <translation>Les mises à jour sont téléchargées uniquement lorsque la voiture est éteinte.</translation>
+        <translation>Les MàJ sont téléchargées uniquement si la voiture est éteinte.</translation>
     </message>
     <message>
         <source>Current Version</source>
@@ -1181,7 +1174,7 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
     <name>WiFiPromptWidget</name>
     <message>
         <source>Setup Wi-Fi</source>
-        <translation>Configurer le Wi-Fi</translation>
+        <translation>Configurer Wi-Fi</translation>
     </message>
     <message>
         <source>Connect to Wi-Fi to upload driving data and help improve openpilot</source>

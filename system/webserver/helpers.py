@@ -1,8 +1,8 @@
 import os
 import subprocess
-from system.loggerd.config import ROOT
-from system.loggerd.uploader import listdir_by_creation
-from tools.lib.route import SegmentName
+from openpilot.system.loggerd.config import ROOT
+from openpilot.system.loggerd.uploader import listdir_by_creation
+from openpilot.tools.lib.route import SegmentName
 
 def is_valid_segment(segment):
   try:

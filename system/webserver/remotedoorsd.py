@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, Response, request
-from common.params import Params
-from system.webserver.helpers import *
+from openpilot.common.params import Params
+from openpilot.system.webserver.helpers import *
 
 app = Flask(__name__)
 
