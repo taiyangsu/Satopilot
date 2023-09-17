@@ -112,3 +112,12 @@ private:
   Params params;
   ParamWatcher *fs_watch;
 };
+
+class AlesatoPanel : public ListWidget {
+  Q_OBJECT
+public:
+  explicit AlesatoPanel(SettingsWindow *parent);
+
+private:
+  Params params;
+};

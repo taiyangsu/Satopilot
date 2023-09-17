@@ -105,12 +105,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
     {
-      "AleSato_ShutdownScreen",
-      tr("Turn Off the Screen with Fog Light"),
-      tr("When the fog light is lit the comma3 screen will turn off."),
-      "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
-    },
-    {
       "OpenpilotEnabledToggle",
       tr("Enable openpilot"),
       tr("Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off."),
@@ -428,6 +422,23 @@ void SettingsWindow::setCurrentPanel(int index, const QString &param) {
   }
 }
 
+AlesatoPanel::AlesatoPanel(SettingsWindow *parent) : ListWidget(parent) {
+  // param, title, desc, icon
+  std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
+    {
+      "AleSato_ShutdownScreen",
+      tr("Turn Off the Screen with Fog Light"),
+      tr("When the fog light is lit the comma3 screen will turn off."),
+      "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
+    },
+  };
+
+  for (auto &[param, title, desc, icon] : toggle_defs) {
+    auto toggle = new ParamControl(param, title, desc, icon, this);
+    addItem(toggle);
+  }
+}
+
 SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   // setup two main layouts
@@ -469,6 +480,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), new SoftwarePanel(this)},
+    {tr("Satopilot"), new AlesatoPanel(this)},
   };
 
   nav_btns = new QButtonGroup(this);
