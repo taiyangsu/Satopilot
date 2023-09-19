@@ -58,6 +58,17 @@ class CarState(CarStateBase):
     self.distance_lines_control = False
     self.myframe = 0
 
+    # AleSato's automatic brakehold
+    self.time_to_brakehold = 100 * 3   # 3 seconds stopped to activate
+    self.GearShifter = car.CarState.GearShifter # avoid Rear and Park gears
+    self.stock_aeb = {}
+    self.brakehold_condition_satisfied = False
+    self.brakehold_condition_counter = 0
+    self.reset_brakehold = False    
+    self.prev_brakePressed = True
+    self.brakehold_governor = False
+
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -209,8 +220,26 @@ class CarState(CarStateBase):
         self.distance_lines_control = True
       else:
         self.distance_lines_control = False
-
     self.myframe += 1 if self.myframe < 255 else -255
+      
+    # Automatic BrakeHold
+    self.stock_aeb = copy.copy(cp_cam.vl["PRE_COLLISION_2"])
+    self.brakehold_condition_satisfied =  (ret.standstill and ret.cruiseState.available and not ret.gasPressed and \
+                                          not ret.cruiseState.enabled and not (ret.gearShifter in (self.GearShifter.reverse,\
+                                          self.GearShifter.park)) and self.params.get_bool('AleSato_AutomaticBrakeHold'))
+    if self.brakehold_condition_satisfied:
+      if self.brakehold_condition_counter > self.time_to_brakehold and not self.reset_brakehold:
+        self.brakehold_governor = True
+      else:
+        self.brakehold_governor = False
+      if not self.prev_brakePressed and ret.brakePressed: # disable automatic brakehold in second brakePress
+        self.reset_brakehold = True
+      self.brakehold_condition_counter += 1
+    else:
+      self.brakehold_governor = False
+      self.reset_brakehold = False
+      self.brakehold_condition_counter = 0  
+    self.prev_brakePressed = ret.brakePressed
 
     return ret
 
@@ -285,6 +314,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       messages += [
         ("PRE_COLLISION", 33),
+        ("PRE_COLLISION_2", 33),
         ("ACC_CONTROL", 33),
         ("PCS_HUD", 1),
       ]

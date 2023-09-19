@@ -947,15 +947,6 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert("LKAS Disabled"),
   },
 
-  EventName.manualSteeringRequired: {
-    ET.WARNING: Alert(
-      "LKAS is PAUSED per blinker",
-      "Manual Steering Required",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.HIGH, VisualAlert.steerRequired, AudibleAlert.prompt, .1),
-    ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
-  },
-
   EventName.steerAlwaysEngageSound: {
     ET.PERMANENT: EngagementAlert(AudibleAlert.engage),
   },
@@ -969,6 +960,24 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.PERMANENT: NormalPermanentAlert("Vehicle Sensors Calibrating", "Drive to Calibrate"),
     ET.NO_ENTRY: NoEntryAlert("Vehicle Sensors Calibrating"),
   },
+
+  # AleSato's events
+  EventName.manualSteeringRequired: {
+    ET.WARNING: Alert(
+      "LKAS is PAUSED per blinker",
+      "Manual Steering Required",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.HIGH, VisualAlert.steerRequired, AudibleAlert.prompt, .1),
+    ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
+  },
+
+  EventName.automaticBrakehold: {
+    ET.PERMANENT: Alert(
+      "Automatic Brake Hold Active",
+      "",
+      AlertStatus.normal, AlertSize.small,
+      Priority.LOWEST, VisualAlert.none, AudibleAlert.engageBrakehold, .1,),
+  },  
 
 }
 

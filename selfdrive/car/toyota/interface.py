@@ -307,11 +307,16 @@ class CarInterface(CarInterfaceBase):
           # while in standstill, send a user alert
           events.add(EventName.manualRestart)
 
+    # AleSato's events
     if not self.prevMadsEnabled and self.CS.madsEnabled:
       events.add(EventName.steerAlwaysEngageSound)
     elif self.prevMadsEnabled and not self.CS.madsEnabled:
       events.add(EventName.steerAlwaysDisengageSound)
     self.prevMadsEnabled = self.CS.madsEnabled
+    
+    if self.CS.brakehold_governor:
+      events.add(EventName.automaticBrakehold)
+
 
     ret.events = events.to_msg()
 

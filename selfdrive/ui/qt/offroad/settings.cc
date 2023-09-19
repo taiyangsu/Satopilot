@@ -431,8 +431,13 @@ AlesatoPanel::AlesatoPanel(SettingsWindow *parent) : ListWidget(parent) {
       tr("When the fog light is lit the comma3 screen will turn off."),
       "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
     },
+    {
+      "AleSato_AutomaticBrakeHold",
+      tr("Automatic Brake Hold"),
+      tr("Activates the car's brakes after 3 seconds stopped (requires actived cruise main)."),
+      "../assets/offroad/brakehold.png",
+    },
   };
-
   for (auto &[param, title, desc, icon] : toggle_defs) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
     addItem(toggle);

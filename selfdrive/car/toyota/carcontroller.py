@@ -166,7 +166,14 @@ class CarController:
       elif self.frame > (self.honk_rate_counter + 32):
         can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
         self.twoHonks = False
-    
+
+    # AleSato's Automatic Brake Hold
+    if self.frame % 2 == 0:
+      if CS.brakehold_governor:
+        can_sends.append(toyotacan.create_brakehold_command(self.packer, {}, True if self.frame % 730 < 727 else False))
+      else:
+        can_sends.append(toyotacan.create_brakehold_command(self.packer, CS.stock_aeb, False))
+
     # handle UI messages
     fcw_alert = hud_control.visualAlert == VisualAlert.fcw
     steer_alert = hud_control.visualAlert in (VisualAlert.steerRequired, VisualAlert.ldw)
