@@ -68,6 +68,25 @@
     </message>
 </context>
 <context>
+    <name>AlesatoPanel</name>
+    <message>
+        <source>Turn Off the Screen with Fog Light</source>
+        <translation>Apagar Tela com Farol de Neblina</translation>
+    </message>
+    <message>
+        <source>When the fog light is lit the comma3 screen will turn off.</source>
+        <translation>Quando o farol de neblina estiver aceso a tela do comma3 se apagará.</translation>
+    </message>
+    <message>
+        <source>Automatic Brake Hold</source>
+        <translation>Brake Hold Automático</translation>
+    </message>
+    <message>
+        <source>Activates the car&apos;s brakes after 3 seconds stopped (requires actived cruise main).</source>
+        <translation>Após 3 segundos parado você poderá liberar o pé do freio que o carro continurá freiando (exige que o cruise main esteja ativo).</translation>
+    </message>
+</context>
+<context>
     <name>AnnotatedCameraWidget</name>
     <message>
         <source>km/h</source>
@@ -705,6 +724,10 @@ Isso pode levar até um minuto.</translation>
         <source>Software</source>
         <translation>Software</translation>
     </message>
+    <message>
+        <source>Satopilot</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Setup</name>
@@ -1147,11 +1170,11 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>Turn Off the Screen with Fog Light</source>
-        <translation>Apagar Tela com Farol de Neblina</translation>
+        <translation type="vanished">Apagar Tela com Farol de Neblina</translation>
     </message>
     <message>
         <source>When the fog light is lit the comma3 screen will turn off.</source>
-        <translation>Quando o farol de neblina estiver aceso a tela do comma3 se apagará.</translation>
+        <translation type="vanished">Quando o farol de neblina estiver aceso a tela do comma3 se apagará.</translation>
     </message>
     <message>
         <source>Navigate on openpilot</source>

@@ -40,7 +40,7 @@ class CarInterface(CarInterfaceBase):
     else:
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
-#      ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
+      # ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
       ret.steerActuatorDelay = 0.12 * 4  # AleSato lateral tunning delay
       ret.steerLimitTimer = 0.4
 
