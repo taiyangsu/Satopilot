@@ -1,12 +1,12 @@
 import os
 import subprocess
-from openpilot.system.loggerd.config import ROOT
+from openpilot.system.hardware.hw import Paths
 from openpilot.system.loggerd.uploader import listdir_by_creation
 from openpilot.tools.lib.route import SegmentName
 
 def is_valid_segment(segment):
   try:
-    segment_to_segment_name(ROOT, segment)
+    segment_to_segment_name(Paths.log_root(), segment)
     return True
   except AssertionError:
     return False
@@ -17,9 +17,9 @@ def segment_to_segment_name(data_dir, segment):
 
 def all_segment_names():
   segments = []
-  for segment in listdir_by_creation(ROOT):
+  for segment in listdir_by_creation(Paths.log_root()):
     try:
-      segments.append(segment_to_segment_name(ROOT, segment))
+      segments.append(segment_to_segment_name(Paths.log_root(), segment))
     except AssertionError:
       pass
   return segments
