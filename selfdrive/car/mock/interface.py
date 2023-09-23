@@ -18,6 +18,7 @@ class CarInterface(CarInterfaceBase):
     ret.wheelbase = 2.70
     ret.centerToFront = ret.wheelbase * 0.5
     ret.steerRatio = 13.
+    ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.silent)]
     return ret
 
   def _update(self, c):
