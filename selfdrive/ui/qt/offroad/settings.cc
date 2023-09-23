@@ -22,7 +22,6 @@
 #include "selfdrive/ui/ui.h"
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
-#include "selfdrive/ui/qt/widgets/input.h"
 
 
 LongitudinalPersonality::LongitudinalPersonality() : AbstractControl(tr("Driving Personality"),
@@ -104,12 +103,6 @@ void LongitudinalPersonality::refresh() {
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
-    {
-      "AleSato_ShutdownScreen",
-      tr("Turn Off the Screen with Fog Light"),
-      tr("When the fog light is lit the comma3 screen will turn off."),
-      "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
-    },
     {
       "OpenpilotEnabledToggle",
       tr("Enable openpilot"),
@@ -428,6 +421,28 @@ void SettingsWindow::setCurrentPanel(int index, const QString &param) {
   }
 }
 
+AlesatoPanel::AlesatoPanel(SettingsWindow *parent) : ListWidget(parent) {
+  // param, title, desc, icon
+  std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
+    {
+      "AleSato_ShutdownScreen",
+      tr("Turn Off the Screen with Fog Light"),
+      tr("When the fog light is lit the comma3 screen will turn off."),
+      "../assets/offroad/bright-brightness-sun-svgrepo-com.svg",
+    },
+    {
+      "AleSato_AutomaticBrakeHold",
+      tr("Automatic Brake Hold"),
+      tr("Activates the car's brakes after 3 seconds stopped (requires actived cruise main)."),
+      "../assets/offroad/brakehold.png",
+    },
+  };
+  for (auto &[param, title, desc, icon] : toggle_defs) {
+    auto toggle = new ParamControl(param, title, desc, icon, this);
+    addItem(toggle);
+  }
+}
+
 SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   // setup two main layouts
@@ -469,6 +484,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), new SoftwarePanel(this)},
+    {tr("Satopilot"), new AlesatoPanel(this)},
   };
 
   nav_btns = new QButtonGroup(this);

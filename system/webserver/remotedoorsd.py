@@ -25,7 +25,7 @@ def full(cameratype, route):
   #if not is_valid_route(route):
   #  return "invalid route"
   file_name = cameratype + (".ts" if cameratype == "qcamera" else ".hevc")
-  vidlist = "|".join(ROOT + "/" + segment + "/" + file_name for segment in segments_in_route(route))
+  vidlist = "|".join(Paths.log_root() + "/" + segment + "/" + file_name for segment in segments_in_route(route))
   def generate_buffered_stream():
     with ffmpeg_mp4_concat_wrap_process_builder(vidlist, cameratype, chunk_size) as process:
       for chunk in iter(lambda: process.stdout.read(chunk_size), b""):
@@ -36,7 +36,7 @@ def full(cameratype, route):
 def fcamera(cameratype, segment):
   if not is_valid_segment(segment):
     return "invalid segment"
-  file_name = ROOT + "/" + segment + "/" + cameratype + (".ts" if cameratype == "qcamera" else ".hevc")
+  file_name = Paths.log_root() + "/" + segment + "/" + cameratype + (".ts" if cameratype == "qcamera" else ".hevc")
 
   return Response(ffmpeg_mp4_wrap_process_builder(file_name).stdout.read(), status=200, mimetype='video/mp4')
 

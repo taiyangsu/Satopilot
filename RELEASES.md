@@ -1,10 +1,18 @@
-Version 0.9.5 (202X-XX-XX)
+Version 0.9.6 (2023-XX-XX)
 ========================
+
+Version 0.9.5 (2023-09-27)
+========================
+* New driving model
+  * Improved navigate on openpilot performance using navigation instructions as an additional model input
+* Hyundai Azera 2022 support thanks to sunnyhaibin!
 * Hyundai Ioniq 6 2023 support thanks to sunnyhaibin, alamo3, and sshane!
 * Hyundai Kona Electric 2023 (Korean version) support thanks to sunnyhaibin and haram-KONA!
+* Kia K8 Hybrid (with HDA II) 2023 support thanks to sunnyhaibin!
 * Kia Sorento Hybrid 2023 support thanks to sunnyhaibin!
 * Lexus IS 2023 support thanks to L3R5!
 * Ale Sato
+  * Automatic Brake Hold (2023-09-18)
   * Lateral Tunning (fix hugg turn cutting) using Pfeiferj's distance based curvature and increased actuator delay (2023-08-10)
   * Fixed "controls lagging" bug when a engage is requested immediately after activating cruise main (2023-08-02)
 

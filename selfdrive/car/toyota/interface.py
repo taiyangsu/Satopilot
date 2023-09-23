@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from panda import Panda
@@ -40,7 +39,7 @@ class CarInterface(CarInterfaceBase):
     else:
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
-#      ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
+      # ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
       ret.steerActuatorDelay = 0.12 * 4  # AleSato lateral tunning delay
       ret.steerLimitTimer = 0.4
 
@@ -207,7 +206,8 @@ class CarInterface(CarInterfaceBase):
     ret.enableBsm = 0x3F6 in fingerprint[0] and candidate in TSS2_CAR
 
     # Detect smartDSU, which intercepts ACC_CMD from the DSU (or radar) allowing openpilot to send it
-    if 0x2FF in fingerprint[0]:
+    # 0x2AA is sent by a similar device which intercepts the radar instead of DSU on NO_DSU_CARs
+    if 0x2FF in fingerprint[0] or (0x2AA in fingerprint[0] and candidate in NO_DSU_CAR):
       ret.flags |= ToyotaFlags.SMART_DSU.value
 
     # No radar dbc for cars without DSU which are not TSS 2.0
@@ -221,13 +221,14 @@ class CarInterface(CarInterfaceBase):
     ret.enableGasInterceptor = 0x201 in fingerprint[0]
 
     # if the smartDSU is detected, openpilot can send ACC_CONTROL and the smartDSU will block it from the DSU or radar.
-    # since we don't yet parse radar on TSS2 radar-based ACC cars, gate longitudinal behind experimental toggle
+    # since we don't yet parse radar on TSS2/TSS-P radar-based ACC cars, gate longitudinal behind experimental toggle
     use_sdsu = bool(ret.flags & ToyotaFlags.SMART_DSU)
-    if candidate in RADAR_ACC_CAR:
+    if candidate in (RADAR_ACC_CAR | NO_DSU_CAR):
       ret.experimentalLongitudinalAvailable = use_sdsu
 
       if not use_sdsu:
-        if experimental_long and False:  # TODO: disabling radar isn't supported yet
+        # Disabling radar is only supported on TSS2 radar-ACC cars
+        if experimental_long and candidate in RADAR_ACC_CAR and False:  # TODO: disabling radar isn't supported yet
           ret.flags |= ToyotaFlags.DISABLE_RADAR.value
       else:
         use_sdsu = use_sdsu and experimental_long
@@ -239,6 +240,7 @@ class CarInterface(CarInterfaceBase):
     # openpilot longitudinal behind experimental long toggle:
     #  - TSS2 radar ACC cars w/ smartDSU installed
     #  - TSS2 radar ACC cars w/o smartDSU installed (disables radar)
+    #  - TSS-P DSU-less cars w/ CAN filter installed (no radar parser yet)
     ret.openpilotLongitudinalControl = use_sdsu or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR) or bool(ret.flags & ToyotaFlags.DISABLE_RADAR.value)
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
 
@@ -307,11 +309,16 @@ class CarInterface(CarInterfaceBase):
           # while in standstill, send a user alert
           events.add(EventName.manualRestart)
 
+    # AleSato's events
     if not self.prevMadsEnabled and self.CS.madsEnabled:
       events.add(EventName.steerAlwaysEngageSound)
     elif self.prevMadsEnabled and not self.CS.madsEnabled:
       events.add(EventName.steerAlwaysDisengageSound)
     self.prevMadsEnabled = self.CS.madsEnabled
+    
+    if self.CS.brakehold_governor:
+      events.add(EventName.automaticBrakehold)
+
 
     ret.events = events.to_msg()
 

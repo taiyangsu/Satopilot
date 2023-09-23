@@ -64,7 +64,9 @@ bool create_params_path(const std::string &param_path, const std::string &key_pa
 std::string ensure_params_path(const std::string &prefix, const std::string &path = {}) {
   std::string params_path = path.empty() ? Path::params() : path;
   if (!create_params_path(params_path, params_path + prefix)) {
-    throw std::runtime_error(util::string_format("Failed to ensure params path, errno=%d", errno));
+    throw std::runtime_error(util::string_format(
+        "Failed to ensure params path, errno=%d, path=%s, param_prefix=%s",
+        errno, params_path.c_str(), prefix.c_str()));
   }
   return params_path;
 }
@@ -85,6 +87,7 @@ private:
 
 std::unordered_map<std::string, uint32_t> keys = {
     // AleSato stuff 
+    {"AleSato_AutomaticBrakeHold", PERSISTENT},
     {"AleSato_RemoteLockDoors", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
     {"AleSato_ShutdownScreen", PERSISTENT},
     {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
