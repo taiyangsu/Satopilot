@@ -223,7 +223,7 @@ class CarState(CarStateBase):
     self.myframe += 1 if self.myframe < 255 else -255
       
     # Automatic BrakeHold
-    if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+    if self.CP.carFingerprint in TSS2_CAR:
       self.stock_aeb = copy.copy(cp_cam.vl["PRE_COLLISION_2"])
       self.brakehold_condition_satisfied =  (ret.standstill and ret.cruiseState.available and not ret.gasPressed and \
                                             not ret.cruiseState.enabled and not (ret.gearShifter in (self.GearShifter.reverse,\
@@ -315,9 +315,14 @@ class CarState(CarStateBase):
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       messages += [
         ("PRE_COLLISION", 33),
-        ("PRE_COLLISION_2", 33),
         ("ACC_CONTROL", 33),
         ("PCS_HUD", 1),
+      ]
+
+    # AleSato
+    if CP.carFingerprint in TSS2_CAR:
+      messages += [
+        ("PRE_COLLISION_2", 33),
       ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 2)
