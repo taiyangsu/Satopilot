@@ -223,23 +223,24 @@ class CarState(CarStateBase):
     self.myframe += 1 if self.myframe < 255 else -255
       
     # Automatic BrakeHold
-    self.stock_aeb = copy.copy(cp_cam.vl["PRE_COLLISION_2"])
-    self.brakehold_condition_satisfied =  (ret.standstill and ret.cruiseState.available and not ret.gasPressed and \
-                                          not ret.cruiseState.enabled and not (ret.gearShifter in (self.GearShifter.reverse,\
-                                          self.GearShifter.park)) and self.params.get_bool('AleSato_AutomaticBrakeHold'))
-    if self.brakehold_condition_satisfied:
-      if self.brakehold_condition_counter > self.time_to_brakehold and not self.reset_brakehold:
-        self.brakehold_governor = True
+    if self.CP.carFingerprint in TSS2_CAR:
+      self.stock_aeb = copy.copy(cp_cam.vl["PRE_COLLISION_2"])
+      self.brakehold_condition_satisfied =  (ret.standstill and ret.cruiseState.available and not ret.gasPressed and \
+                                            not ret.cruiseState.enabled and not (ret.gearShifter in (self.GearShifter.reverse,\
+                                            self.GearShifter.park)) and self.params.get_bool('AleSato_AutomaticBrakeHold'))
+      if self.brakehold_condition_satisfied:
+        if self.brakehold_condition_counter > self.time_to_brakehold and not self.reset_brakehold:
+          self.brakehold_governor = True
+        else:
+          self.brakehold_governor = False
+        if not self.prev_brakePressed and ret.brakePressed: # disable automatic brakehold in second brakePress
+          self.reset_brakehold = True
+        self.brakehold_condition_counter += 1
       else:
         self.brakehold_governor = False
-      if not self.prev_brakePressed and ret.brakePressed: # disable automatic brakehold in second brakePress
-        self.reset_brakehold = True
-      self.brakehold_condition_counter += 1
-    else:
-      self.brakehold_governor = False
-      self.reset_brakehold = False
-      self.brakehold_condition_counter = 0  
-    self.prev_brakePressed = ret.brakePressed
+        self.reset_brakehold = False
+        self.brakehold_condition_counter = 0  
+      self.prev_brakePressed = ret.brakePressed
 
     return ret
 
@@ -315,9 +316,14 @@ class CarState(CarStateBase):
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       messages += [
         ("PRE_COLLISION", 33),
-        ("PRE_COLLISION_2", 33),
         ("ACC_CONTROL", 33),
         ("PCS_HUD", 1),
+      ]
+
+    # AleSato
+    if CP.carFingerprint in TSS2_CAR:
+      messages += [
+        ("PRE_COLLISION_2", 33),
       ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 2)
