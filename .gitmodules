@@ -6,9 +6,6 @@
   path = opendbc
   url = ../../AlexandreSato/opendbc.git
   branch = brakehold
-[submodule "laika_repo"]
-  path = laika_repo
-  url = ../../commaai/laika.git
 [submodule "cereal"]
   path = cereal
   url = ../../AlexandreSato/cereal.git

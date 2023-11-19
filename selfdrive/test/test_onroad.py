@@ -5,6 +5,7 @@ import json
 import os
 import pathlib
 import psutil
+import pytest
 import shutil
 import subprocess
 import time
@@ -68,7 +69,7 @@ PROCS.update({
   },
   "tizi": {
      "./boardd": 19.0,
-    "system.sensord.rawgps.rawgpsd": 1.0,
+    "system.qcomgpsd.qcomgpsd": 1.0,
   }
 }.get(HARDWARE.get_device_type(), {}))
 
@@ -98,6 +99,7 @@ def cputime_total(ct):
   return ct.cpuUser + ct.cpuSystem + ct.cpuChildrenUser + ct.cpuChildrenSystem
 
 
+@pytest.mark.tici
 class TestOnroad(unittest.TestCase):
 
   @classmethod
