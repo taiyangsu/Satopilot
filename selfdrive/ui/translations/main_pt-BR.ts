@@ -85,6 +85,22 @@
         <source>Activates the car&apos;s brakes after 3 seconds stopped (requires actived cruise main).</source>
         <translation>Após 3 segundos parado você poderá liberar o pé do freio que o carro continurá freiando (exige que o cruise main esteja ativo).</translation>
     </message>
+    <message>
+        <source>DashCam footage</source>
+        <translation>Imagens da DashCam</translation>
+    </message>
+    <message>
+        <source>Watch and/or download recordings from comma device cameras</source>
+        <translation>Assista e/ou baixe gravações das câmeras do dispositivo comma</translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation>Doação</translation>
+    </message>
+    <message>
+        <source>AleSato keeps this fork as a hobby, keep it motivated</source>
+        <translation>Ale Sato mantém essa fork por hobby, mantenha-o motivado</translation>
+    </message>
 </context>
 <context>
     <name>AnnotatedCameraWidget</name>
@@ -696,10 +712,6 @@ Isso pode levar até um minuto.</translation>
     <message>
         <source>Software</source>
         <translation>Software</translation>
-    </message>
-    <message>
-        <source>Satopilot</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

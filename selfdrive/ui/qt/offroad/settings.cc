@@ -422,6 +422,15 @@ void SettingsWindow::setCurrentPanel(int index, const QString &param) {
 }
 
 AlesatoPanel::AlesatoPanel(SettingsWindow *parent) : ListWidget(parent) {
+  auto qrcodeDonateBtn = new ButtonControl(tr("Donate"), "QR-Code",
+                                     tr("AleSato keeps this fork as a hobby, keep it motivated"));
+  connect(qrcodeDonateBtn, &ButtonControl::clicked, [=] {addItem( new LabelControl("Bar")); });
+  addItem(qrcodeDonateBtn);
+  auto qrcodeBtn = new ButtonControl(tr("DashCam footage"), "QR-Code",
+                                     tr("Watch and/or download recordings from comma device cameras"));
+  connect(qrcodeBtn, &ButtonControl::clicked, [=] {addItem( new LabelControl("Foo")); });
+  addItem(qrcodeBtn);
+
   // param, title, desc, icon
   std::vector<std::tuple<QString, QString, QString, QString>> toggle_defs{
     {
@@ -484,7 +493,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), new SoftwarePanel(this)},
-    {tr("Satopilot"), new AlesatoPanel(this)},
+    {"Satopilot", new AlesatoPanel(this)},
   };
 
   nav_btns = new QButtonGroup(this);
