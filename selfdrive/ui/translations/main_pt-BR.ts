@@ -432,6 +432,55 @@
     </message>
 </context>
 <context>
+    <name>MyDonatePopup</name>
+    <message>
+        <source>Keep this project alive!</source>
+        <translation>Mantenha esse projeto vivo!</translation>
+    </message>
+    <message>
+        <source>Scan the QR code on the right</source>
+        <translation>Scaneie o QR code a direita</translation>
+    </message>
+    <message>
+        <source>Donate any value you feel in your heart</source>
+        <translation>Doe qualquer valor que sentir em seu coração</translation>
+    </message>
+</context>
+<context>
+    <name>MyFootagePopup</name>
+    <message>
+        <source>Watch and/or download recordings from comma device cameras</source>
+        <translation>Assista e/ou baixe gravações das câmeras do dispositivo comma</translation>
+    </message>
+    <message>
+        <source>Connect your smartphone and comma device to the same Wi-Fi network</source>
+        <translation>Conecte seu smartphone e o dispositivo comma à mesma rede Wi-Fi</translation>
+    </message>
+    <message>
+        <source>Scan the QR code on the right</source>
+        <translation>Scaneie o QR code a direita</translation>
+    </message>
+</context>
+<context>
+    <name>MyPairingPopup</name>
+    <message>
+        <source>Pair your device to your comma account</source>
+        <translation type="obsolete">Pareie seu dispositivo à sua conta comma</translation>
+    </message>
+    <message>
+        <source>Go to https://connect.comma.ai on your phone</source>
+        <translation type="obsolete">navegue até https://connect.comma.ai no seu telefone</translation>
+    </message>
+    <message>
+        <source>Click &quot;add new device&quot; and scan the QR code on the right</source>
+        <translation type="obsolete">Clique &quot;add new device&quot; e escaneie o QR code a seguir</translation>
+    </message>
+    <message>
+        <source>Bookmark connect.comma.ai to your home screen to use it like an app</source>
+        <translation type="obsolete">Salve connect.comma.ai como sua página inicial para utilizar como um app</translation>
+    </message>
+</context>
+<context>
     <name>Networking</name>
     <message>
         <source>Advanced</source>

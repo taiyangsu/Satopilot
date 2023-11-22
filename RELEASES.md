@@ -1,5 +1,7 @@
 Version 0.9.6 (2023-XX-XX)
 ========================
+* AleSato stuff
+ * Add QrCode to watch dashcam footage (2023-11-21)
 
 Version 0.9.5 (2023-11-17)
 ========================

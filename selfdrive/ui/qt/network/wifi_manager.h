@@ -42,6 +42,7 @@ public:
   QMap<QString, Network> seenNetworks;
   QMap<QDBusObjectPath, QString> knownConnections;
   QString ipv4_address;
+  QString getIp4Address(); // realy need this?
 
   explicit WifiManager(QObject* parent);
   void start();
@@ -72,7 +73,7 @@ private:
 
   QString getAdapter(const uint = NM_DEVICE_TYPE_WIFI);
   uint getAdapterType(const QDBusObjectPath &path);
-  QString getIp4Address();
+  // QString getIp4Address();
   void deactivateConnectionBySsid(const QString &ssid);
   void deactivateConnection(const QDBusObjectPath &path);
   QVector<QDBusObjectPath> getActiveConnections();

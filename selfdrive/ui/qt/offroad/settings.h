@@ -13,6 +13,7 @@
 
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/widgets/controls.h"
+#include "selfdrive/ui/qt/widgets/myqrcodes.h" // QrCode
 
 // ********** settings window + top-level panels **********
 class SettingsWindow : public QFrame {

@@ -424,11 +424,17 @@ void SettingsWindow::setCurrentPanel(int index, const QString &param) {
 AlesatoPanel::AlesatoPanel(SettingsWindow *parent) : ListWidget(parent) {
   auto qrcodeDonateBtn = new ButtonControl(tr("Donate"), "QR-Code",
                                      tr("AleSato keeps this fork as a hobby, keep it motivated"));
-  connect(qrcodeDonateBtn, &ButtonControl::clicked, [=] {addItem( new LabelControl("Bar")); });
+  auto donatePopup = new MyDonatePopup(this);
+  connect(qrcodeDonateBtn, &ButtonControl::clicked, [=] {
+      donatePopup->exec();
+    });
   addItem(qrcodeDonateBtn);
+  auto footagePopup = new MyFootagePopup(this);
   auto qrcodeBtn = new ButtonControl(tr("DashCam footage"), "QR-Code",
                                      tr("Watch and/or download recordings from comma device cameras"));
-  connect(qrcodeBtn, &ButtonControl::clicked, [=] {addItem( new LabelControl("Foo")); });
+  connect(qrcodeBtn, &ButtonControl::clicked, [=] {
+      footagePopup->exec();
+    });
   addItem(qrcodeBtn);
 
   // param, title, desc, icon
