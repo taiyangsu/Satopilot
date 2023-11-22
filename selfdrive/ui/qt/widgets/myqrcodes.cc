@@ -15,7 +15,6 @@
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
 #include "selfdrive/ui/qt/widgets/wifi.h"
-#include "selfdrive/ui/qt/network/wifi_manager.h" // to get IP from comma device dynamically
 
 using qrcodegen::QrCode;
 
@@ -134,9 +133,7 @@ void MyFootageQRWidget::hideEvent(QHideEvent *event) {
 void MyFootageQRWidget::refresh() {
   wifi = new WifiManager(this);
   QString myIp = wifi->getIp4Address();
-  // QString myIp = wifi->ipv4_address;
-  QString qrString = "http://" + myIp + ":5000/footage/";
-  // QString qrString = "http://192.168.15.3:5000/footage/";
+  QString qrString = "http://" + myIp + ":5000/footage";
   this->updateQrCode(qrString);
   update();
 }
