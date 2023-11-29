@@ -1,3 +1,33 @@
+my fork is at branch 'personal3'
+the features are explained at this video: (https://youtu.be/HZEI8A6YVkA)
+the url for instalation is
+```
+https://smiskol.com/fork/AlexandreSato/personal3
+```
+or
+```
+https://installer.comma.ai/AlexandreSato/personal3
+```
+
+
+💰 Donate 💰
+---
+
+If you find any of the features useful, feel free to donate to support for future feature development.
+
+Thank you for your continuous love and support! Enjoy 🥰
+
+**PayPal:**
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=JN4E8PTL4QBZG" target="_blank">
+<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="PayPal this" title="PayPal - The safer, easier way to pay online!" border="0" />
+</a>
+<br></br>
+
+**PayPal QR Code:**
+
+![Paypall.png.png](Paypall.png)
+
 ![openpilot on the comma 3X](https://github.com/commaai/openpilot/assets/4038174/f1081737-8718-4241-a22a-3ceba526361a)
 
 Table of Contents
