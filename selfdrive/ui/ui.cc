@@ -211,10 +211,15 @@ static void update_state(UIState *s) {
   // Ale Sato blinker indicator
   if (sm.updated("carState")) {
     auto cs_data = sm["carState"].getCarState();
-    s->scene.leftBlinker = cs_data.getLeftBlinker();
-    s->scene.rightBlinker = cs_data.getRightBlinker();
     scene.blinkerstatus = cs_data.getLeftBlinker()? 1 : cs_data.getRightBlinker()? 2 : 0;
   }
+  // End Ale Sato blinker indicator
+
+  scene.world_objects_visible = scene.world_objects_visible ||
+                                (scene.started &&
+                                 sm.rcv_frame("liveCalibration") > scene.started_frame &&
+                                 sm.rcv_frame("modelV2") > scene.started_frame &&
+                                 sm.rcv_frame("uiPlan") > scene.started_frame);
 }
 
 void ui_update_params(UIState *s) {
@@ -241,6 +246,7 @@ void UIState::updateStatus() {
       scene.started_frame = sm->frame;
     }
     started_prev = scene.started;
+    scene.world_objects_visible = false;
     emit offroadTransition(!scene.started);
   }
 }

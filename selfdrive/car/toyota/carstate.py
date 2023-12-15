@@ -3,7 +3,7 @@ import copy
 from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from openpilot.common.numpy_fast import mean
-from openpilot.common.params import Params, put_bool_nonblocking
+from openpilot.common.params import Params
 from openpilot.common.filter_simple import FirstOrderFilter
 from openpilot.common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
@@ -179,7 +179,7 @@ class CarState(CarStateBase):
       self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1 or cp_acc.vl["ACC_CONTROL"]["DISTANCE"] == 1
     if self.ispressed and not self.ispressed_prev:
       self.e2eLongButton = not self.params.get_bool("ExperimentalMode")
-      put_bool_nonblocking('ExperimentalMode', self.e2eLongButton)
+      self.params.put_bool_nonblocking('ExperimentalMode', self.e2eLongButton)
     self.ispressed_prev = self.ispressed
 
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["FRONT_FOG"])
