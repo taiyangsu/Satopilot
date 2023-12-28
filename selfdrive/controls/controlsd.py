@@ -591,7 +591,8 @@ class Controls:
                    (not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))
     if (self.mem_params.get_bool("AleSato_SteerAlwaysOn") and (CS.vEgo < 50 * CV.KPH_TO_MS) and (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0)):
       self.events.add(EventName.manualSteeringRequired) 
-    CC.longActive = self.enabled and not self.events.contains(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
+    CC.longActive = self.enabled and (not self.events.contains(ET.OVERRIDE_LONGITUDINAL) or self.CP.carName == 'toyota') \
+                   and self.CP.openpilotLongitudinalControl
 
     actuators = CC.actuators
     actuators.longControlState = self.LoC.long_control_state
