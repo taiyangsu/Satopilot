@@ -2,6 +2,7 @@ Version 0.9.6 (20XX-XX-XX)
 ========================
 * AleSato stuff
   * Add QrCode to watch dashcam footage (2023-11-21)
+  * Stolen Irene's Toyota: improve longitudinal control #30697
 * New driving model
   * Vision model trained on more data
   * Improved driving performance
