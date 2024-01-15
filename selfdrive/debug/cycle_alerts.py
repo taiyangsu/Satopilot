@@ -45,8 +45,9 @@ def cycle_alerts(duration=200, is_metric=False):
     #(EventName.processNotRunning, ET.NO_ENTRY),
     #(EventName.commIssue, ET.NO_ENTRY),
     #(EventName.calibrationInvalid, ET.PERMANENT),
-    (EventName.cameraMalfunction, ET.PERMANENT),
-    (EventName.cameraFrameRate, ET.PERMANENT),
+    (EventName.laneChange, ET.WARNING),
+    (EventName.preLaneChangeLeft, ET.WARNING),
+    (EventName.preLaneChangeRight, ET.WARNING),
   ]
 
   cameras = ['roadCameraState', 'wideRoadCameraState', 'driverCameraState']
@@ -68,15 +69,15 @@ def cycle_alerts(duration=200, is_metric=False):
       events.clear()
       events.add(alert)
 
-      sm['deviceState'].freeSpacePercent = randperc()
-      sm['deviceState'].memoryUsagePercent = int(randperc())
-      sm['deviceState'].cpuTempC = [randperc() for _ in range(3)]
-      sm['deviceState'].gpuTempC = [randperc() for _ in range(3)]
-      sm['deviceState'].cpuUsagePercent = [int(randperc()) for _ in range(8)]
-      sm['modelV2'].frameDropPerc = randperc()
+#      sm['deviceState'].freeSpacePercent = randperc()
+#      sm['deviceState'].memoryUsagePercent = int(randperc())
+#      sm['deviceState'].cpuTempC = [randperc() for _ in range(3)]
+#      sm['deviceState'].gpuTempC = [randperc() for _ in range(3)]
+#      sm['deviceState'].cpuUsagePercent = [int(randperc()) for _ in range(8)]
+#      sm['modelV2'].frameDropPerc = randperc()
 
-      if random.random() > 0.25:
-        sm['modelV2'].velocity.x = [random.random(), ]
+#      if random.random() > 0.25:
+#        sm['modelV2'].velocity.x = [random.random(), ]
       if random.random() > 0.25:
         CS.vEgo = random.random()
 
@@ -84,9 +85,9 @@ def cycle_alerts(duration=200, is_metric=False):
       random.shuffle(procs)
       for i in range(random.randint(0, 10)):
         procs[i].shouldBeRunning = True
-      sm['managerState'].processes = procs
+#      sm['managerState'].processes = procs
 
-      sm['liveCalibration'].rpyCalib = [-1 * random.random() for _ in range(random.randint(0, 3))]
+#      sm['liveCalibration'].rpyCalib = [-1 * random.random() for _ in range(random.randint(0, 3))]
 
       for s in sm.data.keys():
         prob = 0.3 if s in cameras else 0.08
@@ -99,7 +100,7 @@ def cycle_alerts(duration=200, is_metric=False):
       alert = AM.process_alerts(frame, [])
       print(alert)
       for _ in range(duration):
-        dat = messaging.new_message()
+        dat = messaging.new_message('controlsState')
         dat.init('controlsState')
         dat.controlsState.enabled = False
 
@@ -113,7 +114,7 @@ def cycle_alerts(duration=200, is_metric=False):
           dat.controlsState.alertSound = alert.audible_alert
         pm.send('controlsState', dat)
 
-        dat = messaging.new_message()
+        dat = messaging.new_message('deviceState')
         dat.init('deviceState')
         dat.deviceState.started = True
         pm.send('deviceState', dat)

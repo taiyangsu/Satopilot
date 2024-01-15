@@ -580,7 +580,7 @@
     </message>
     <message>
         <source>Changing Lanes</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">TROCANDO FAIXAS</translation>
     </message>
     <message>
         <source>Check Hardware</source>
@@ -869,11 +869,11 @@ Gear</source>
     </message>
     <message>
         <source>Steer Left to Start Lane Change Once Safe</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Puxe à Esquerda quando Seguro</translation>
     </message>
     <message>
         <source>Steer Right to Start Lane Change Once Safe</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Puxe à Direita quando Seguro</translation>
     </message>
     <message>
         <source>Steer Unavailable Below %1</source>
@@ -905,7 +905,7 @@ Gear</source>
     </message>
     <message>
         <source>TAKE CONTROL IMMEDIATELY</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ASSUMA O CONTROLE IMEDIATAMENTE</translation>
     </message>
     <message>
         <source>Take Control</source>
