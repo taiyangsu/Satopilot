@@ -57,6 +57,7 @@ class CarController:
     self.oneHonk = False
     self.twoHonks = False
     self.honk_rate_counter = 0
+    self.reset_pcm_compensation = True
 
   def update(self, CC, CS, now_nanos):
     actuators = CC.actuators
@@ -133,11 +134,17 @@ class CarController:
     else:
       interceptor_gas_cmd = 0.
 
+    # Transition Logic
+    if CS.out.gasPressed or not CS.out.cruiseState.enabled:
+      self.reset_pcm_compensation = True
+    if CS.pcm_neutral_force >= 0:
+      self.reset_pcm_compensation = False
+
     # NO_STOP_TIMER_CAR will creep if compensation is applied when stopping or stopped, don't compensate when stopped or stopping
     should_compensate = True
     if self.CP.carFingerprint in NO_STOP_TIMER_CAR and ((CS.out.vEgo <  1e-3 and actuators.accel < 1e-3) or stopping):
       should_compensate = False
-    if CC.longActive and should_compensate and CS.pcm_neutral_force >= 0:
+    if CC.longActive and should_compensate and not self.reset_pcm_compensation:
       accel_offset = CS.pcm_neutral_force / self.CP.mass
     else:
       accel_offset = 0.
