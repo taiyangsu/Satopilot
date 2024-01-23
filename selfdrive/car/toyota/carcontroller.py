@@ -64,7 +64,7 @@ class CarController:
     hud_control = CC.hudControl
     pcm_cancel_cmd = CC.cruiseControl.cancel
     lat_active = CC.latActive and abs(CS.out.steeringTorque) < MAX_USER_TORQUE
-    stopping = actuators.longControlState == LongCtrlState.stopping
+    stopping = actuators.longControlState == LongCtrlState.stopping and not CS.out.gasPressed
 
     # *** control msgs ***
     can_sends = []
@@ -134,7 +134,7 @@ class CarController:
     else:
       interceptor_gas_cmd = 0.
 
-    # Transition Logic
+    # PCM compensation Transition Logic (enter only at first positive calculation)
     if CS.out.gasPressed or not CS.out.cruiseState.enabled:
       self.reset_pcm_compensation = True
     if CS.pcm_neutral_force >= 0:
@@ -211,15 +211,16 @@ class CarController:
     # we can spam can to cancel the system even if we are using lat only control
     if (self.frame % 3 == 0 and self.CP.openpilotLongitudinalControl) or pcm_cancel_cmd:
       lead = hud_control.leadVisible or CS.out.vEgo < 12.  # at low speed we always assume the lead is present so ACC can be engaged
+      accel_raw = -2.5 if stopping else actuators.accel if should_compensate else pcm_accel_cmd
 
       # Lexus IS uses a different cancellation message
       if pcm_cancel_cmd and self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:
         can_sends.append(toyotacan.create_acc_cancel_command(self.packer))
       elif self.CP.openpilotLongitudinalControl:
-        can_sends.append(toyotacan.create_accel_command(self.packer, pcm_accel_cmd, actuators.accel, pcm_cancel_cmd, self.standstill_req, lead, CS.acc_type, CS.distance_lines_control, fcw_alert, should_compensate))
+        can_sends.append(toyotacan.create_accel_command(self.packer, pcm_accel_cmd, accel_raw, pcm_cancel_cmd, self.standstill_req, lead, CS.acc_type, CS.distance_lines_control, fcw_alert))
         self.accel = pcm_accel_cmd
       else:
-        can_sends.append(toyotacan.create_accel_command(self.packer, 0, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance_lines_control, False, False))
+        can_sends.append(toyotacan.create_accel_command(self.packer, 0, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance_lines_control, False))
 
     if self.frame % 2 == 0 and self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl:
       # send exactly zero if gas cmd is zero. Interceptor will send the max between read value and gas cmd.
