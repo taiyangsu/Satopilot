@@ -1,8 +1,9 @@
 Version 0.9.6 (20XX-XX-XX)
 ========================
 * AleSato stuff
+  * Use danlee's multilang onroad alerts #28528 (2024-01-23)
+  * Stolen Irene's Toyota: improve longitudinal control #30697 (2024-01-21)
   * Add QrCode to watch dashcam footage (2023-11-21)
-  * Stolen Irene's Toyota: improve longitudinal control #30697
 * New driving model
   * Vision model trained on more data
   * Improved driving performance

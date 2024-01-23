@@ -248,6 +248,23 @@ void OnroadAlerts::updateAlert(const Alert &a) {
   }
 }
 
+QString OnroadAlerts::translateAlertText(const QString &text) {
+  QString translated;
+  if (!text.isEmpty()) {
+    auto arg_pos = text.indexOf('|');
+    if (arg_pos == -1) {
+      translated = tr(text.toUtf8().data());
+   } else {
+      translated = tr(text.left(arg_pos).toUtf8().data());
+      auto args = text.mid(arg_pos + 1).split(',');
+      for (int i = 0; i < args.size(); ++i) {
+        translated = translated.replace(QString("%%1").arg(i + 1), args[i]);
+      }
+    }
+  }
+  return translated;
+}
+
 void OnroadAlerts::paintEvent(QPaintEvent *event) {
   if (alert.size == cereal::ControlsState::AlertSize::NONE) {
     return;
@@ -285,23 +302,25 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   p.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
   // text
+  QString text1 = translateAlertText(alert.text1);
+  QString text2 = translateAlertText(alert.text2);  
   const QPoint c = r.center();
   p.setPen(QColor(0xff, 0xff, 0xff));
   p.setRenderHint(QPainter::TextAntialiasing);
   if (alert.size == cereal::ControlsState::AlertSize::SMALL) {
     p.setFont(InterFont(74, QFont::DemiBold));
-    p.drawText(r, Qt::AlignCenter, alert.text1);
+    p.drawText(r, Qt::AlignCenter, text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
     p.setFont(InterFont(88, QFont::Bold));
-    p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);
+    p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, text1);
     p.setFont(InterFont(66));
-    p.drawText(QRect(0, c.y() + 21, width(), 90), Qt::AlignHCenter, alert.text2);
+    p.drawText(QRect(0, c.y() + 21, width(), 90), Qt::AlignHCenter, text2);
   } else if (alert.size == cereal::ControlsState::AlertSize::FULL) {
-    bool l = alert.text1.length() > 15;
+    bool l = text1.length() > 15;
     p.setFont(InterFont(l ? 132 : 177, QFont::Bold));
-    p.drawText(QRect(0, r.y() + (l ? 240 : 270), width(), 600), Qt::AlignHCenter | Qt::TextWordWrap, alert.text1);
+    p.drawText(QRect(0, r.y() + (l ? 240 : 270), width(), 600), Qt::AlignHCenter | Qt::TextWordWrap, text1);
     p.setFont(InterFont(88));
-    p.drawText(QRect(0, r.height() - (l ? 361 : 420), width(), 300), Qt::AlignHCenter | Qt::TextWordWrap, alert.text2);
+    p.drawText(QRect(0, r.height() - (l ? 361 : 420), width(), 300), Qt::AlignHCenter | Qt::TextWordWrap, text2);
   }
 }
 

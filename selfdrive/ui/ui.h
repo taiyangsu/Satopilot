@@ -47,6 +47,15 @@ constexpr vec3 default_face_kpts_3d[] = {
   {18.02, -49.14, 8.00}, {6.36, -51.20, 8.00}, {-5.98, -51.20, 8.00},
 };
 
+static const char *onroad_alert_strings[] = {
+  QT_TRANSLATE_NOOP("OnroadAlerts", "openpilot Unavailable"),
+  QT_TRANSLATE_NOOP("OnroadAlerts", "Waiting for controls to start"),
+  QT_TRANSLATE_NOOP("OnroadAlerts", "TAKE CONTROL IMMEDIATELY"),
+  QT_TRANSLATE_NOOP("OnroadAlerts", "Controls Unresponsive"),
+  QT_TRANSLATE_NOOP("OnroadAlerts", "Controls Unresponsive"),
+  QT_TRANSLATE_NOOP("OnroadAlerts", "Reboot Device"),
+};
+
 struct Alert {
   QString text1;
   QString text2;
@@ -78,19 +87,19 @@ struct Alert {
       // Handle controls timeout
       if (controls_frame < started_frame) {
         // car is started, but controlsState hasn't been seen at all
-        alert = {"openpilot Unavailable", "Waiting for controls to start",
+        alert = {onroad_alert_strings[0], onroad_alert_strings[1],
                  "controlsWaiting", cereal::ControlsState::AlertSize::MID,
                  cereal::ControlsState::AlertStatus::NORMAL,
                  AudibleAlert::NONE};
       } else if (controls_missing > CONTROLS_TIMEOUT && !Hardware::PC()) {
         // car is started, but controls is lagging or died
         if (cs.getEnabled() && (controls_missing - CONTROLS_TIMEOUT) < 10) {
-          alert = {"TAKE CONTROL IMMEDIATELY", "Controls Unresponsive",
+          alert = {onroad_alert_strings[2], onroad_alert_strings[3],
                    "controlsUnresponsive", cereal::ControlsState::AlertSize::FULL,
                    cereal::ControlsState::AlertStatus::CRITICAL,
                    AudibleAlert::WARNING_IMMEDIATE};
         } else {
-          alert = {"Controls Unresponsive", "Reboot Device",
+          alert = {onroad_alert_strings[4], onroad_alert_strings[5],
                    "controlsUnresponsivePermanent", cereal::ControlsState::AlertSize::MID,
                    cereal::ControlsState::AlertStatus::NORMAL,
                    AudibleAlert::NONE};
