@@ -18,11 +18,12 @@ const int img_size = (btn_size / 4) * 3;
 
 // ***** onroad widgets *****
 
+class MapSettingsButton;
 class ButtonsWindow : public QWidget {
   Q_OBJECT
 
   public:
-    ButtonsWindow(QWidget* parent = 0);
+    ButtonsWindow(QWidget* parent = 0, MapSettingsButton *map_settings_btn = 0);
 
   private:
     QPushButton *helloButton;

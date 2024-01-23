@@ -193,7 +193,7 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
 // ***** onroad widgets *****
 
 // HelloButton
-ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
+ButtonsWindow::ButtonsWindow(QWidget *parent,  MapSettingsButton *map_settings_btn) : QWidget(parent) {
   QVBoxLayout *main_layout  = new QVBoxLayout(this);
   QWidget *btns_wrapper = new QWidget;
   QHBoxLayout *btns_layout  = new QHBoxLayout(btns_wrapper);
@@ -212,6 +212,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton->setFixedHeight(200);
   btns_layout->addWidget(helloButton, 0, Qt::AlignLeft);
   btns_layout->addSpacing(35);
+  btns_layout->addWidget(map_settings_btn);
 
   setStyleSheet(R"(
     QPushButton {
@@ -367,11 +368,11 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
 
   map_settings_btn = new MapSettingsButton(this);
-  main_layout->addWidget(map_settings_btn, 0, Qt::AlignBottom | Qt::AlignRight);
+  // main_layout->addWidget(map_settings_btn, 0, Qt::AlignBottom | Qt::AlignRight);
 
   // HelloButton
   main_layout->addStretch();
-  buttons = new ButtonsWindow(this);
+  buttons = new ButtonsWindow(this, map_settings_btn);
   main_layout->addWidget(buttons);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
@@ -432,7 +433,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
 
   // hide map settings button for alerts and flip for right hand DM
   if (map_settings_btn->isEnabled()) {
-    // As I use the button on top the alert banner doesn't cover
     // map_settings_btn->setVisible(!hideBottomIcons);
     map_settings_btn->setVisible(cs.getAlertSize() != cereal::ControlsState::AlertSize::FULL);
     main_layout->setAlignment(map_settings_btn, (rightHandDM ? Qt::AlignLeft : Qt::AlignRight) | Qt::AlignBottom);
