@@ -1,13 +1,16 @@
 my fork is at branch 'personal3'
 the features are explained at this video: (https://youtu.be/HZEI8A6YVkA)
-the url for instalation is
-```
-https://smiskol.com/fork/AlexandreSato/personal3
-```
+the url for instalation is:
+
+```https://bit.ly/3HriaWt```
+
 or
-```
-https://installer.comma.ai/AlexandreSato/personal3
-```
+
+```https://smiskol.com/fork/AlexandreSato/personal3```
+
+or
+
+```https://installer.comma.ai/AlexandreSato/personal3```
 
 
 💰 Donate 💰
