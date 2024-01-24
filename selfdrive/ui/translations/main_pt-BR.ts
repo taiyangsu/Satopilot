@@ -380,7 +380,7 @@
     <name>LongitudinalPersonality</name>
     <message>
         <source>Driving Personality</source>
-        <translation type="unfinished">Temperamento de Direção</translation>
+        <translation>Temperamento de Direção</translation>
     </message>
     <message>
         <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake.</source>
@@ -619,7 +619,7 @@
     </message>
     <message>
         <source>Always keep hands on wheel and eyes on road</source>
-        <translation type="unfinished">Sempre mantenha as mãos no volante e olhos na estrada</translation>
+        <translation>Mantenha as mãos no volante e olhos na estrada</translation>
     </message>
     <message>
         <source>Automatic Brake Hold Active</source>
@@ -627,11 +627,11 @@
     </message>
     <message>
         <source>BRAKE!</source>
-        <translation type="unfinished"></translation>
+        <translation>FREIE!</translation>
     </message>
     <message>
         <source>Be ready to take over at any time</source>
-        <translation type="unfinished">Sempre esteja pronto para retomar o controle</translation>
+        <translation>Retome o controle a qualquer momento</translation>
     </message>
     <message>
         <source>Brake Hold Active</source>
@@ -879,7 +879,7 @@
     </message>
     <message>
         <source>Lane Departure Detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Saída de Faixa Detectada</translation>
     </message>
     <message>
         <source>Likely Hardware Issue</source>
@@ -984,7 +984,7 @@ Gear</source>
     </message>
     <message>
         <source>Risk of Collision</source>
-        <translation type="unfinished"></translation>
+        <translation>Risco de Colisão</translation>
     </message>
     <message>
         <source>Seatbelt Unlatched</source>
@@ -1032,7 +1032,7 @@ Gear</source>
     </message>
     <message>
         <source>Stock AEB: Risk of Collision</source>
-        <translation type="unfinished"></translation>
+        <translation>Stock AEB: Risco de Colisão</translation>
     </message>
     <message>
         <source>Stock LKAS is on</source>
@@ -1056,7 +1056,7 @@ Gear</source>
     </message>
     <message>
         <source>Take Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Assuma o Controle</translation>
     </message>
     <message>
         <source>Touch Steering Wheel</source>
@@ -1068,7 +1068,7 @@ Gear</source>
     </message>
     <message>
         <source>Turn Exceeds Steering Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Curva Excede o Limite de Direção</translation>
     </message>
     <message>
         <source>Turn off stock LKAS to engage</source>
