@@ -4,6 +4,7 @@ from cereal import car, log, messaging
 from cereal.services import SERVICE_LIST
 from openpilot.selfdrive.controls.lib.events import EVENTS, Alert
 from openpilot.common.realtime import DT_CTRL
+from openpilot.selfdrive.manager.process_config import managed_processes
 
 # For a specific alert
 from openpilot.selfdrive.controls.lib.events import ET, Events
@@ -17,15 +18,13 @@ pm = messaging.PubMaster(list(SERVICE_LIST.keys()))
 EventName = car.CarEvent.EventName
 specific_alerts = [
   # Include here your events to test
-  (EventName.ldw, ET.PERMANENT),
-  (EventName.steerSaturated, ET.WARNING),
-  (EventName.fcw, ET.PERMANENT),
-  # (EventName.startupNoFw, ET.PERMANENT),
-  # (EventName.modeldLagging, ET.PERMANENT),
-  # (EventName.processNotRunning, ET.NO_ENTRY),  
+  # (EventName.startupNoControl, ET.NO_ENTRY),
+  (EventName.calibrationInvalid, ET.PERMANENT),
+  # (EventName.calibrationInvalid, ET.SOFT_DISABLE),
+  # (EventName.calibrationInvalid, ET.NO_ENTRY),
 ]
 duration = 200
-is_metric = False
+is_metric = True
 
 
 def publish_alert(alert):
@@ -79,10 +78,14 @@ def create_all_onroad_alerts():
    
 
 def cycle_onroad_alerts():
-  while True:
-    create_specific_onroad_alerts()
+  create_specific_onroad_alerts()
 
 
 if __name__ == '__main__':
-  cycle_onroad_alerts()
-  create_all_onroad_alerts()
+  managed_processes['ui'].start()
+  try:
+    while True:
+      cycle_onroad_alerts()
+      # create_all_onroad_alerts()
+  except KeyboardInterrupt:
+    managed_processes['ui'].stop()

@@ -623,7 +623,7 @@
     </message>
     <message>
         <source>Automatic Brake Hold Active</source>
-        <translation type="unfinished"></translation>
+        <translation>Brake Hold Automático Ativo</translation>
     </message>
     <message>
         <source>BRAKE!</source>
@@ -659,23 +659,23 @@
     </message>
     <message>
         <source>Calibration Incomplete</source>
-        <translation type="unfinished"></translation>
+        <translation>Calibração Incompleta</translation>
     </message>
     <message>
         <source>Calibration Invalid</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Calibração Inválida</translation>
     </message>
     <message>
         <source>Calibration Invalid: Remount Device &amp; Recalibrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Calibração Invalida: Remonte o Dispositivo &amp; Recalibre</translation>
     </message>
     <message>
         <source>Calibration in Progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Calibração em Progresso</translation>
     </message>
     <message>
         <source>Calibration in Progress: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Calibração em Progresso: %1%</translation>
     </message>
     <message>
         <source>Camera CRC Error - Driver</source>
@@ -715,19 +715,19 @@
     </message>
     <message>
         <source>Car Unrecognized</source>
-        <translation type="unfinished"></translation>
+        <translation>Carro Não Conhecido</translation>
     </message>
     <message>
         <source>Changing Lanes</source>
-        <translation type="unfinished"></translation>
+        <translation>Trocando de Faixa</translation>
     </message>
     <message>
         <source>Check Hardware</source>
-        <translation type="unfinished"></translation>
+        <translation>Verifique o Hardware</translation>
     </message>
     <message>
         <source>Check comma power connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Cheque as conexões do comma power</translation>
     </message>
     <message>
         <source>Communication Issue Between Processes</source>
@@ -763,19 +763,19 @@
     </message>
     <message>
         <source>DISENGAGE IMMEDIATELY</source>
-        <translation type="unfinished"></translation>
+        <translation>DESACIONE  IMEDIATAMENTE</translation>
     </message>
     <message>
         <source>Dashcam Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo Dashcam</translation>
     </message>
     <message>
         <source>Dashcam mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo dashcam</translation>
     </message>
     <message>
         <source>Dashcam mode for unsupported car</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo dashcam para carro não suportado</translation>
     </message>
     <message>
         <source>Device Fell Off Mount</source>
@@ -787,7 +787,7 @@
     </message>
     <message>
         <source>Distraction Level Too High</source>
-        <translation type="unfinished"></translation>
+        <translation>Nível de Distração Muito Alto</translation>
     </message>
     <message>
         <source>Door Open</source>
@@ -795,7 +795,7 @@
     </message>
     <message>
         <source>Drive Above %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Dirija Acima de %1</translation>
     </message>
     <message>
         <source>Drive above %1 to engage</source>
@@ -807,11 +807,11 @@
     </message>
     <message>
         <source>Driver Distracted</source>
-        <translation type="unfinished"></translation>
+        <translation>Motorista Distraído</translation>
     </message>
     <message>
         <source>Driver Unresponsive</source>
-        <translation type="unfinished"></translation>
+        <translation>Motorista sem Resposta</translation>
     </message>
     <message>
         <source>Driving Model Lagging</source>
@@ -827,11 +827,11 @@
     </message>
     <message>
         <source>Fan Malfunction</source>
-        <translation type="unfinished"></translation>
+        <translation>Mal Funcionamento da Ventoínha</translation>
     </message>
     <message>
         <source>GPS Malfunction</source>
-        <translation type="unfinished"></translation>
+        <translation>Mal Funcionamento do GPS</translation>
     </message>
     <message>
         <source>Gas: %1%, Steer: %2%</source>
@@ -839,15 +839,15 @@
     </message>
     <message>
         <source>Gear not D</source>
-        <translation type="unfinished"></translation>
+        <translation>A Marcha não Está em D</translation>
     </message>
     <message>
         <source>Hardware malfunctioning if sky is visible</source>
-        <translation type="unfinished"></translation>
+        <translation>Mal funcionamento de hardware se o céu é visível</translation>
     </message>
     <message>
         <source>Harness Relay Malfunction</source>
-        <translation type="unfinished"></translation>
+        <translation>Mal Funcionamento do Relé no Chicote</translation>
     </message>
     <message>
         <source>High CPU Usage</source>
@@ -875,7 +875,7 @@
     </message>
     <message>
         <source>LKAS is PAUSED per blinker</source>
-        <translation type="unfinished"></translation>
+        <translation>LKAS está PAUSADO por seta</translation>
     </message>
     <message>
         <source>Lane Departure Detected</source>
@@ -883,7 +883,7 @@
     </message>
     <message>
         <source>Likely Hardware Issue</source>
-        <translation type="unfinished"></translation>
+        <translation>Provável Problema de Hardware</translation>
     </message>
     <message>
         <source>Low Battery</source>
@@ -903,7 +903,7 @@
     </message>
     <message>
         <source>Manual Steering Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Direção Manual Necessária</translation>
     </message>
     <message>
         <source>Model uncertain at this speed</source>
@@ -915,11 +915,11 @@
     </message>
     <message>
         <source>Parking Brake Engaged</source>
-        <translation type="unfinished"></translation>
+        <translation>Freio de Mão Acionado</translation>
     </message>
     <message>
         <source>Pay Attention</source>
-        <translation type="unfinished"></translation>
+        <translation>Preste Atenção</translation>
     </message>
     <message>
         <source>Pedal Pressed</source>
@@ -927,7 +927,7 @@
     </message>
     <message>
         <source>Poor GPS reception</source>
-        <translation type="unfinished"></translation>
+        <translation>Recepção de GPS pobre</translation>
     </message>
     <message>
         <source>Posenet Speed Invalid</source>
@@ -963,24 +963,25 @@
     </message>
     <message>
         <source>Remount Detected: Recalibrating</source>
-        <translation type="unfinished"></translation>
+        <translation>Remontagem Detectada: Recalibrando</translation>
     </message>
     <message>
         <source>Remount Device (Pitch: %1°, Yaw: %2°)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Remonte o Dispositivo (Pitch: %1°, Yaw: %2°)</translation>
     </message>
     <message>
         <source>Resume Driving Manually</source>
-        <translation type="unfinished"></translation>
+        <translation>Continue a Direção Manualmente</translation>
     </message>
     <message>
         <source>Reverse
 Gear</source>
-        <translation type="unfinished"></translation>
+        <translation>Marcha
+Ré</translation>
     </message>
     <message>
         <source>Reverse Gear</source>
-        <translation type="unfinished"></translation>
+        <translation>Marcha Ré</translation>
     </message>
     <message>
         <source>Risk of Collision</source>
@@ -1016,11 +1017,11 @@ Gear</source>
     </message>
     <message>
         <source>Steer Left to Start Lane Change Once Safe</source>
-        <translation type="unfinished"></translation>
+        <translation>Puxe à Esquerda Quando for Seguro</translation>
     </message>
     <message>
         <source>Steer Right to Start Lane Change Once Safe</source>
-        <translation type="unfinished"></translation>
+        <translation>Puxe à Direita Quando for Seguro</translation>
     </message>
     <message>
         <source>Steer Unavailable Below %1</source>
@@ -1044,15 +1045,15 @@ Gear</source>
     </message>
     <message>
         <source>System Overheated</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistema Superaquecido</translation>
     </message>
     <message>
         <source>TAKE CONTROL</source>
-        <translation type="unfinished"></translation>
+        <translation>ASSUMA CONTROLE</translation>
     </message>
     <message>
         <source>TAKE CONTROL IMMEDIATELY</source>
-        <translation type="unfinished"></translation>
+        <translation>ASSUMA IMEDIATAMENTE</translation>
     </message>
     <message>
         <source>Take Control</source>
@@ -1060,11 +1061,11 @@ Gear</source>
     </message>
     <message>
         <source>Touch Steering Wheel</source>
-        <translation type="unfinished"></translation>
+        <translation>Puxe o Volante</translation>
     </message>
     <message>
         <source>Touch Steering Wheel: No Face Detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Puxe o Volante: Face Não Detectada</translation>
     </message>
     <message>
         <source>Turn Exceeds Steering Limit</source>
@@ -1108,7 +1109,7 @@ Gear</source>
     </message>
     <message>
         <source>openpilot Unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>openpilot Indisponível</translation>
     </message>
     <message>
         <source>paramsd Permanent Error</source>
