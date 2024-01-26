@@ -827,7 +827,7 @@
     </message>
     <message>
         <source>Fan Malfunction</source>
-        <translation>Mal Funcionamento da Ventoínha</translation>
+        <translation>Mal Funcionamento da Ventoinha</translation>
     </message>
     <message>
         <source>GPS Malfunction</source>

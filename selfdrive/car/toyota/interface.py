@@ -38,8 +38,7 @@ class CarInterface(CarInterfaceBase):
     else:
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
-      # ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
-      ret.steerActuatorDelay = 0.12 * 4  # AleSato lateral tunning delay
+      ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
       ret.steerLimitTimer = 0.4
 
     ret.stoppingControl = False  # Toyota starts braking more when it thinks you want to stop
