@@ -1,9 +1,14 @@
-my fork is at branch 'personal3'
+my fork "SatoPilot" is at branch 'personal3'
+------
 the features are explained at this video: (https://youtu.be/HZEI8A6YVkA)
-the url for instalation is:
-
-```https://bit.ly/3HriaWt```
-
+the url for instalation is
+```
+https://bit.ly/3HriaWt
+```
+or
+```
+https://smiskol.com/fork/AlexandreSato/personal3
+```
 or
 
 ```https://smiskol.com/fork/AlexandreSato/personal3```
@@ -31,21 +36,8 @@ Thank you for your continuous love and support! Enjoy 🥰
 
 ![Paypall.png.png](Paypall.png)
 
+
 [![openpilot on the comma 3X](https://github.com/commaai/openpilot/assets/8762862/f09e6d29-db2d-4179-80c2-51e8d92bdb5c)](https://comma.ai/shop/comma-3x)
-
-Table of Contents
-=======================
-
-* [What is openpilot?](#what-is-openpilot)
-* [Running in a car](#running-on-a-dedicated-device-in-a-car)
-* [Running on PC](#running-on-pc)
-* [Community and Contributing](#community-and-contributing)
-* [User Data and comma Account](#user-data-and-comma-account)
-* [Safety and Testing](#safety-and-testing)
-* [Directory Structure](#directory-structure)
-* [Licensing](#licensing)
-
----
 
 What is openpilot?
 ------
