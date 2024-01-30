@@ -1,8 +1,10 @@
 my fork is at branch 'personal3'
 the features are explained at this video: (https://youtu.be/HZEI8A6YVkA)
 the url for instalation is
-`https://bit.ly/3HriaWt` or
-
+```
+https://bit.ly/3HriaWt
+```
+or
 ```
 https://smiskol.com/fork/AlexandreSato/personal3
 ```
