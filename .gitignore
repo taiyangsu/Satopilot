@@ -88,7 +88,3 @@ build/
 
 poetry.toml
 Pipfile
-selfdrive/assets/offroad/brakehold.png
-selfdrive/assets/offroad/bright-brightness-sun-svgrepo-com.svg
-selfdrive/assets/sounds/engage_brakehold.wav
-Paypall.png
