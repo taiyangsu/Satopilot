@@ -266,8 +266,9 @@ class CarInterface(CarInterfaceBase):
     ret.stopAccel = -0.4
     ret.vEgoStopping = 0.25
     ret.vEgoStarting = 0.25 
-
     tune = ret.longitudinalTuning
+    tune.deadzoneBP = [0., 16., 20., 30.]
+    tune.deadzoneV = [0., .03, .06, .15]
     tune.deadzoneBP = [0., 9.]
     tune.deadzoneV = [.0, .15]
     tune.kpBP = [0.,]
