@@ -269,12 +269,10 @@ class CarInterface(CarInterfaceBase):
     tune = ret.longitudinalTuning
     tune.deadzoneBP = [0., 16., 20., 30.]
     tune.deadzoneV = [0., .03, .06, .15]
-    tune.deadzoneBP = [0., 9.]
-    tune.deadzoneV = [.0, .15]
-    tune.kpBP = [0.,]
-    tune.kiBP = [0., 3.]
-    tune.kpV = [1.]
-    tune.kiV = [.3, 1.]    
+    tune.kpBP = [0., 5.]
+    tune.kpV =  [.8, 1.]
+    tune.kiBP = [0., 5.]
+    tune.kiV =  [.3, 1.]    
     ret.stoppingDecelRate = 0.009  # reach stopping target smoothly
 
     return ret
