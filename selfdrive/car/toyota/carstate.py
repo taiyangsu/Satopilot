@@ -120,6 +120,9 @@ class CarState(CarStateBase):
     ret.leftBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
     ret.rightBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 2
 
+    if self.CP.carFingerprint != CAR.MIRAI:
+      ret.engineRpm = cp.vl["ENGINE_RPM"]["RPM"]
+
     ret.steeringTorque = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_DRIVER"]
     ret.steeringTorqueEps = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_EPS"] * self.eps_torque_scale
     # we could use the override bit from dbc, but it's triggered at too high torque values
@@ -209,7 +212,6 @@ class CarState(CarStateBase):
       self.prev_lkas_enabled = self.lkas_enabled 
 
     # AleSato Stuff
-    ret.engineRpm = cp.vl["ENGINE_RPM"]['RPM']
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR): # Comunicate better about follow distance
       self.is_exp = self.params.get_bool("ExperimentalMode")
       self.distance_lines = int(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"])
@@ -258,9 +260,10 @@ class CarState(CarStateBase):
       ("PCM_CRUISE", 33),
       ("PCM_CRUISE_SM", 1),
       ("STEER_TORQUE_SENSOR", 50),
-      # AleSato
-      ("ENGINE_RPM", 100),
     ]
+
+    if CP.carFingerprint != CAR.MIRAI:
+      messages.append(("ENGINE_RPM", 42))
 
     if CP.carFingerprint in UNSUPPORTED_DSU_CAR:
       messages.append(("DSU_CRUISE", 5))
