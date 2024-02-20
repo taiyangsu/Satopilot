@@ -19,7 +19,7 @@ from openpilot.selfdrive.athena.registration import register, UNREGISTERED_DONGL
 from openpilot.common.swaglog import cloudlog, add_file_handler
 from openpilot.system.version import is_dirty, get_commit, get_version, get_origin, get_short_branch, \
                            get_normalized_origin, terms_version, training_version, \
-                           is_tested_branch, is_release_branch
+                           is_tested_branch, is_release_branch, get_commit_date
 
 
 
@@ -39,7 +39,14 @@ def manager_init() -> None:
     ("DisengageOnAccelerator", "1"),
     ("SshEnabled", "1"),
     ("GithubUsername", "AlexandreSato"),
-    ("GithubSshKeys", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCUfU4ymJdRned22jes0n0qI1vSSreusRsSS1pFcCroGGkfYU1ZTKuURGtBxcJSw5HEIdWRQfbmdGJBH/k+C1Y3hmgBkbJir+xwp28YeMdT8ZPEIzi6TQdJBee9LplHgxbrOP9M559Copf6lnyJdVQphKPOl91W/fOgC/xvKeS5v2CNiZCYgAIJsOtgIv1aw+wZVNhPTIda1Sv+6Gj5uk3YBvGcSwSvQBbXORJvaBuJAv0kVL0nLGv8OtQTmNrMsmR17+lHeVkkfFAaNE3E3QtPCCgpClp5FSbw5SpbYAqVk2MTIjfSGHDzYckT46l63gYHWSIHlqR5peIY/5hPUt6paDLdLwM50s5azwtMqZcZ+xY1QEu6wzQDTb+Z2JUm/VtjOmmnRBbXKuDNJ7HKOTvrmZcmbcr3wsTPC8VRHjrxR1TPoTwLYgwonaVlyFwP1W7KPYci6LG9xJraRQ/2W1zGupzmsoF3Zz5Uz01owrQCCpdRr2mbBSCupZjDgqs6lNhkWPPUEgkbm2t2nPCJyq0E0XjwmE+CrlPaE2SuKN3BJ3OmY46cyrtxmKgGfLxC+ZXFs10B4A2GCMuZhKm4WjlmfC8pDgr0PBMW/xYPLpYdEuDavPOXG/AViGHZlL0BIviihoZ1YbtuGFq2LTPL2IaM4l02x+Cqb2gztqc4mCVUGQ=="),
+    ("GithubSshKeys", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCUfU4ymJdRned22jes0n0qI1vSSreusRsSS1pFcCroGGkfYU1\
+     ZTKuURGtBxcJSw5HEIdWRQfbmdGJBH/k+C1Y3hmgBkbJir+xwp28YeMdT8ZPEIzi6TQdJBee9LplHgxbrOP9M559Copf6lnyJdVQphKPO\
+     l91W/fOgC/xvKeS5v2CNiZCYgAIJsOtgIv1aw+wZVNhPTIda1Sv+6Gj5uk3YBvGcSwSvQBbXORJvaBuJAv0kVL0nLGv8OtQTmNrMsmR17\
+     +lHeVkkfFAaNE3E3QtPCCgpClp5FSbw5SpbYAqVk2MTIjfSGHDzYckT46l63gYHWSIHlqR5peIY/5hPUt6paDLdLwM50s5azwtMqZcZ+x\
+     Y1QEu6wzQDTb+Z2JUm/VtjOmmnRBbXKuDNJ7HKOTvrmZcmbcr3wsTPC8VRHjrxR1TPoTwLYgwonaVlyFwP1W7KPYci6LG9xJraRQ/2W1z\
+     GupzmsoF3Zz5Uz01owrQCCpdRr2mbBSCupZjDgqs6lNhkWPPUEgkbm2t2nPCJyq0E0XjwmE+CrlPaE2SuKN3BJ3OmY46cyrtxmKgGfLxC\
+     +ZXFs10B4A2GCMuZhKm4WjlmfC8pDgr0PBMW/xYPLpYdEuDavPOXG/AViGHZlL0BIviihoZ1YbtuGFq2LTPL2IaM4l02x+Cqb2gztqc4m\
+     CVUGQ=="),
     ("GsmMetered", "0"),
     ("HasAcceptedTerms", "0"),
     ("IsMetric", "1"),
@@ -71,6 +78,7 @@ def manager_init() -> None:
   params.put("TermsVersion", terms_version)
   params.put("TrainingVersion", training_version)
   params.put("GitCommit", get_commit())
+  params.put("GitCommitDate", get_commit_date())
   params.put("GitBranch", get_short_branch())
   params.put("GitRemote", get_origin())
   params.put_bool("IsTestedBranch", is_tested_branch())

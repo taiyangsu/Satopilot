@@ -74,10 +74,10 @@ class CarController:
     apply_steer = apply_meas_steer_torque_limits(new_steer, self.last_steer, CS.out.steeringTorqueEps, self.params)
 
     # >100 degree/sec steering fault prevention
-    self.steer_rate_counter, apply_steer_req = common_fault_avoidance(abs(CS.out.steeringRateDeg) >= MAX_STEER_RATE, CC.latActive,
+    self.steer_rate_counter, apply_steer_req = common_fault_avoidance(abs(CS.out.steeringRateDeg) >= MAX_STEER_RATE, lat_active,
                                                                       self.steer_rate_counter, MAX_STEER_RATE_FRAMES)
 
-    if not CC.latActive:
+    if not lat_active:
       apply_steer = 0
 
     # *** steer angle ***
@@ -167,7 +167,7 @@ class CarController:
 
     self.last_standstill = CS.out.standstill
 
-    # AleSato Stuff 
+    # AleSato Stuff
     self.remoteLockDoors = Params().get_bool("AleSato_RemoteLockDoors")
     if self.remoteLockDoors and not self.lastRemoteLockDoors:
       self.oneHonk = True
@@ -217,7 +217,8 @@ class CarController:
       if pcm_cancel_cmd and self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:
         can_sends.append(toyotacan.create_acc_cancel_command(self.packer))
       elif self.CP.openpilotLongitudinalControl:
-        can_sends.append(toyotacan.create_accel_command(self.packer, pcm_accel_cmd, accel_raw, pcm_cancel_cmd, self.standstill_req, lead, CS.acc_type, CS.distance_lines_control, fcw_alert))
+        can_sends.append(toyotacan.create_accel_command(self.packer, pcm_accel_cmd, accel_raw, pcm_cancel_cmd, self.standstill_req, \
+                                                        lead, CS.acc_type, CS.distance_lines_control, fcw_alert))
         self.accel = pcm_accel_cmd
       else:
         can_sends.append(toyotacan.create_accel_command(self.packer, 0, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance_lines_control, False))
