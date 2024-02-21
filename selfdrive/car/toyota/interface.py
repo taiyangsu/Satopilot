@@ -12,7 +12,9 @@ EventName = car.CarEvent.EventName
 SteerControlType = car.CarParams.SteerControlType
 
 class CarInterface(CarInterfaceBase):
-  prevMadsEnabled = False
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState)
+    self.prevMadsEnabled = False
 
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
