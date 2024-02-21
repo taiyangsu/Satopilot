@@ -277,11 +277,6 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   QHBoxLayout *power_layout = new QHBoxLayout();
   power_layout->setSpacing(30);
 
-  QPushButton *reboot_btn = new QPushButton(tr("Reboot"));
-  reboot_btn->setObjectName("reboot_btn");
-  power_layout->addWidget(reboot_btn);
-  QObject::connect(reboot_btn, &QPushButton::clicked, this, &DevicePanel::reboot);
-
   QPushButton *poweroff_btn = new QPushButton(tr("Power Off"));
   poweroff_btn->setObjectName("poweroff_btn");
   power_layout->addWidget(poweroff_btn);
@@ -290,6 +285,11 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   if (!Hardware::PC() and false) { // I want shutdown to be complete when finishing my trip
     connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
   }
+
+  QPushButton *reboot_btn = new QPushButton(tr("Reboot"));
+  reboot_btn->setObjectName("reboot_btn");
+  power_layout->addWidget(reboot_btn);
+  QObject::connect(reboot_btn, &QPushButton::clicked, this, &DevicePanel::reboot);
 
   setStyleSheet(R"(
     #reboot_btn { height: 120px; border-radius: 15px; background-color: #393939; }
