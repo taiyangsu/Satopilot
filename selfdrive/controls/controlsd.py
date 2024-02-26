@@ -200,6 +200,7 @@ class Controls:
 
     self.log_sock = messaging.sub_sock('androidLog')
 
+    self.mem_params = Params("/dev/shm/params")
     self.params = Params()
     ignore = self.sensor_packets + ['testJoystick']
     if SIMULATION:
