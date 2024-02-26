@@ -1,4 +1,9 @@
-Version 0.9.6 (2024-02-22)
+Version 0.9.7 (2024-XX-XX)
+========================
+* New driving model
+* Support for many hybrid Ford models
+
+Version 0.9.6 (2024-02-27)
 ========================
 * AleSato stuff
   * Use danlee's multilang onroad alerts #28528 (2024-01-23)
