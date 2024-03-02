@@ -3,6 +3,7 @@ from openpilot.common.numpy_fast import clip, interp
 from openpilot.common.params import Params
 from openpilot.selfdrive.car import apply_meas_steer_torque_limits, apply_std_steer_angle_limits, common_fault_avoidance, \
                           create_gas_interceptor_command, make_can_msg
+from openpilot.selfdrive.car.interfaces import CarControllerBase
 from openpilot.selfdrive.car.toyota import toyotacan
 from openpilot.selfdrive.car.toyota.values import CAR, STATIC_DSU_MSGS, NO_STOP_TIMER_CAR, TSS2_CAR, \
                                         MIN_ACC_SPEED, PEDAL_TRANSITION, CarControllerParams, ToyotaFlags, \
@@ -35,7 +36,7 @@ MAX_LTA_ANGLE = 94.9461  # deg
 MAX_LTA_DRIVER_TORQUE_ALLOWANCE = 150  # slightly above steering pressed allows some resistance when changing lanes
 
 
-class CarController:
+class CarController(CarControllerBase):
   def __init__(self, dbc_name, CP, VM):
     self.CP = CP
     self.params = CarControllerParams(self.CP)
