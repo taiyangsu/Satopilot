@@ -1,5 +1,7 @@
 Version 0.9.7 (2024-XX-XX)
 ========================
+* AleSato stuff
+  * Wake up screen with tap if shutdowned by fog lights (2024-03-03)
 * New driving model
 * Support for many hybrid Ford models
 

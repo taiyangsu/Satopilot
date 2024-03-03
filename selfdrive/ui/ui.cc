@@ -343,10 +343,6 @@ void Device::updateBrightness(const UIState &s) {
 
   int brightness = brightness_filter.update(clipped_brightness);
 
-  // AleSato turn off screen with fog light
-  SubMaster &sm = *(s.sm);
-  if (Params().getBool("AleSato_ShutdownScreen") && sm["carState"].getCarState().getGenericToggle()) {brightness = 0.00;}
-
   if (!awake) {
     brightness = 0;
   }
@@ -369,7 +365,10 @@ void Device::updateWakefulness(const UIState &s) {
     emit interactiveTimeout();
   }
 
-  setAwake(s.scene.ignition || interactive_timeout > 0);
+  // AleSato turn off screen with fog light
+  SubMaster &sm = *(s.sm);
+  bool should_shutdown = Params().getBool("AleSato_ShutdownScreen") && sm["carState"].getCarState().getGenericToggle();
+  setAwake((s.scene.ignition && !should_shutdown) || interactive_timeout > 0);
 }
 
 UIState *uiState() {
