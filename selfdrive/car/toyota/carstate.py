@@ -41,6 +41,9 @@ class CarState(CarStateBase):
     self.accurate_steer_angle_seen = False
     self.angle_offset = FirstOrderFilter(None, 60.0, DT_CTRL, initialized=False)
 
+    self.prev_distance_button = 0
+    self.distance_button = 0
+
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
@@ -241,6 +244,11 @@ class CarState(CarStateBase):
         self.reset_brakehold = False
         self.brakehold_condition_counter = 0  
       self.prev_brakePressed = ret.brakePressed
+
+    # distance button is wired to the ACC module (camera or radar)
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+      self.prev_distance_button = self.distance_button
+      self.distance_button = cp_acc.vl["ACC_CONTROL"]["DISTANCE"]
 
     return ret
 
