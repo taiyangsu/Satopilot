@@ -63,6 +63,7 @@ class Controls:
   def __init__(self, CI=None):
     self.card = CarD(CI)
 
+    self.mem_params = Params("/dev/shm/params")
     self.params = Params()
 
     with car.CarParams.from_bytes(self.params.get("CarParams", block=True)) as msg:
