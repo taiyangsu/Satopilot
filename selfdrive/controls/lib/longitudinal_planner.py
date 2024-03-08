@@ -70,8 +70,8 @@ class LongitudinalPlanner:
     self.solverExecutionTime = 0.0
     self.params = Params()
     self.param_read_counter = 0
-    self.read_param()
     self.personality = log.LongitudinalPersonality.standard
+    self.read_param()
 
   def read_param(self):
     try:

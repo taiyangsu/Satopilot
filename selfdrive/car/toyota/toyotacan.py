@@ -151,5 +151,5 @@ def create_brakehold_command(packer, stock_AEB, cut3frames):
       "PBPREPMP",
     ]})
 
-  
+
   return packer.make_can_msg("PRE_COLLISION_2", 0, values)

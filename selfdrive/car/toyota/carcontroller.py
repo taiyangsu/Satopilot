@@ -47,6 +47,7 @@ class CarController(CarControllerBase):
     self.last_standstill = False
     self.standstill_req = False
     self.steer_rate_counter = 0
+    self.distance_button = 0
 
     self.packer = CANPacker(dbc_name)
     self.gas = 0
@@ -213,6 +214,14 @@ class CarController(CarControllerBase):
     if (self.frame % 3 == 0 and self.CP.openpilotLongitudinalControl) or pcm_cancel_cmd:
       lead = hud_control.leadVisible or CS.out.vEgo < 12.  # at low speed we always assume the lead is present so ACC can be engaged
       accel_raw = -0.4 if stopping else actuators.accel if should_compensate else pcm_accel_cmd
+
+      # Press distance button until we are at the correct bar length. Only change while enabled to avoid skipping startup popup
+      if self.frame % 6 == 0:
+        if CS.pcm_follow_distance_values.get(CS.pcm_follow_distance, "UNKNOWN") != "FAR" and CS.out.cruiseState.enabled and \
+          self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR:
+          self.distance_button = not self.distance_button
+        else:
+          self.distance_button = 0
 
       # Lexus IS uses a different cancellation message
       if pcm_cancel_cmd and self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:

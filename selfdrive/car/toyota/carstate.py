@@ -44,6 +44,9 @@ class CarState(CarStateBase):
     self.prev_distance_button = 0
     self.distance_button = 0
 
+    self.pcm_follow_distance = 0
+    self.pcm_follow_distance_values = can_define.dv['PCM_CRUISE_2']['PCM_FOLLOW_DISTANCE']
+
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
@@ -55,7 +58,7 @@ class CarState(CarStateBase):
     self.lkas_enabled = False
     self.prev_lkas_enabled = False
 
-    # Change between chill/experimental mode using steering wheel 
+    # Change between chill/experimental mode using steering wheel
     self.ispressed = False
     self.ispressed_prev = False
     self.distance_lines_control = False
@@ -67,7 +70,7 @@ class CarState(CarStateBase):
     self.stock_aeb = {}
     self.brakehold_condition_satisfied = False
     self.brakehold_condition_counter = 0
-    self.reset_brakehold = False    
+    self.reset_brakehold = False
     self.prev_brakePressed = True
     self.brakehold_governor = False
 
@@ -203,16 +206,16 @@ class CarState(CarStateBase):
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
       self.lkas_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
       if self.prev_lkas_enabled is None:
-        self.prev_lkas_enabled = self.lkas_enabled  
+        self.prev_lkas_enabled = self.lkas_enabled
       if not self.prev_lkas_enabled and self.lkas_enabled and not self.mem_params.get_bool("AleSato_SteerAlwaysOn") and ret.cruiseState.available:
-        self.mem_params.put_bool('AleSato_SteerAlwaysOn', True)  
+        self.mem_params.put_bool('AleSato_SteerAlwaysOn', True)
       elif (self.prev_lkas_enabled and not self.lkas_enabled and self.mem_params.get_bool("AleSato_SteerAlwaysOn")) or not ret.cruiseState.available:
-        self.mem_params.put_bool('AleSato_SteerAlwaysOn', False)  
+        self.mem_params.put_bool('AleSato_SteerAlwaysOn', False)
       if self.mem_params.get_bool("AleSato_SteerAlwaysOn"):
         self.madsEnabled = True
       else:
         self.madsEnabled = False
-      self.prev_lkas_enabled = self.lkas_enabled 
+      self.prev_lkas_enabled = self.lkas_enabled
 
     # AleSato Stuff
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR): # Comunicate better about follow distance
@@ -224,7 +227,7 @@ class CarState(CarStateBase):
       else:
         self.distance_lines_control = False
     self.myframe += 1 if self.myframe < 255 else -255
-      
+
     # Automatic BrakeHold
     if self.CP.carFingerprint in TSS2_CAR:
       self.stock_aeb = copy.copy(cp_cam.vl["PRE_COLLISION_2"])
@@ -242,13 +245,19 @@ class CarState(CarStateBase):
       else:
         self.brakehold_governor = False
         self.reset_brakehold = False
-        self.brakehold_condition_counter = 0  
+        self.brakehold_condition_counter = 0
       self.prev_brakePressed = ret.brakePressed
 
-    # distance button is wired to the ACC module (camera or radar)
-    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+    if self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR:
+      self.pcm_follow_distance = cp.vl["PCM_CRUISE_2"]["PCM_FOLLOW_DISTANCE"]
+
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR) or (self.CP.flags & ToyotaFlags.SMART_DSU and not self.CP.flags & ToyotaFlags.RADAR_CAN_FILTER):
+      # distance button is wired to the ACC module (camera or radar)
       self.prev_distance_button = self.distance_button
-      self.distance_button = cp_acc.vl["ACC_CONTROL"]["DISTANCE"]
+      if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+        self.distance_button = cp_acc.vl["ACC_CONTROL"]["DISTANCE"]
+      else:
+        self.distance_button = cp.vl["SDSU"]["FD_BUTTON"]
 
     return ret
 
@@ -300,10 +309,9 @@ class CarState(CarStateBase):
         ("PRE_COLLISION", 33),
       ]
 
-    if CP.flags & ToyotaFlags.SMART_DSU:
+    if CP.flags & ToyotaFlags.SMART_DSU and not CP.flags & ToyotaFlags.RADAR_CAN_FILTER:
       messages += [
-        ("SDSU", 0),
-        ("ACC_CONTROL", 33),
+        ("SDSU", 100),
       ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 0)
