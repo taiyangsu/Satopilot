@@ -58,10 +58,10 @@ class CarState(CarStateBase):
     self.prev_lkas_enabled = False
 
     # Change between chill/experimental mode using steering wheel
-    self.ispressed = False
     self.ispressed_prev = False
-    self.distance_lines_control = False
-    self.myframe = 0
+    self.distance_button_hold = 0
+    self.gap_button_counter = 0
+    self.short_press_button_counter = 0
 
     # AleSato's automatic brakehold
     self.time_to_brakehold = 100 * 3   # 3 seconds stopped to activate
@@ -181,16 +181,6 @@ class CarState(CarStateBase):
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]["CRUISE_STATE"] in (1, 2, 3, 4, 5, 6)
     self.pcm_neutral_force = cp.vl["PCM_CRUISE"]["NEUTRAL_FORCE"]
 
-    # Sunny's change e2e_long on fly
-    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
-      self.ispressed = cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1
-    elif self.CP.flags & ToyotaFlags.SMART_DSU:
-      self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1 or cp_acc.vl["ACC_CONTROL"]["DISTANCE"] == 1
-    if self.ispressed and not self.ispressed_prev:
-      self.e2eLongButton = not self.params.get_bool("ExperimentalMode")
-      self.params.put_bool_nonblocking('ExperimentalMode', self.e2eLongButton)
-    self.ispressed_prev = self.ispressed
-
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["FRONT_FOG"])
     ret.espDisabled = cp.vl["ESP_CONTROL"]["TC_DISABLED"] != 0
 
@@ -215,17 +205,6 @@ class CarState(CarStateBase):
       else:
         self.madsEnabled = False
       self.prev_lkas_enabled = self.lkas_enabled
-
-    # AleSato Stuff
-    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR): # Comunicate better about follow distance
-      self.is_exp = self.params.get_bool("ExperimentalMode")
-      self.distance_lines = int(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"])
-                                       # 1bar for Chill and                                                 3bars for Exp
-      if ((not self.is_exp and self.distance_lines != 1 and self.myframe % 2 == 0) or (self.is_exp and self.distance_lines != 3 and self.myframe % 2 == 0)) and ret.cruiseState.enabled:
-        self.distance_lines_control = True
-      else:
-        self.distance_lines_control = False
-    self.myframe += 1 if self.myframe < 255 else -255
 
     # Automatic BrakeHold
     if self.CP.carFingerprint in TSS2_CAR:
@@ -252,11 +231,31 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR) or (self.CP.flags & ToyotaFlags.SMART_DSU and not self.CP.flags & ToyotaFlags.RADAR_CAN_FILTER):
       # distance button is wired to the ACC module (camera or radar)
-      self.prev_distance_button = self.distance_button
+      # self.prev_distance_button = self.distance_button
+      self.prev_distance_button = self.distance_button_hold
       if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
         self.distance_button = cp_acc.vl["ACC_CONTROL"]["DISTANCE"]
       else:
         self.distance_button = cp.vl["SDSU"]["FD_BUTTON"]
+
+    # change follow distances with long press
+    if self.distance_button:
+      self.short_press_button_counter += 1
+      if not self.distance_button_hold:
+        self.gap_button_counter += 1
+        if self.gap_button_counter > 50:  # 50 miliseconds
+          self.gap_button_counter = 0
+          self.distance_button_hold = True
+    else:
+      self.gap_button_counter = 0
+      self.distance_button_hold = False
+
+    # change experimental/chill mode on fly with short press
+    if not self.distance_button and self.ispressed_prev and self.short_press_button_counter < 50:
+      self.params.put_bool_nonblocking('ExperimentalMode', not self.params.get_bool("ExperimentalMode"))
+    if not self.ispressed_prev and not self.distance_button:
+      self.short_press_button_counter = 0
+    self.ispressed_prev = self.distance_button
 
     return ret
 

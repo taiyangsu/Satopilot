@@ -1,6 +1,8 @@
 Version 0.9.7 (2024-XX-XX)
 ========================
 * AleSato stuff
+  * Change follows distances with long press on distance button (2024-03-13)
+  * Wake up screen in experimental mode if turned off (2024-03-13)
   * Wake up screen with tap if shutdowned by fog lights (2024-03-03)
 * New driving model
 * Support for hybrid variants of supported Ford models
