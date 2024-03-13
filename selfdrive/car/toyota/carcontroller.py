@@ -216,9 +216,9 @@ class CarController(CarControllerBase):
       accel_raw = -0.4 if stopping else actuators.accel if should_compensate else pcm_accel_cmd
 
       # Press distance button until we are at the correct bar length. Only change while enabled to avoid skipping startup popup
-      if self.frame % 6 == 0:
-        if CS.pcm_follow_distance_values.get(CS.pcm_follow_distance, "UNKNOWN") != "FAR" and CS.out.cruiseState.enabled and \
-          self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR:
+      if self.frame % 6 == 0 and self.CP.openpilotLongitudinalControl:
+        desired_distance = 4 - hud_control.leadDistanceBars
+        if CS.out.cruiseState.enabled and CS.pcm_follow_distance != desired_distance:
           self.distance_button = not self.distance_button
         else:
           self.distance_button = 0
@@ -228,10 +228,10 @@ class CarController(CarControllerBase):
         can_sends.append(toyotacan.create_acc_cancel_command(self.packer))
       elif self.CP.openpilotLongitudinalControl:
         can_sends.append(toyotacan.create_accel_command(self.packer, pcm_accel_cmd, accel_raw, pcm_cancel_cmd, self.standstill_req, \
-                                                        lead, CS.acc_type, CS.distance_lines_control, fcw_alert))
+                                                        lead, CS.acc_type, self.distance_button, fcw_alert))
         self.accel = pcm_accel_cmd
       else:
-        can_sends.append(toyotacan.create_accel_command(self.packer, 0, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance_lines_control, False))
+        can_sends.append(toyotacan.create_accel_command(self.packer, 0, 0, pcm_cancel_cmd, False, lead, CS.acc_type, self.distance_button, False))
 
     if self.frame % 2 == 0 and self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl:
       # send exactly zero if gas cmd is zero. Interceptor will send the max between read value and gas cmd.
