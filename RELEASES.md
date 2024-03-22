@@ -5,6 +5,7 @@ Version 0.9.7 (2024-XX-XX)
   * Wake up screen in experimental mode if turned off (2024-03-13)
   * Wake up screen with tap if shutdowned by fog lights (2024-03-03)
 * New driving model
+* Adjust driving personality with the follow distance button
 * Support for hybrid variants of supported Ford models
 
 Version 0.9.6 (2024-02-27)
