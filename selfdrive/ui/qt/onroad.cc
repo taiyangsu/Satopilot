@@ -74,24 +74,22 @@ void OnroadWindow::updateState(const UIState &s) {
     return;
   }
 
-  QColor bgColor = (Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn") && s.status != STATUS_ENGAGED)? bg_colors[STATUS_OVERRIDE] : bg_colors[s.status];
-  Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
-  alerts->updateAlert(alert);
-
   if (s.scene.map_on_left) {
     split->setDirection(QBoxLayout::LeftToRight);
   } else {
     split->setDirection(QBoxLayout::RightToLeft);
   }
 
+  alerts->updateState(s);
   nvg->updateState(s);
 
+  QColor bgColor = (Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn") && s.status != STATUS_ENGAGED)? bg_colors[STATUS_OVERRIDE] : bg_colors[s.status];
   if (bg != bgColor) {
     // repaint border
     bg = bgColor;
     update();
   }
-  
+
   // Ale Sato blinker indicator at borders
   UIState *my_s = uiState();
   if (s.scene.blinkerstatus || my_s->scene.prev_blinkerstatus) {
@@ -137,7 +135,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
     }
   }
 #endif
-  alerts->updateAlert({});
+  alerts->clear();
 }
 
 void OnroadWindow::primeChanged(bool prime) {
@@ -207,7 +205,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent,  MapSettingsButton *map_settings_b
   main_layout->addWidget(btns_wrapper, 0, Qt::AlignBottom);
   QString initHelloButton = "";
   helloButton = new QPushButton(initHelloButton);
-  
+
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
     bool button_state = Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn");
     Params("/dev/shm/params").putBool("AleSato_SteerAlwaysOn", !button_state);
@@ -238,15 +236,17 @@ void ButtonsWindow::updateState(const UIState &s) {
   const auto helloButtonState = Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("STEER ALWAYS");    
+    helloButton->setText("STEER ALWAYS");
   } else {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(2)));
-    helloButton->setText("STOCK"); 
+    helloButton->setText("STOCK");
   }
 }
 
 // OnroadAlerts
-void OnroadAlerts::updateAlert(const Alert &a) {
+
+void OnroadAlerts::updateState(const UIState &s) {
+  Alert a = getAlert(*(s.sm), s.scene.started_frame);
   if (!alert.equal(a)) {
     alert = a;
     update();
@@ -268,6 +268,47 @@ QString OnroadAlerts::translateAlertText(const QString &text) {
     }
   }
   return translated;
+}
+
+void OnroadAlerts::clear() {
+  alert = {};
+  update();
+}
+
+OnroadAlerts::Alert OnroadAlerts::getAlert(const SubMaster &sm, uint64_t started_frame) {
+  const cereal::ControlsState::Reader &cs = sm["controlsState"].getControlsState();
+  const uint64_t controls_frame = sm.rcv_frame("controlsState");
+
+  Alert a = {};
+  if (controls_frame >= started_frame) {  // Don't get old alert.
+    a = {cs.getAlertText1().cStr(), cs.getAlertText2().cStr(),
+         cs.getAlertType().cStr(), cs.getAlertSize(), cs.getAlertStatus()};
+  }
+
+  if (!sm.updated("controlsState") && (sm.frame - started_frame) > 5 * UI_FREQ) {
+    const int CONTROLS_TIMEOUT = 5;
+    const int controls_missing = (nanos_since_boot() - sm.rcv_time("controlsState")) / 1e9;
+
+    // Handle controls timeout
+    if (controls_frame < started_frame) {
+      // car is started, but controlsState hasn't been seen at all
+      a = {tr("openpilot Unavailable"), tr("Waiting for controls to start"),
+           "controlsWaiting", cereal::ControlsState::AlertSize::MID,
+           cereal::ControlsState::AlertStatus::NORMAL};
+    } else if (controls_missing > CONTROLS_TIMEOUT && !Hardware::PC()) {
+      // car is started, but controls is lagging or died
+      if (cs.getEnabled() && (controls_missing - CONTROLS_TIMEOUT) < 10) {
+        a = {tr("TAKE CONTROL IMMEDIATELY"), tr("Controls Unresponsive"),
+             "controlsUnresponsive", cereal::ControlsState::AlertSize::FULL,
+             cereal::ControlsState::AlertStatus::CRITICAL};
+      } else {
+        a = {tr("Controls Unresponsive"), tr("Reboot Device"),
+             "controlsUnresponsivePermanent", cereal::ControlsState::AlertSize::MID,
+             cereal::ControlsState::AlertStatus::NORMAL};
+      }
+    }
+  }
+  return a;
 }
 
 void OnroadAlerts::paintEvent(QPaintEvent *event) {
@@ -308,7 +349,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
 
   // text
   QString text1 = translateAlertText(alert.text1);
-  QString text2 = translateAlertText(alert.text2);  
+  QString text2 = translateAlertText(alert.text2);
   const QPoint c = r.center();
   p.setPen(QColor(0xff, 0xff, 0xff));
   p.setRenderHint(QPainter::TextAntialiasing);
@@ -587,7 +628,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.drawText(my_engine_rpm_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  engineRPMStr);
   // End AleSato
 
-// Begin2 Ale Sato 
+// Begin2 Ale Sato
   char distanceTraveledStr[16];
   snprintf(distanceTraveledStr, sizeof(distanceTraveledStr), "%.1f", distanceTraveled);
 
@@ -627,13 +668,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
   p.setFont(InterFont(90, QFont::Bold));
   p.drawText(my_trip_distance_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter,  distanceTraveledStr);
-  // End2 AleSato 
+  // End2 AleSato
 
   // current speed
   p.setFont(InterFont(230, QFont::Bold));
   drawText(p, rect().center().x(), 210, speedStr);
   // Turning the speed blue
-  drawTextWithColor(p, rect().center().x(), 210, speedStr, engineColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, engineColorSpeed ? whiteColor() : QColor(20, 255, 20, 255));
   p.setFont(InterFont(66));
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 

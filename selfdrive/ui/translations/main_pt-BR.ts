@@ -150,7 +150,7 @@
     </message>
     <message>
         <source>TRIP DIST</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -342,11 +342,11 @@
     </message>
     <message>
         <source>Pair Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Parear Dispositivo</translation>
     </message>
     <message>
-        <source>Pair</source>
-        <translation type="unfinished"></translation>
+        <source>PAIR</source>
+        <translation>PAREAR</translation>
     </message>
 </context>
 <context>
@@ -746,10 +746,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Communication Issue between Processes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Controls Lagging</source>
         <translation type="unfinished"></translation>
     </message>
@@ -899,10 +895,6 @@
     </message>
     <message>
         <source>Low Battery</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Low Communication Rate between Processes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1124,23 +1116,51 @@ Ré</translation>
         <translation>openpilot Indisponível</translation>
     </message>
     <message>
+        <source>Waiting for controls to start</source>
+        <translation>Aguardando controles para iniciar</translation>
+    </message>
+    <message>
+        <source>Controls Unresponsive</source>
+        <translation>Controles Não Respondem</translation>
+    </message>
+    <message>
+        <source>Reboot Device</source>
+        <translation>Reinicie o Dispositivo</translation>
+    </message>
+    <message>
+        <source>km/h</source>
+        <translation type="obsolete">km/h</translation>
+    </message>
+    <message>
+        <source>mph</source>
+        <translation type="obsolete">mph</translation>
+    </message>
+    <message>
+        <source>MAX</source>
+        <translation type="obsolete">LIMITE</translation>
+    </message>
+    <message>
+        <source>SPEED</source>
+        <translation type="obsolete">MAX</translation>
+    </message>
+    <message>
+        <source>LIMIT</source>
+        <translation type="obsolete">VELO</translation>
+    </message>
+    <message>
+        <source>ENGINE RPM</source>
+        <translation type="obsolete">MOTOR RPM</translation>
+    </message>
+    <message>
+        <source>Low Communication Rate Between Processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>paramsd Permanent Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>paramsd Temporary Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Waiting for controls to start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Controls Unresponsive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reboot Device</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1269,7 +1289,7 @@ Ré</translation>
     </message>
     <message>
         <source>now</source>
-        <translation type="unfinished"></translation>
+        <translation>agora</translation>
     </message>
 </context>
 <context>
