@@ -15,7 +15,7 @@ class ButtonsWindow : public QWidget {
 
   private:
     QPushButton *helloButton;
-    const QStringList helloButtonColors = {"#37b868", "#fcff4b", "#f44336"};
+    const QStringList helloButtonColors = {"#37b868", "#fcff4b", "#24a8bc", "#173349"};
 
   public slots:
     void updateState(const UIState &s);

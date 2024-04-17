@@ -25,7 +25,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent,  MapSettingsButton *map_settings_b
     Params("/dev/shm/params").putBool("AleSato_SteerAlwaysOn", !button_state);
   });
 
-  helloButton->setFixedWidth(525);
+  helloButton->setFixedWidth(200);
   helloButton->setFixedHeight(200);
   btns_layout->addWidget(helloButton, 0, Qt::AlignLeft);
   btns_layout->addSpacing(35);
@@ -36,24 +36,24 @@ ButtonsWindow::ButtonsWindow(QWidget *parent,  MapSettingsButton *map_settings_b
       color: white;
       text-align: center;
       padding: 0px;
-      border-width: 18px;
+      border-width: 12px;
       border-style: solid;
       background-color: rgba(75, 75, 75, 0.3);
     }
   )");
 
-  helloButton->setStyleSheet(QString("font-size: 50px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(1)));
+  helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(1)));
 }
 
 // We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
   const auto helloButtonState = Params("/dev/shm/params").getBool("AleSato_SteerAlwaysOn");
   if(helloButtonState) {
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(0)));
-    helloButton->setText("STEER ALWAYS");
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
+    helloButton->setText("STEER\nalways");
   } else {
-    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 32px; border-color: %1").arg(helloButtonColors.at(2)));
-    helloButton->setText("STOCK");
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(3)));
+    helloButton->setText("stock");
   }
 }
 
