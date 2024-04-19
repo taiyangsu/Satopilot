@@ -95,6 +95,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"AleSato_SteerAlwaysOn", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
     
     {"AccessToken", CLEAR_ON_MANAGER_START | DONT_LOG},
+    {"AlwaysOnDM", PERSISTENT},
     {"ApiCache_Device", PERSISTENT},
     {"ApiCache_NavDestinations", PERSISTENT},
     {"AssistNowToken", PERSISTENT},
