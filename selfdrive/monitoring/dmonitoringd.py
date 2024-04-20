@@ -14,6 +14,7 @@ def dmonitoringd_thread():
   set_realtime_priority(2)
 
   params = Params()
+  mem_params = Params("/dev/shm/params")
   pm = messaging.PubMaster(['driverMonitoringState'])
   sm = messaging.SubMaster(['driverStateV2', 'liveCalibration', 'carState', 'controlsState', 'modelV2'], poll='driverStateV2')
 
@@ -44,7 +45,9 @@ def dmonitoringd_thread():
     events = Events()
 
     if sm.all_checks() and len(sm['liveCalibration'].rpyCalib):
-      driver_status.update_states(sm['driverStateV2'], sm['liveCalibration'].rpyCalib, sm['carState'].vEgo, sm['controlsState'].enabled)
+      driver_status.update_states(sm['driverStateV2'], sm['liveCalibration'].rpyCalib, sm['carState'].vEgo,
+                                  sm['controlsState'].enabled or \
+                                  (mem_params.get_bool("AleSato_SteerAlwaysOn") and sm['carState'].vEgo > 2))
 
     # Block engaging after max number of distrations
     if driver_status.terminal_alert_cnt >= driver_status.settings._MAX_TERMINAL_ALERTS or \
@@ -52,8 +55,11 @@ def dmonitoringd_thread():
       events.add(car.CarEvent.EventName.tooDistracted)
 
     # Update events from driver state
-    driver_status.update_events(events, driver_engaged, sm['controlsState'].enabled,
-      sm['carState'].standstill, sm['carState'].gearShifter in [car.CarState.GearShifter.reverse, car.CarState.GearShifter.park])
+    driver_status.update_events(events, driver_engaged, sm['controlsState'].enabled or \
+                                (mem_params.get_bool("AleSato_SteerAlwaysOn") and sm['carState'].vEgo > 2),
+                                sm['carState'].standstill,
+                                sm['carState'].gearShifter in \
+                                  [car.CarState.GearShifter.reverse, car.CarState.GearShifter.park])
 
     # build driverMonitoringState packet
     dat = messaging.new_message('driverMonitoringState', valid=sm.all_checks())
