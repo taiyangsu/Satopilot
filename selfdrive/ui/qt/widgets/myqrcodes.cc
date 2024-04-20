@@ -195,9 +195,10 @@ MyFootagePopup::MyFootagePopup(QWidget *parent) : DialogBase(parent) {
       <ol type='1' style='margin-left: 15px;'>
         <li style='margin-bottom: 50px;'>%1</li>
         <li style='margin-bottom: 50px;'>%2</li>
+        <li style='margin-bottom: 50px;'>%3</li>
       </ol>
     )").arg(tr("Connect your smartphone and comma device to the same Wi-Fi network"))
-    .arg(tr("Scan the QR code on the right")), this);
+    .arg(tr("Scan the QR code on the right")).arg(tr("If the page does not load on your phone when using the comma3 hotspot, turn off mobile data")), this);
 
     instructions->setStyleSheet("font-size: 47px; font-weight: bold; color: black;");
     instructions->setWordWrap(true);

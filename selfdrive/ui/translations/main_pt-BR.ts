@@ -150,7 +150,7 @@
     </message>
     <message>
         <source>TRIP DIST</source>
-        <translation type="unfinished"></translation>
+        <translation>TRIP DIST</translation>
     </message>
 </context>
 <context>
@@ -350,6 +350,33 @@
     </message>
 </context>
 <context>
+    <name>DriveStats</name>
+    <message>
+        <source>Drives</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ALL TIME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAST WEEK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Miles</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DriverViewWindow</name>
     <message>
         <source>camera starting</source>
@@ -392,7 +419,7 @@
     <name>LongitudinalPersonality</name>
     <message>
         <source>Driving Personality</source>
-        <translation>Temperamento de Direção</translation>
+        <translation type="unfinished">Temperamento de Direção</translation>
     </message>
     <message>
         <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake.</source>
@@ -486,11 +513,15 @@
     </message>
     <message>
         <source>Connect your smartphone and comma device to the same Wi-Fi network</source>
-        <translation>Conecte seu smartphone e o dispositivo comma à mesma rede Wi-Fi</translation>
+        <translation>Conecte seu smartphone e o comma à mesma rede Wi-Fi</translation>
     </message>
     <message>
         <source>Scan the QR code on the right</source>
-        <translation>Scaneie o QR code a direita</translation>
+        <translation>Scaneie o QR code à direita</translation>
+    </message>
+    <message>
+        <source>If the page does not load on your phone when using the comma3 hotspot, turn off mobile data</source>
+        <translation>Se a página não carregar no seu celular, desligue os dados móveis</translation>
     </message>
 </context>
 <context>
@@ -675,7 +706,7 @@
     </message>
     <message>
         <source>Calibration Invalid</source>
-        <translation type="unfinished">Calibração Inválida</translation>
+        <translation>Calibração Inválida</translation>
     </message>
     <message>
         <source>Calibration Invalid: Remount Device &amp; Recalibrate</source>
@@ -971,7 +1002,7 @@
     </message>
     <message>
         <source>Remount Device (Pitch: %1°, Yaw: %2°)</source>
-        <translation type="unfinished">Remonte o Dispositivo (Pitch: %1°, Yaw: %2°)</translation>
+        <translation>Remonte o Dispositivo (Pitch: %1°, Yaw: %2°)</translation>
     </message>
     <message>
         <source>Resume Driving Manually</source>
