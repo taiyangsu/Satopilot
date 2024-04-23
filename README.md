@@ -1,7 +1,7 @@
 # Carros Brasileiros Testados:
 
 |Marca|Modelo|Controle Longitudinal|Sem ACC abaixo|Sem ALC abaixo|Torque na Direção|Continua após parada completa|Hardware Necessário|Vídeo|
-|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
 |Toyota|Corolla 2019-24|TSS-2.0|openpilot|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">|
 |Honda|HR-V 2023|foo|stock|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">|
 
