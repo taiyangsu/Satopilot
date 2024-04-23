@@ -26,7 +26,8 @@ QString getVersion() {
 }
 
 QString getBrand() {
-  return QObject::tr("openpilot");
+  // return QObject::tr("openpilot");
+  return QObject::tr("InfinityDrive");
 }
 
 QString getUserAgent() {
