@@ -595,7 +595,7 @@
     </message>
     <message>
         <source>openpilot</source>
-        <translation>openpilot</translation>
+        <translation type="vanished">openpilot</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -637,6 +637,10 @@
     <message>
         <source>now</source>
         <translation>agora</translation>
+    </message>
+    <message>
+        <source>InfinityDrive</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1040,7 +1044,7 @@ Isso pode levar até um minuto.</translation>
     <name>TogglesPanel</name>
     <message>
         <source>Enable openpilot</source>
-        <translation>Ativar openpilot</translation>
+        <translation>Ativar InfinityDrive</translation>
     </message>
     <message>
         <source>Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off.</source>
