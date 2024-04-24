@@ -1,11 +1,27 @@
 # Carros Brasileiros Testados:
+01 - Corolla
+02 - CorollaCross
+03 - Rav4 2020
+04 - Lexus NX 2020
+05 - Lexus UX 2020
+06 - Dodge RAM 1500
+07 - Dodge RAM 3500
+08 - Honda Accord 2019
+09 - Honda Civic 2019
+10 - Honda HR-V 2023
+11 - Honda ZR-V 2023
+12 - Ford Ranger 2024
+13 - VW Taos 2020
+14 - VW Tiguan 2019
+15 - VW T-Cross 2019 (mesmo sem câmera)
+16 - VW - Passat alemão
 
 |Marca|Modelo|Requisito|Controle Longitudinal|Sem ACC abaixo|Sem ALC abaixo|Torque na Direção|Continua após parada completa|Hardware Necessário|Vídeo|
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |Toyota|Corolla 2019-24|TSS-2.0|openpilot|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">youtu.be</a>|
 |Honda|HR-V 2023|foo|stock|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">youtu.be</a>|
 
-
+------
 [![openpilot on the comma 3X](https://github.com/commaai/openpilot/assets/8762862/f09e6d29-db2d-4179-80c2-51e8d92bdb5c)](https://comma.ai/shop/comma-3x)
 
 What is openpilot?
