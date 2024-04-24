@@ -1,20 +1,21 @@
 # Carros Brasileiros Testados:
-01 - Corolla
-02 - CorollaCross
-03 - Rav4 2020
-04 - Lexus NX 2020
-05 - Lexus UX 2020
-06 - Dodge RAM 1500
-07 - Dodge RAM 3500
-08 - Honda Accord 2019
-09 - Honda Civic 2019
-10 - Honda HR-V 2023
-11 - Honda ZR-V 2023
-12 - Ford Ranger 2024
-13 - VW Taos 2020
-14 - VW Tiguan 2019
-15 - VW T-Cross 2019 (mesmo sem câmera)
-16 - VW - Passat alemão
+01 - Corolla<br>
+02 - CorollaCross<br>
+03 - Rav4 2020<br>
+04 - Lexus NX 2020<br>
+05 - Lexus UX 2020<br>
+06 - Dodge RAM 1500<br>
+07 - Dodge RAM 3500<br>
+08 - Honda Accord 2019<br>
+09 - Honda Civic 2019<br>
+10 - Honda HR-V 2023<br>
+11 - Honda ZR-V 2023<br>
+12 - Ford Ranger 2024<br>
+13 - VW Taos 2020<br>
+14 - VW Tiguan 2019<br>
+15 - VW T-Cross 2019 (mesmo sem câmera) <br>
+16 - VW - Passat alemão <br>
+17 - VW Nivus 2020 <br>
 
 |Marca|Modelo|Requisito|Controle Longitudinal|Sem ACC abaixo|Sem ALC abaixo|Torque na Direção|Continua após parada completa|Hardware Necessário|Vídeo|
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
