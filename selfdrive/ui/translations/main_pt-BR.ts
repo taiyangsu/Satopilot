@@ -125,7 +125,7 @@
     <name>DeclinePage</name>
     <message>
         <source>You must accept the Terms and Conditions in order to use openpilot.</source>
-        <translation>Você precisa aceitar os Termos e Condições para utilizar openpilot.</translation>
+        <translation>Você precisa aceitar os Termos e Condições para utilizar InfinityDrive.</translation>
     </message>
     <message>
         <source>Back</source>
@@ -211,7 +211,7 @@
     </message>
     <message>
         <source>Review the rules, features, and limitations of openpilot</source>
-        <translation>Revisar regras, aprimoramentos e limitações do openpilot</translation>
+        <translation>Revisar regras, aprimoramentos e limitações do InfinityDrive</translation>
     </message>
     <message>
         <source>Are you sure you want to review the training guide?</source>
@@ -247,7 +247,7 @@
     </message>
     <message>
         <source>openpilot requires the device to be mounted within 4° left or right and within 5° up or 9° down. openpilot is continuously calibrating, resetting is rarely required.</source>
-        <translation>O openpilot requer que o dispositivo seja montado dentro de 4° esquerda ou direita e dentro de 5° para cima ou 9° para baixo. O openpilot está continuamente calibrando, resetar raramente é necessário.</translation>
+        <translation>O InfinityDrive requer que o dispositivo seja montado dentro de 4° esquerda ou direita e dentro de 5° para cima ou 9° para baixo. O InfinityDrive está continuamente calibrando, resetar raramente é necessário.</translation>
     </message>
     <message>
         <source> Your device is pointed %1° %2 and %3° %4.</source>
@@ -420,11 +420,11 @@
     <name>OffroadAlert</name>
     <message>
         <source>Immediately connect to the internet to check for updates. If you do not connect to the internet, openpilot won&apos;t engage in %1</source>
-        <translation>Conecte-se imediatamente à internet para verificar se há atualizações. Se você não se conectar à internet em %1 não será possível acionar o openpilot.</translation>
+        <translation>Conecte-se imediatamente à internet para verificar se há atualizações. Se você não se conectar à internet em %1 não será possível acionar o InfinityDrive.</translation>
     </message>
     <message>
         <source>Connect to internet to check for updates. openpilot won&apos;t automatically start until it connects to internet to check for updates.</source>
-        <translation>Conecte-se à internet para verificar se há atualizações. O openpilot não será iniciado automaticamente até que ele se conecte à internet para verificar se há atualizações.</translation>
+        <translation>Conecte-se à internet para verificar se há atualizações. O InfinityDrive não será iniciado automaticamente até que ele se conecte à internet para verificar se há atualizações.</translation>
     </message>
     <message>
         <source>Unable to download updates
@@ -458,15 +458,15 @@
     </message>
     <message>
         <source>openpilot was unable to identify your car. Your car is either unsupported or its ECUs are not recognized. Please submit a pull request to add the firmware versions to the proper vehicle. Need help? Join discord.comma.ai.</source>
-        <translation>O openpilot não conseguiu identificar o seu carro. Seu carro não é suportado ou seus ECUs não são reconhecidos. Envie um pull request para adicionar as versões de firmware ao veículo adequado. Precisa de ajuda? Junte-se discord.comma.ai.</translation>
+        <translation>O InfinityDrive não conseguiu identificar o seu carro. Seu carro não é suportado ou seus ECUs não são reconhecidos. Envie um pull request para adicionar as versões de firmware ao veículo adequado. Precisa de ajuda? Junte-se discord.comma.ai.</translation>
     </message>
     <message>
         <source>openpilot was unable to identify your car. Check integrity of cables and ensure all connections are secure, particularly that the comma power is fully inserted in the OBD-II port of the vehicle. Need help? Join discord.comma.ai.</source>
-        <translation>O openpilot não conseguiu identificar o seu carro. Verifique a integridade dos cabos e certifique-se de que todas as conexões estejam seguras, especialmente se o comma power está totalmente inserido na porta OBD-II do veículo. Precisa de ajuda? Junte-se discord.comma.ai.</translation>
+        <translation>O InfinityDrive não conseguiu identificar o seu carro. Verifique a integridade dos cabos e certifique-se de que todas as conexões estejam seguras, especialmente se o comma power está totalmente inserido na porta OBD-II do veículo. Precisa de ajuda? Junte-se discord.comma.ai.</translation>
     </message>
     <message>
         <source>openpilot detected a change in the device&apos;s mounting position. Ensure the device is fully seated in the mount and the mount is firmly secured to the windshield.</source>
-        <translation>O openpilot detectou uma mudança na posição de montagem do dispositivo. Verifique se o dispositivo está totalmente encaixado no suporte e se o suporte está firmemente preso ao para-brisa.</translation>
+        <translation>O InfinityDrive detectou uma mudança na posição de montagem do dispositivo. Verifique se o dispositivo está totalmente encaixado no suporte e se o suporte está firmemente preso ao para-brisa.</translation>
     </message>
     <message>
         <source>Device temperature too high. System cooling down before starting. Current internal component temperature: %1</source>
@@ -492,7 +492,7 @@
     <name>OnroadAlerts</name>
     <message>
         <source>openpilot Unavailable</source>
-        <translation>openpilot Indisponível</translation>
+        <translation>InfinityDrive Indisponível</translation>
     </message>
     <message>
         <source>Waiting for controls to start</source>
@@ -595,7 +595,7 @@
     </message>
     <message>
         <source>openpilot</source>
-        <translation type="vanished">openpilot</translation>
+        <translation type="vanished">InfinityDrive</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -795,7 +795,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>openpilot</source>
-        <translation>openpilot</translation>
+        <translation>InfinityDrive</translation>
     </message>
     <message>
         <source>Custom Software</source>
@@ -1048,7 +1048,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off.</source>
-        <translation>Use o sistema openpilot para controle de cruzeiro adaptativo e assistência ao motorista de manutenção de faixa. Sua atenção é necessária o tempo todo para usar esse recurso. A alteração desta configuração tem efeito quando o carro é desligado.</translation>
+        <translation>Use o sistema InfinityDrive para controle de cruzeiro adaptativo e assistência ao motorista de manutenção de faixa. Sua atenção é necessária o tempo todo para usar esse recurso. A alteração desta configuração tem efeito quando o carro é desligado.</translation>
     </message>
     <message>
         <source>Enable Lane Departure Warnings</source>
@@ -1080,7 +1080,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>When enabled, pressing the accelerator pedal will disengage openpilot.</source>
-        <translation>Quando ativado, pressionar o pedal do acelerador desacionará o openpilot.</translation>
+        <translation>Quando ativado, pressionar o pedal do acelerador desacionará o InfinityDrive.</translation>
     </message>
     <message>
         <source>Show ETA in 24h Format</source>
@@ -1104,11 +1104,11 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>openpilot defaults to driving in &lt;b&gt;chill mode&lt;/b&gt;. Experimental mode enables &lt;b&gt;alpha-level features&lt;/b&gt; that aren&apos;t ready for chill mode. Experimental features are listed below:</source>
-        <translation>openpilot por padrão funciona em &lt;b&gt;modo chill&lt;/b&gt;. modo Experimental ativa &lt;b&gt;recursos de nível-embrionário&lt;/b&gt; que não estão prontos para o modo chill. Recursos experimentais estão listados abaixo:</translation>
+        <translation>InfinityDrive por padrão funciona em &lt;b&gt;modo chill&lt;/b&gt;. modo Experimental ativa &lt;b&gt;recursos de nível-embrionário&lt;/b&gt; que não estão prontos para o modo chill. Recursos experimentais estão listados abaixo:</translation>
     </message>
     <message>
         <source>Let the driving model control the gas and brakes. openpilot will drive as it thinks a human would, including stopping for red lights and stop signs. Since the driving model decides the speed to drive, the set speed will only act as an upper bound. This is an alpha quality feature; mistakes should be expected.</source>
-        <translation>Deixe o modelo de IA controlar o acelerador e os freios. O openpilot irá dirigir como pensa que um humano faria, incluindo parar em sinais vermelhos e sinais de parada. Uma vez que o modelo de condução decide a velocidade a conduzir, a velocidade definida apenas funcionará como um limite superior. Este é um recurso de qualidade embrionária; erros devem ser esperados.</translation>
+        <translation>Deixe o modelo de IA controlar o acelerador e os freios. O InfinityDrive irá dirigir como pensa que um humano faria, incluindo parar em sinais vermelhos e sinais de parada. Uma vez que o modelo de condução decide a velocidade a conduzir, a velocidade definida apenas funcionará como um limite superior. Este é um recurso de qualidade embrionária; erros devem ser esperados.</translation>
     </message>
     <message>
         <source>New Driving Visualization</source>
@@ -1120,19 +1120,19 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>openpilot longitudinal control may come in a future update.</source>
-        <translation>O controle longitudinal openpilot poderá vir em uma atualização futura.</translation>
+        <translation>O controle longitudinal InfinityDrive poderá vir em uma atualização futura.</translation>
     </message>
     <message>
         <source>openpilot Longitudinal Control (Alpha)</source>
-        <translation>Controle Longitudinal openpilot (Embrionário)</translation>
+        <translation>Controle Longitudinal InfinityDrive (Embrionário)</translation>
     </message>
     <message>
         <source>WARNING: openpilot longitudinal control is in alpha for this car and will disable Automatic Emergency Braking (AEB).</source>
-        <translation>AVISO: o controle longitudinal openpilot está em estado embrionário para este carro e desativará a Frenagem Automática de Emergência (AEB).</translation>
+        <translation>AVISO: o controle longitudinal InfinityDrive está em estado embrionário para este carro e desativará a Frenagem Automática de Emergência (AEB).</translation>
     </message>
     <message>
         <source>On this car, openpilot defaults to the car&apos;s built-in ACC instead of openpilot&apos;s longitudinal control. Enable this to switch to openpilot longitudinal control. Enabling Experimental mode is recommended when enabling openpilot longitudinal control alpha.</source>
-        <translation>Neste carro, o openpilot tem como padrão o ACC embutido do carro em vez do controle longitudinal do openpilot. Habilite isso para alternar para o controle longitudinal openpilot. Recomenda-se ativar o modo Experimental ao ativar o embrionário controle longitudinal openpilot.</translation>
+        <translation>Neste carro, o InfinityDrive tem como padrão o ACC embutido do carro em vez do controle longitudinal do InfinityDrive. Habilite isso para alternar para o controle longitudinal InfinityDrive. Recomenda-se ativar o modo Experimental ao ativar o embrionário controle longitudinal InfinityDrive.</translation>
     </message>
     <message>
         <source>Aggressive</source>
@@ -1152,11 +1152,11 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>An alpha version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.</source>
-        <translation>Uma versão embrionária do controle longitudinal openpilot pode ser testada em conjunto com o modo Experimental, em branches que não sejam de produção.</translation>
+        <translation>Uma versão embrionária do controle longitudinal InfinityDrive pode ser testada em conjunto com o modo Experimental, em branches que não sejam de produção.</translation>
     </message>
     <message>
         <source>Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
-        <translation>Habilite o controle longitudinal (embrionário) openpilot para permitir o modo Experimental.</translation>
+        <translation>Habilite o controle longitudinal (embrionário) InfinityDrive para permitir o modo Experimental.</translation>
     </message>
     <message>
         <source>End-to-End Longitudinal Control</source>
@@ -1164,7 +1164,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake. In relaxed mode openpilot will stay further away from lead cars. On supported cars, you can cycle through these personalities with your steering wheel distance button.</source>
-        <translation>Neutro é o recomendado. No modo disputa o openpilot seguirá o carro da frente mais de perto e será mais agressivo com a aceleração e frenagem. No modo calmo o openpilot se manterá mais longe do carro da frente. Em carros compatíveis, você pode alternar esses temperamentos com o botão de distância do volante.</translation>
+        <translation>Neutro é o recomendado. No modo disputa o InfinityDrive seguirá o carro da frente mais de perto e será mais agressivo com a aceleração e frenagem. No modo calmo o InfinityDrive se manterá mais longe do carro da frente. Em carros compatíveis, você pode alternar esses temperamentos com o botão de distância do volante.</translation>
     </message>
     <message>
         <source>The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner.</source>
@@ -1176,7 +1176,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>Enable driver monitoring even when openpilot is not engaged.</source>
-        <translation>Habilite o monitoramento do motorista mesmo quando o openpilot não estiver acionado.</translation>
+        <translation>Habilite o monitoramento do motorista mesmo quando o InfinityDrive não estiver acionado.</translation>
     </message>
 </context>
 <context>
@@ -1222,7 +1222,7 @@ Isso pode levar até um minuto.</translation>
     </message>
     <message>
         <source>Connect to Wi-Fi to upload driving data and help improve openpilot</source>
-        <translation>Conecte se ao Wi-Fi para realizar upload de dados de condução e ajudar a melhorar o openpilot</translation>
+        <translation>Conecte se ao Wi-Fi para realizar upload de dados de condução e ajudar a melhorar o InfinityDrive</translation>
     </message>
     <message>
         <source>Open Settings</source>
