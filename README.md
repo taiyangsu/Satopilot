@@ -1,5 +1,5 @@
 # Carros Brasileiros Testados:
-01 - Corolla<br>
+01 - OK - Corolla<br>
 02 - CorollaCross<br>
 03 - Rav4 2020<br>
 04 - Lexus NX 2020<br>
@@ -8,7 +8,7 @@
 07 - Dodge RAM 3500<br>
 08 - Honda Accord 2019<br>
 09 - Honda Civic 2019<br>
-10 - Honda HR-V 2023<br>
+10 - OK - Honda HR-V 2023<br>
 11 - Honda ZR-V 2023<br>
 12 - Ford Ranger 2024<br>
 13 - VW Taos 2020<br>
@@ -19,11 +19,15 @@
 
 |Marca|Modelo|Requisito|Controle Longitudinal|Sem ACC abaixo|Sem ALC abaixo|Torque na Direção|Continua após parada completa|Hardware Necessário|Vídeo|
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|Toyota|Corolla 2019-24|TSS-2.0|openpilot|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">youtu.be</a>|
-|Honda|HR-V 2023|foo|stock|27 km/h|0 km/h|Excelente|Sim|Chicote toyota-A|<a href="https://youtube.com/@comma_ai.brasil">youtu.be</a>|
+|Honda|HR-V 2023|Honda Sensing|openpilot disponível[<sup>1</sup>](#rodapé)|0 km/h|0 km/h|[![star](docs/assets/icon-star-half.svg)](##)|[![star](docs/assets/icon-star-full.svg)](##)|<details><summary>Peças</summary><sub>- 1 cabo RJ45 (2m)<br>- 1 Conector Honda Bosch-B<br>- 1 comma 3<br>- 1 comma power v2<br>- 1 harness box<br>- 1 mount<br>- 1 right angle OBD-C cable (1.5 ft)</sub></details>|<a href="https://youtu.be/Q11veROVwF4?si=-H3NYu2AqmhyDIyw&t=1696" target="_blank"><img height="18px" src="docs/assets/icon-youtube.svg"></img></a>|
+|Toyota|Corolla 2019-24|Safety Sense|openpilot|0 km/h|0 km/h|[![star](docs/assets/icon-star-full.svg)](##)|[![star](docs/assets/icon-star-full.svg)](##)|<details><summary>Peças</summary><sub>- 1 cabo RJ45 (2m)<br>- 1 Conector Toyota-A<br>- 1 comma 3<br>- 1 comma power v2<br>- 1 harness box<br>- 1 mount<br>- 1 right angle OBD-C cable (1.5 ft)<br>- 1 módulo Sato<br><a href="https://produto.mercadolivre.com.br/MLB-4035054242-modulo-pra-desbloqueio-do-cruzeiro-adaptativo-sub-27kmh-_JM">Compre Aqui</a></sub></details>|<a href="https://youtube.com/@comma_ai.brasil" target="_blank"><img height="18px" src="docs/assets/icon-youtube.svg"></img></a>|
+
+### Rodapé
+<sup>1</sup>O Controle Longitudinal (Alpha) do openpilot está disponível atrás de um interruptor; o interruptor só está disponível em branches  não lançadas, como `devel` ou `master-ci`. <br />
 
 ------
 [![openpilot on the comma 3X](https://github.com/commaai/openpilot/assets/8762862/f09e6d29-db2d-4179-80c2-51e8d92bdb5c)](https://comma.ai/shop/comma-3x)
+
 
 What is openpilot?
 ------
